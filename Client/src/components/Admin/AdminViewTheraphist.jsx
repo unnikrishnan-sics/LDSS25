@@ -38,7 +38,7 @@ const AdminViewTheraphist = () => {
     const fetchAllTheraphist = async () => {
         try {
             const token = localStorage.getItem("token");
-            const allTheraphist = await axios.get("http://localhost:4000/ldss/theraphist/getalltheraphist", {
+            const allTheraphist = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/theraphist/getalltheraphist`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const theraphistData = allTheraphist.data.theraphist;
@@ -88,7 +88,7 @@ const AdminViewTheraphist = () => {
     const fetchTheraphistDetail = async (theraphistId) => {
         const token = localStorage.getItem("token");
         try {
-            const response = await axios.get(`http://localhost:4000/ldss/theraphist/gettheraphist/${theraphistId}`, {
+            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/theraphist/gettheraphist/${theraphistId}`, {
                 headers: { Authorization: `bearer ${token}` }
             });
             setTheraphistdetail(response.data.theraphist);
@@ -101,7 +101,7 @@ const AdminViewTheraphist = () => {
     const approve = async (theraphistId) => {
         const token = localStorage.getItem("token");
         try {
-            await axios.post(`http://localhost:4000/ldss/admin/theraphist/accept/${theraphistId}`, {}, {
+            await axios.post(`${import.meta.env.VITE_SERVER_URL}/ldss/admin/theraphist/accept/${theraphistId}`, {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             fetchAllTheraphist();
@@ -114,7 +114,7 @@ const AdminViewTheraphist = () => {
     const rejectTheraphist = async (theraphistId) => {
         const token = localStorage.getItem("token");
         try {
-            await axios.delete(`http://localhost:4000/ldss/admin/theraphist/reject/${theraphistId}`, {
+            await axios.delete(`${import.meta.env.VITE_SERVER_URL}/ldss/admin/theraphist/reject/${theraphistId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             fetchAllTheraphist();
@@ -170,7 +170,7 @@ const AdminViewTheraphist = () => {
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     InputProps={{
-                                        startAdornment: ( <InputAdornment position="start"><SearchIcon color="primary" /></InputAdornment> ),
+                                        startAdornment: (<InputAdornment position="start"><SearchIcon color="primary" /></InputAdornment>),
                                     }}
                                 />
                             </Box>
@@ -193,7 +193,7 @@ const AdminViewTheraphist = () => {
                                                 filteredTherapists.map((therapist, index) => (
                                                     <TableRow key={therapist._id || index} sx={{ '&:last-child td, &:last-child th': { border: 0 }, '& td, & th': { border: 'none' } }}>
                                                         <TableCell component="th" scope="row">{index + 1}</TableCell>
-                                                        <TableCell align="left">{therapist.profilePic?.filename ? (<Avatar src={`http://localhost:4000/uploads/${therapist?.profilePic?.filename}`} />) : (<Avatar>{therapist?.name?.charAt(0).toUpperCase()}</Avatar>)}</TableCell>
+                                                        <TableCell align="left">{therapist.profilePic?.filename ? (<Avatar src={`${import.meta.env.VITE_SERVER_URL}/uploads/${therapist?.profilePic?.filename}`} />) : (<Avatar>{therapist?.name?.charAt(0).toUpperCase()}</Avatar>)}</TableCell>
                                                         <TableCell align="left">{therapist.name}</TableCell>
                                                         <TableCell align="left">{therapist.phone}</TableCell>
                                                         <TableCell align="left">{therapist.email}</TableCell>

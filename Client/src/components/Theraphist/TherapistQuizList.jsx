@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Button, CircularProgress, List,Paper, ListItem, ListItemText, Divider, Breadcrumbs, IconButton } from '@mui/material';
+import { Box, Typography, Button, CircularProgress, List, Paper, ListItem, ListItemText, Divider, Breadcrumbs, IconButton } from '@mui/material';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -33,7 +33,7 @@ const TherapistQuizList = () => {
         try {
             const token = localStorage.getItem('token');
             const response = await axios.get(
-                `http://localhost:4000/ldss/therapist/quizzes/child/${childId}`,
+                `${import.meta.env.VITE_SERVER_URL}/ldss/therapist/quizzes/child/${childId}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             if (response.data.success) {
@@ -49,12 +49,12 @@ const TherapistQuizList = () => {
         }
     };
 
-     const handleDeleteQuiz = async (quizId) => {
+    const handleDeleteQuiz = async (quizId) => {
         if (window.confirm("Are you sure you want to delete this quiz and all its attempts?")) {
             try {
                 const token = localStorage.getItem('token');
                 const response = await axios.delete(
-                    `http://localhost:4000/ldss/therapist/quiz/${quizId}`,
+                    `${import.meta.env.VITE_SERVER_URL}/ldss/therapist/quiz/${quizId}`,
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
                 if (response.data.success) {
@@ -62,11 +62,11 @@ const TherapistQuizList = () => {
                     // Remove the deleted quiz from the state
                     setQuizzes(quizzes.filter(q => q._id !== quizId));
                 } else {
-                     toast.error(response.data.message || "Failed to delete quiz.");
+                    toast.error(response.data.message || "Failed to delete quiz.");
                 }
             } catch (err) {
-                 console.error("Error deleting quiz:", err);
-                 toast.error(err.response?.data?.message || "An error occurred while deleting the quiz.");
+                console.error("Error deleting quiz:", err);
+                toast.error(err.response?.data?.message || "An error occurred while deleting the quiz.");
             }
         }
     };
@@ -74,19 +74,19 @@ const TherapistQuizList = () => {
 
     if (loading) {
         return (
-             <>
+            <>
                 <TherapistNavbar therapistDetails={therapistDetails} navigateToProfile={navigateToProfile} />
-                 <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
-                     <CircularProgress />
-                 </Box>
-             </>
+                <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
+                    <CircularProgress />
+                </Box>
+            </>
         );
     }
 
     if (error) {
         return (
             <>
-                 <TherapistNavbar theraphistdetails={therapistDetails} navigateToProfile={navigateToProfile} />
+                <TherapistNavbar theraphistdetails={therapistDetails} navigateToProfile={navigateToProfile} />
                 <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
                     <Typography color="error">{error}</Typography>
                 </Box>
@@ -98,22 +98,22 @@ const TherapistQuizList = () => {
     return (
         <>
             <TherapistNavbar theraphistdetails={therapistDetails} navigateToProfile={navigateToProfile} />
-                <Box display="flex" justifyContent="center" alignItems="center" sx={{ height: "46px", background: "#DBE8FA" }}>
-                    <Typography color='primary' textAlign="center" sx={{ fontSize: "18px", fontWeight: "600" }}>
-                        Quizzes 
-                    </Typography>
-                </Box>
+            <Box display="flex" justifyContent="center" alignItems="center" sx={{ height: "46px", background: "#DBE8FA" }}>
+                <Typography color='primary' textAlign="center" sx={{ fontSize: "18px", fontWeight: "600" }}>
+                    Quizzes
+                </Typography>
+            </Box>
 
-             <Box display="flex" justifyContent="start" alignItems="start" sx={{ mt: "30px", mx: "50px" }}>
+            <Box display="flex" justifyContent="start" alignItems="start" sx={{ mt: "30px", mx: "50px" }}>
                 <Breadcrumbs aria-label="breadcrumb" separator="›">
                     <Link to="/therapist/home" style={{ fontSize: "12px", fontWeight: "500", color: "#7F7F7F", textDecoration: "none" }}>
                         Home
                     </Link>
-                     <Link to="/therapist/home" style={{ fontSize: "12px", fontWeight: "500", color: "#7F7F7F", textDecoration: "none" }}>
+                    <Link to="/therapist/home" style={{ fontSize: "12px", fontWeight: "500", color: "#7F7F7F", textDecoration: "none" }}>
                         All Students
                     </Link>
                     <Typography color='primary' sx={{ fontSize: "12px", fontWeight: "500" }}>
-                       Quizzes
+                        Quizzes
                     </Typography>
                 </Breadcrumbs>
             </Box>
@@ -121,7 +121,7 @@ const TherapistQuizList = () => {
 
             <Box sx={{ p: 4, maxWidth: 800, mx: 'auto', mt: 3 }}>
                 <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-                     <Typography variant="h5" color="primary">
+                    <Typography variant="h5" color="primary">
                         Available Quizzes
                     </Typography>
                     <Button
@@ -143,21 +143,21 @@ const TherapistQuizList = () => {
                         {quizzes.map((quiz) => (
                             <React.Fragment key={quiz._id}>
                                 <ListItem
-                                     secondaryAction={
+                                    secondaryAction={
                                         <>
-                                             <Button
+                                            <Button
                                                 variant="outlined"
                                                 size="small"
                                                 sx={{ mr: 1, borderRadius: '20px' }}
                                                 onClick={() => navigate(`/therapist/child/${childId}/quizzes/attempts`)}
-                                             >
+                                            >
                                                 View Attempts
-                                             </Button>
-                                             <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteQuiz(quiz._id)}>
+                                            </Button>
+                                            <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteQuiz(quiz._id)}>
                                                 <DeleteIcon color="error" />
                                             </IconButton>
                                         </>
-                                     }
+                                    }
                                 >
                                     <ListItemText
                                         primary={quiz.title}

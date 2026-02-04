@@ -26,7 +26,7 @@ const ParentTheraphistLearning = () => {
         try {
             const token = localStorage.getItem("token");
             if (!token) throw new Error("No authentication token found");
-            
+
             if (!learningPlan._id) {
                 toast.error("Learning plan ID is missing. Cannot complete activity.");
                 return;
@@ -43,7 +43,7 @@ const ParentTheraphistLearning = () => {
 
             // FIXED: Send learningPlan._id instead of childId
             const response = await axios.put(
-                `http://localhost:4000/ldss/parent/completeactivity/${learningPlan._id}/${weekIndex}/${activityIndex}`,
+                `${import.meta.env.VITE_SERVER_URL}/ldss/parent/completeactivity/${learningPlan._id}/${weekIndex}/${activityIndex}`,
                 {},
                 {
                     headers: { Authorization: `Bearer ${token}` }
@@ -78,7 +78,7 @@ const ParentTheraphistLearning = () => {
 
             if (!childId) throw new Error("Missing child ID");
 
-            const url = `http://localhost:4000/ldss/parent/getstudentplantherapist/${therapistId}/${childId}`;
+            const url = `${import.meta.env.VITE_SERVER_URL}/ldss/parent/getstudentplantherapist/${therapistId}/${childId}`;
 
             const response = await axios.get(url, {
                 headers: { Authorization: `Bearer ${token}` }
@@ -171,8 +171,8 @@ const ParentTheraphistLearning = () => {
                     <Typography color="primary" variant="h5" sx={{ mb: 2 }}>
                         {error}
                     </Typography>
-                    <Button 
-                        variant="outlined" 
+                    <Button
+                        variant="outlined"
                         color="primary"
                         onClick={() => navigate(-1)}
                         sx={{ mt: 2 }}

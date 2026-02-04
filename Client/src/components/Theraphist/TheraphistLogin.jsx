@@ -17,7 +17,7 @@ const TheraphistLogin = () => {
     });
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
-    
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setData((prevData) => ({ ...prevData, [name]: value }));
@@ -26,15 +26,15 @@ const TheraphistLogin = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://localhost:4000/ldss/theraphist/login", data);
+            const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/ldss/theraphist/login`, data);
             const jwtToken = response.data.token;
             const message = response.data.message;
             if (!jwtToken) return;
             const decoded = jwtDecode(jwtToken);
-            const res = await axios.get(`http://localhost:4000/ldss/theraphist/gettheraphist/${decoded.id}`, {
+            const res = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/theraphist/gettheraphist/${decoded.id}`, {
                 headers: { Authorization: `Bearer ${jwtToken}` }
             });
-            
+
             if (res.data.theraphist.isAdminApproved == true) {
                 if (jwtToken && message === "theraphist logged in successfully" && res.data.theraphist.isAdminApproved == true) {
                     localStorage.setItem("token", jwtToken);
@@ -59,8 +59,8 @@ const TheraphistLogin = () => {
     return (
         <>
             <ParentNavbarSiginIn siginupStyle={{ background: "white", boxShadow: "none" }} />
-            <Box sx={{ 
-                backgroundImage: `url(${background})`, 
+            <Box sx={{
+                backgroundImage: `url(${background})`,
                 backgroundSize: 'cover',
                 minHeight: '100vh',
                 display: 'flex',
@@ -76,7 +76,7 @@ const TheraphistLogin = () => {
                         p: 4,
                         textAlign: 'center'
                     }}>
-                        <Typography variant="h4" color='primary' sx={{ 
+                        <Typography variant="h4" color='primary' sx={{
                             fontWeight: "700",
                             mb: 3,
                             position: 'relative',
@@ -95,8 +95,8 @@ const TheraphistLogin = () => {
                         <Box component="form" onSubmit={handleLogin} sx={{ mt: 3 }}>
                             <Box sx={{ mb: 3 }}>
                                 <Typography align="left" sx={{ mb: 1, fontWeight: 500 }}>Email</Typography>
-                                <input 
-                                    style={{ 
+                                <input
+                                    style={{
                                         width: '100%',
                                         padding: '12px 16px',
                                         borderRadius: '8px',
@@ -119,8 +119,8 @@ const TheraphistLogin = () => {
 
                             <Box sx={{ mb: 2, position: 'relative' }}>
                                 <Typography align="left" sx={{ mb: 1, fontWeight: 500 }}>Password</Typography>
-                                <input 
-                                    style={{ 
+                                <input
+                                    style={{
                                         width: '100%',
                                         padding: '12px 16px',
                                         borderRadius: '8px',
@@ -133,7 +133,7 @@ const TheraphistLogin = () => {
                                     type={showPassword ? 'text' : 'password'}
                                     required
                                 />
-                                <Box 
+                                <Box
                                     onClick={togglePasswordVisibility}
                                     sx={{
                                         position: 'absolute',
@@ -148,7 +148,7 @@ const TheraphistLogin = () => {
                             </Box>
 
                             <Box sx={{ textAlign: 'right', mb: 3 }}>
-                                <Link to="/therapist/forgotpassword" style={{ 
+                                <Link to="/therapist/forgotpassword" style={{
                                     textDecoration: "none",
                                     color: 'primary.main',
                                     fontSize: '14px',
@@ -158,11 +158,11 @@ const TheraphistLogin = () => {
                                 </Link>
                             </Box>
 
-                            <Button 
+                            <Button
                                 fullWidth
-                                variant='contained' 
-                                color='secondary' 
-                                sx={{ 
+                                variant='contained'
+                                color='secondary'
+                                sx={{
                                     borderRadius: "8px",
                                     height: "48px",
                                     textTransform: 'none',
@@ -180,7 +180,7 @@ const TheraphistLogin = () => {
 
                             <Typography sx={{ mt: 3 }}>
                                 Don't have an account?{' '}
-                                <Link to="/therapist/registration" style={{ 
+                                <Link to="/therapist/registration" style={{
                                     textDecoration: "none",
                                     color: 'primary.main',
                                     fontWeight: 600
@@ -192,7 +192,7 @@ const TheraphistLogin = () => {
                     </Box>
                 </Container>
             </Box>
-<Footer userRole="therapist" />        </>
+            <Footer userRole="therapist" />        </>
     )
 }
 

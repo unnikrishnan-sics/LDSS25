@@ -88,18 +88,18 @@ const TherapistViewActivityLibrary = () => {
         console.error("No token found");
         return;
       }
-      
+
       const decoded = jwtDecode(token);
-      
-      const response = await axios.get(`http://localhost:4000/ldss/theraphist/gettheraphist/${decoded.id}`, {
+
+      const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/theraphist/gettheraphist/${decoded.id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      
+
       if (response.data && response.data.theraphist) {
         const therapistData = response.data.theraphist;
-        
+
         // Validate before storing
         if (therapistData && therapistData._id) {
           try {
@@ -158,15 +158,15 @@ const TherapistViewActivityLibrary = () => {
       {/* Main Content */}
       <Box>
         {/* Header */}
-        <TheraphistNavbar 
+        <TheraphistNavbar
           theraphistdetails={therapistDetails}
-          navigateToProfile={navigateToProfile} 
+          navigateToProfile={navigateToProfile}
         />
-        
+
         <Box display="flex" justifyContent="center" alignItems="center" sx={{ height: "46px", background: "#DBE8FA" }}>
           <Typography color='primary' textAlign="center" sx={{ fontSize: "18px", fontWeight: "600" }}>Activity Library</Typography>
         </Box>
-        
+
         {/* Content Area */}
         <Box sx={{ background: "white", borderRadius: "8px", p: 3 }}>
           {/* Search and Breadcrumb */}

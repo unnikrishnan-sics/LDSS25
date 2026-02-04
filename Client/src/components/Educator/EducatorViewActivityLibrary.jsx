@@ -74,31 +74,31 @@ const EducatorViewActivityLibrary = () => {
     card.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     card.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
     card.category.toLowerCase().includes(searchTerm.toLowerCase())
-    
+
   );
-    const [educatorDetails, setEducatorDetails] = useState({});
-      const { id } = useParams();
+  const [educatorDetails, setEducatorDetails] = useState({});
+  const { id } = useParams();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
 
-    const fetchEducator = async () => {
-        const token = localStorage.getItem('token');
-        const decoded = jwtDecode(token);
-        const response = await axios.get(`http://localhost:4000/ldss/educator/geteducator/${decoded.id}`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        const educatorData = response.data.educator;
-        localStorage.setItem("educatorDetails", JSON.stringify(educatorData));
-        setEducatorDetails(educatorData);
-    };
-useEffect(() => {
-      const storedEducator = localStorage.getItem("educatorDetails");
-        if (storedEducator) {
-            setEducatorDetails(JSON.parse(storedEducator));
-        }
-        fetchEducator();
+  const fetchEducator = async () => {
+    const token = localStorage.getItem('token');
+    const decoded = jwtDecode(token);
+    const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/educator/geteducator/${decoded.id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const educatorData = response.data.educator;
+    localStorage.setItem("educatorDetails", JSON.stringify(educatorData));
+    setEducatorDetails(educatorData);
+  };
+  useEffect(() => {
+    const storedEducator = localStorage.getItem("educatorDetails");
+    if (storedEducator) {
+      setEducatorDetails(JSON.parse(storedEducator));
+    }
+    fetchEducator();
 
     const chatId = parseInt(id);
     if (chatId && dummyChats[chatId]) {
@@ -113,10 +113,10 @@ useEffect(() => {
       {/* Main Content */}
       <Box>
         {/* Header */}
-      <EducatorNavbar educatorDetails={educatorDetails} navigateToProfile={() => navigate('/educator/profile')} />
-<Box display="flex" justifyContent="center" alignItems="center" sx={{ height: "46px", background: "#DBE8FA" }}>
-                    <Typography color='primary' textAlign="center" sx={{ fontSize: "18px", fontWeight: "600" }}>All Students</Typography>
-                </Box>
+        <EducatorNavbar educatorDetails={educatorDetails} navigateToProfile={() => navigate('/educator/profile')} />
+        <Box display="flex" justifyContent="center" alignItems="center" sx={{ height: "46px", background: "#DBE8FA" }}>
+          <Typography color='primary' textAlign="center" sx={{ fontSize: "18px", fontWeight: "600" }}>All Students</Typography>
+        </Box>
         {/* Content Area */}
         <Box sx={{ background: "white", borderRadius: "8px", p: 3 }}>
           {/* Search and Breadcrumb */}
@@ -213,14 +213,14 @@ useEffect(() => {
 
                     <Typography variant="body2" sx={{
                       color: "#384371",
-                      
+
                       fontSize: "13px"
                     }}>
                       {card.category}
                     </Typography>
                   </CardContent>
 
-                  
+
                 </Card>
               </Grid>
             ))}

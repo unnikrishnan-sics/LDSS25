@@ -79,10 +79,10 @@ const TherapistChat = () => {
       let endpoint = '';
 
       if (userType === 'parent') {
-        endpoint = `http://localhost:4000/ldss/parent/getparent/${participantId}`;
+        endpoint = `${import.meta.env.VITE_SERVER_URL}/ldss/parent/getparent/${participantId}`;
         setStudentName(location.state?.studentName || '');
       } else if (userType === 'educator') {
-        endpoint = `http://localhost:4000/ldss/educator/geteducator/${participantId}`;
+        endpoint = `${import.meta.env.VITE_SERVER_URL}/ldss/educator/geteducator/${participantId}`;
         setStudentName(location.state?.studentName || ''); // Student name might be null for educator chats
       } else {
         return; // Invalid userType or missing
@@ -122,7 +122,7 @@ const TherapistChat = () => {
 
       // First try to find existing conversation
       const existingConvs = await axios.get(
-        `http://localhost:4000/ldss/conversations/user/${therapistId}`,
+        `${import.meta.env.VITE_SERVER_URL}/ldss/conversations/user/${therapistId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -150,7 +150,7 @@ const TherapistChat = () => {
       }
 
       const newConv = await axios.post(
-        'http://localhost:4000/ldss/conversations',
+        `${import.meta.env.VITE_SERVER_URL}/ldss/conversations`,
         requestData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -170,7 +170,7 @@ const TherapistChat = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get(
-        `http://localhost:4000/ldss/conversations/${convId}`,
+        `${import.meta.env.VITE_SERVER_URL}/ldss/conversations/${convId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -216,7 +216,7 @@ const TherapistChat = () => {
 
       // Send message to backend
       await axios.post(
-        `http://localhost:4000/ldss/conversations/${conversationId}/messages`,
+        `${import.meta.env.VITE_SERVER_URL}/ldss/conversations/${conversationId}/messages`,
         newMsg, // newMsg now contains the student ID if it's a parent chat
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -252,7 +252,7 @@ const TherapistChat = () => {
         try {
           const decoded = jwtDecode(token);
           const therapistId = decoded.id;
-          const response = await axios.get(`http://localhost:4000/ldss/theraphist/gettheraphist/${therapistId}`, {
+          const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/theraphist/gettheraphist/${therapistId}`, {
             headers: { Authorization: `Bearer ${token}` }
           });
           if (response.data?.therapist) {
@@ -583,7 +583,7 @@ const TherapistChat = () => {
               )}
 
               {/* Message Input */}
-              <Divider sx={{backgroundColor: '#f0f0f0'}} />
+              <Divider sx={{ backgroundColor: '#f0f0f0' }} />
               <Box sx={{ p: 2, display: 'flex', alignItems: 'center' }}>
                 <TextField
                   fullWidth

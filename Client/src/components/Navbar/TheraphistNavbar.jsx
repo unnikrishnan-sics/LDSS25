@@ -73,18 +73,18 @@ const TheraphistNavbar = ({ homebg = {}, aboutBg = {}, profilebg = {}, navigateT
         setLoading(true);
         const token = localStorage.getItem("token");
         const therapistId = JSON.parse(localStorage.getItem("theraphistDetails"))?._id;
-        
+
         if (!therapistId) return;
-        
+
         const response = await axiosInstance.get(`/therapist/viewmeeting/${therapistId}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
         });
-        
+
         const fetchedMeetings = response.data.meetings || [];
         setMeetings(fetchedMeetings);
-        
+
         // Calculate upcoming meetings
         const upcoming = fetchedMeetings.filter(meeting => {
           const meetingDate = new Date(meeting.date);
@@ -93,7 +93,7 @@ const TheraphistNavbar = ({ homebg = {}, aboutBg = {}, profilebg = {}, navigateT
           nextWeek.setDate(today.getDate() + 7);
           return meetingDate >= today && meetingDate <= nextWeek;
         });
-        
+
         setUnreadCount(upcoming.length);
       } catch (error) {
         console.error("Error fetching meetings:", error);
@@ -217,7 +217,7 @@ const TheraphistNavbar = ({ homebg = {}, aboutBg = {}, profilebg = {}, navigateT
 
             {/* Notifications */}
             <IconButton onClick={handleOpenNotificationMenu} color="inherit">
-                <NotificationsOutlinedIcon color="primary" sx={{ height: '24px' }} />
+              <NotificationsOutlinedIcon color="primary" sx={{ height: '24px' }} />
             </IconButton>
 
             {/* Notifications Dropdown */}
@@ -297,7 +297,7 @@ const TheraphistNavbar = ({ homebg = {}, aboutBg = {}, profilebg = {}, navigateT
             <Box display={"flex"} justifyContent={"center"} alignItems={"center"} sx={{ gap: "30px" }}>
               <Typography color='secondary'>Hi, {theraphistdetails?.name}</Typography>
               {theraphistdetails?.profilePic?.filename ? (
-                <Avatar onClick={navigateToProfile} src={`http://localhost:4000/uploads/${theraphistdetails?.profilePic?.filename}`} alt={theraphistdetails?.name} />
+                <Avatar onClick={navigateToProfile} src={`${import.meta.env.VITE_SERVER_URL}/uploads/${theraphistdetails?.profilePic?.filename}`} alt={theraphistdetails?.name} />
               ) : (
                 <Avatar onClick={navigateToProfile}>{theraphistdetails?.name?.charAt(0)}</Avatar>
               )}

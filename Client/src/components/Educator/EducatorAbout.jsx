@@ -18,14 +18,14 @@ const EducatorAbout = () => {
     const aboutBg = {
         background: "#F6F7F9"
     }
-    
+
     const [educatorDetails, setEducatorDetails] = useState({});
     const navigate = useNavigate();
-    
+
     const fetchEducator = async () => {
         const token = localStorage.getItem('token');
         const decoded = jwtDecode(token);
-        const response = await axios.get(`http://localhost:4000/ldss/educator/geteducator/${decoded.id}`, {
+        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/educator/geteducator/${decoded.id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -50,9 +50,9 @@ const EducatorAbout = () => {
 
     return (
         <>
-            <EducatorNavbar aboutBg={aboutBg} educatorDetails={educatorDetails} navigateToProfile={navigateToProfile}/>
+            <EducatorNavbar aboutBg={aboutBg} educatorDetails={educatorDetails} navigateToProfile={navigateToProfile} />
             <Box display={"flex"} justifyContent={"center"} alignItems={"center"} sx={{
-                position: "relative", 
+                position: "relative",
                 ...aboutBg
             }}>
                 <Box component="img" src={background} sx={{ position: "absolute", bottom: 0, left: 0, objectFit: 'cover', zIndex: -10 }}></Box>
@@ -65,7 +65,7 @@ const EducatorAbout = () => {
                 </Box>
                 <Box component="img" alt='bg' src={aboutbg}></Box>
             </Box>
-            
+
             <Box display={"flex"} justifyContent={"space-around"} alignItems={"center"} sx={{ margin: "100px", position: "relative" }}>
                 <Box component="img" src={background2} sx={{ position: "absolute", top: -25, left: 570, objectFit: 'cover', zIndex: -1 }}></Box>
                 <Box component="img" src={background2} sx={{ position: "absolute", top: 310, left: 50, objectFit: 'cover', zIndex: -1 }}></Box>
@@ -76,12 +76,12 @@ const EducatorAbout = () => {
                 </Box>
             </Box>
 
-            <Box display={"flex"} alignItems={"center"} justifyContent={"space-around"} sx={{ 
+            <Box display={"flex"} alignItems={"center"} justifyContent={"space-around"} sx={{
                 height: "700px",
-                backgroundImage:`url(${aboutbg1})`,
-                backgroundRepeat:"no-repeat",
-                backgroundSize:"cover",
-                backgroundPosition:"center"
+                backgroundImage: `url(${aboutbg1})`,
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "cover",
+                backgroundPosition: "center"
             }}>
                 <Box display={"flex"} justifyContent={"center"} alignItems={"start"} flexDirection={"column"} sx={{ height: '400px', gap: "30px", margin: "0px 70px" }}>
                     <Box component="img" src={vector1} sx={{ height: "118px" }}></Box>
@@ -97,35 +97,35 @@ const EducatorAbout = () => {
             </Box>
 
             {/* Why Choose Us section */}
-            <Box sx={{ width:'100%', mb:"100px"}} display={"flex"} justifyContent={"center"} alignItems={"center"}>
-                <Box sx={{ gap:"20px" }} display={"flex"} alignItems={"start"} flexDirection={"column"}>
-                    <Typography variant='h3' color='primary' sx={{ fontSize: "32px", fontWeight: "600", marginTop:'20px' }}>Why Choose Us?</Typography>
-                    <Box display={"flex"} alignItems={"start"} flexDirection={"column"} sx={{marginLeft:'10px', gap:'25px'}}>
-                        <Box display={"flex"} alignItems={"start"} flexDirection={"column"} sx={{gap:'25px'}}>
+            <Box sx={{ width: '100%', mb: "100px" }} display={"flex"} justifyContent={"center"} alignItems={"center"}>
+                <Box sx={{ gap: "20px" }} display={"flex"} alignItems={"start"} flexDirection={"column"}>
+                    <Typography variant='h3' color='primary' sx={{ fontSize: "32px", fontWeight: "600", marginTop: '20px' }}>Why Choose Us?</Typography>
+                    <Box display={"flex"} alignItems={"start"} flexDirection={"column"} sx={{ marginLeft: '10px', gap: '25px' }}>
+                        <Box display={"flex"} alignItems={"start"} flexDirection={"column"} sx={{ gap: '25px' }}>
                             <Typography variant='h3' color='primary' sx={{ fontSize: "18px", fontWeight: "500" }}>1. AI-Powered Personalization:</Typography>
-                            <Typography variant='p' color='primary' sx={{ fontSize: "14px", fontWeight: "500", marginLeft:"10px"}}>Our intelligent system tailors learning plans based on each child's unique needs, ensuring personalized support to their progress</Typography>
+                            <Typography variant='p' color='primary' sx={{ fontSize: "14px", fontWeight: "500", marginLeft: "10px" }}>Our intelligent system tailors learning plans based on each child's unique needs, ensuring personalized support to their progress</Typography>
                         </Box>
-                        <Box display={"flex"} alignItems={"start"} flexDirection={"column"} sx={{gap:'25px'}}>
+                        <Box display={"flex"} alignItems={"start"} flexDirection={"column"} sx={{ gap: '25px' }}>
                             <Typography variant='h3' color='primary' sx={{ fontSize: "18px", fontWeight: "500" }}>2. Real-Time Progress Tracking:</Typography>
-                            <Typography variant='p' color='primary' sx={{ fontSize: "14px", fontWeight: "500", marginLeft:"10px"}}>Monitor your child's development with detailed insights, interactive reports, and AI-driven analytics to measure improvement over time.</Typography>
+                            <Typography variant='p' color='primary' sx={{ fontSize: "14px", fontWeight: "500", marginLeft: "10px" }}>Monitor your child's development with detailed insights, interactive reports, and AI-driven analytics to measure improvement over time.</Typography>
                         </Box>
-                        <Box display={"flex"} alignItems={"start"} flexDirection={"column"} sx={{gap:'25px'}}>
+                        <Box display={"flex"} alignItems={"start"} flexDirection={"column"} sx={{ gap: '25px' }}>
                             <Typography variant='h3' color='primary' sx={{ fontSize: "18px", fontWeight: "500" }}>3. Expert-Guided Resources:</Typography>
-                            <Typography variant='p' color='primary' sx={{ fontSize: "14px", fontWeight: "500", marginLeft:"10px" }}>Gain access to a curated library of therapist-approved activities, exercises, and tools designed to enhance learning and therapy.</Typography>
+                            <Typography variant='p' color='primary' sx={{ fontSize: "14px", fontWeight: "500", marginLeft: "10px" }}>Gain access to a curated library of therapist-approved activities, exercises, and tools designed to enhance learning and therapy.</Typography>
                         </Box>
-                        <Box display={"flex"} alignItems={"start"} flexDirection={"column"} sx={{gap:'25px'}}>
+                        <Box display={"flex"} alignItems={"start"} flexDirection={"column"} sx={{ gap: '25px' }}>
                             <Typography variant='h3' color='primary' sx={{ fontSize: "18px", fontWeight: "500" }}>4. User-Friendly & Secure:</Typography>
-                            <Typography variant='p' color='primary' sx={{ fontSize: "14px", fontWeight: "500", marginLeft:"10px" }}>Our platform is built with an intuitive interface, ensuring ease of use while prioritizing data security and privacy for all users.</Typography>
+                            <Typography variant='p' color='primary' sx={{ fontSize: "14px", fontWeight: "500", marginLeft: "10px" }}>Our platform is built with an intuitive interface, ensuring ease of use while prioritizing data security and privacy for all users.</Typography>
                         </Box>
-                        <Box display={"flex"} alignItems={"start"} flexDirection={"column"} sx={{gap:'25px'}}>
+                        <Box display={"flex"} alignItems={"start"} flexDirection={"column"} sx={{ gap: '25px' }}>
                             <Typography variant='h3' color='primary' sx={{ fontSize: "18px", fontWeight: "500" }}>5. Inclusive & Supportive Community:</Typography>
-                            <Typography variant='p' color='primary' sx={{ fontSize: "14px", fontWeight: "500", marginLeft:"10px" }}>Join a network of professionals to empowering children with learning disabilities, fostering growth, confidence, and lifelong success.</Typography>
+                            <Typography variant='p' color='primary' sx={{ fontSize: "14px", fontWeight: "500", marginLeft: "10px" }}>Join a network of professionals to empowering children with learning disabilities, fostering growth, confidence, and lifelong success.</Typography>
                         </Box>
                     </Box>
                 </Box>
             </Box>
 
-<Footer userRole="educator" />        </>
+            <Footer userRole="educator" />        </>
     )
 }
 

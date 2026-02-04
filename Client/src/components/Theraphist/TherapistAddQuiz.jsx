@@ -75,24 +75,24 @@ const TherapistAddQuiz = () => {
     };
 
     const addOption = (qIndex) => {
-         const newQuestions = [...quizData.questions];
-         newQuestions[qIndex].options.push('');
-         setQuizData({ ...quizData, questions: newQuestions });
+        const newQuestions = [...quizData.questions];
+        newQuestions[qIndex].options.push('');
+        setQuizData({ ...quizData, questions: newQuestions });
     };
 
     const removeOption = (qIndex, oIndex) => {
         const newQuestions = [...quizData.questions];
         if (newQuestions[qIndex].options.length > 2) { // Keep minimum 2 options
             newQuestions[qIndex].options.splice(oIndex, 1);
-             // Adjust correct answer index if it was the removed option or an index higher than the removed one
+            // Adjust correct answer index if it was the removed option or an index higher than the removed one
             if (newQuestions[qIndex].correctAnswerIndex === oIndex) {
                 newQuestions[qIndex].correctAnswerIndex = 0; // Reset to first option
             } else if (newQuestions[qIndex].correctAnswerIndex > oIndex) {
-                 newQuestions[qIndex].correctAnswerIndex -= 1;
+                newQuestions[qIndex].correctAnswerIndex -= 1;
             }
             setQuizData({ ...quizData, questions: newQuestions });
         } else {
-             toast.info("A question must have at least 2 options.");
+            toast.info("A question must have at least 2 options.");
         }
     };
 
@@ -103,7 +103,7 @@ const TherapistAddQuiz = () => {
         try {
             const token = localStorage.getItem('token');
             console.log(therapistDetails._id);
-            
+
             const payload = {
                 childId: childId,
                 title: quizData.title,
@@ -111,31 +111,31 @@ const TherapistAddQuiz = () => {
                 questions: quizData.questions
                     // Basic trimming
                     .map(q => ({
-                         ...q,
-                         questionText: q.questionText.trim(),
-                         options: q.options.map(opt => opt.trim())
+                        ...q,
+                        questionText: q.questionText.trim(),
+                        options: q.options.map(opt => opt.trim())
                     }))
                     // Filter out empty questions or options (optional, backend validates too)
                     .filter(q => q.questionText && q.options.every(opt => opt !== '') && q.options.length >= 2),
             };
 
             if (payload.questions.length < 5) {
-                 toast.error("Please ensure you have at least 5 questions, and all questions/options are filled.");
-                 setLoading(false);
-                 return;
+                toast.error("Please ensure you have at least 5 questions, and all questions/options are filled.");
+                setLoading(false);
+                return;
             }
-             // Deeper validation: check correct answer index validity relative to options length
-             for(const q of payload.questions) {
-                 if (q.correctAnswerIndex < 0 || q.correctAnswerIndex >= q.options.length) {
-                      toast.error(`Question "${q.questionText}" has an invalid correct answer selection.`);
-                      setLoading(false);
-                      return;
-                 }
-             }
+            // Deeper validation: check correct answer index validity relative to options length
+            for (const q of payload.questions) {
+                if (q.correctAnswerIndex < 0 || q.correctAnswerIndex >= q.options.length) {
+                    toast.error(`Question "${q.questionText}" has an invalid correct answer selection.`);
+                    setLoading(false);
+                    return;
+                }
+            }
 
 
             const response = await axios.post(
-                `http://localhost:4000/ldss/therapist/quizzes`,
+                `${import.meta.env.VITE_SERVER_URL}/ldss/therapist/quizzes`,
                 payload,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -144,7 +144,7 @@ const TherapistAddQuiz = () => {
                 toast.success("Quiz created successfully!");
                 navigate(`/therapist/child/${childId}/quizzes`); // Navigate to quiz list for this child
             } else {
-                 toast.error(response.data.message || "Failed to create quiz.");
+                toast.error(response.data.message || "Failed to create quiz.");
             }
 
         } catch (error) {
@@ -164,16 +164,16 @@ const TherapistAddQuiz = () => {
                 </Typography>
             </Box>
 
-             <Box display="flex" justifyContent="start" alignItems="start" sx={{ mt: "30px", mx: "50px" }}>
+            <Box display="flex" justifyContent="start" alignItems="start" sx={{ mt: "30px", mx: "50px" }}>
                 <Breadcrumbs aria-label="breadcrumb" separator="›">
                     <Link to="/therapist/home" style={{ fontSize: "12px", fontWeight: "500", color: "#7F7F7F", textDecoration: "none" }}>
                         Home
                     </Link>
-                     <Link to="/therapist/home" style={{ fontSize: "12px", fontWeight: "500", color: "#7F7F7F", textDecoration: "none" }}>
+                    <Link to="/therapist/home" style={{ fontSize: "12px", fontWeight: "500", color: "#7F7F7F", textDecoration: "none" }}>
                         All Students
                     </Link>
                     <Link to={`/therapist/child/${childId}/quizzes`} style={{ fontSize: "12px", fontWeight: "500", color: "#7F7F7F", textDecoration: "none" }}>
-                       Quizzes
+                        Quizzes
                     </Link>
                     <Typography color='primary' sx={{ fontSize: "12px", fontWeight: "500" }}>
                         Add New Quiz
@@ -201,7 +201,7 @@ const TherapistAddQuiz = () => {
                         <Typography variant="h6" color="secondary" gutterBottom>
                             Question {qIndex + 1}
                         </Typography>
-                         {quizData.questions.length > 5 && ( // Allow removal only if > 5 questions
+                        {quizData.questions.length > 5 && ( // Allow removal only if > 5 questions
                             <IconButton
                                 aria-label="remove question"
                                 size="small"
@@ -211,7 +211,7 @@ const TherapistAddQuiz = () => {
                             >
                                 <RemoveIcon />
                             </IconButton>
-                         )}
+                        )}
 
 
                         <TextField
@@ -255,11 +255,11 @@ const TherapistAddQuiz = () => {
                             </Box>
                         ))}
                         <Button
-                             variant='outlined'
-                             size="small"
-                             onClick={() => addOption(qIndex)}
-                             startIcon={<AddIcon />}
-                             sx={{mt: 1}}
+                            variant='outlined'
+                            size="small"
+                            onClick={() => addOption(qIndex)}
+                            startIcon={<AddIcon />}
+                            sx={{ mt: 1 }}
                         >
                             Add Option
                         </Button>

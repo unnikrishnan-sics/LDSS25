@@ -58,20 +58,20 @@ const EducatorNavbar = ({ homebg = {}, aboutBg = {}, contactbg = {}, navigateToP
     // Function to check if a meeting is upcoming
     const isMeetingUpcoming = (meeting) => {
         if (!meeting?.date || !meeting?.endTime) return false;
-        
+
         const now = new Date();
         const meetingDate = new Date(meeting.date);
-        
+
         // Compare dates first
         if (meetingDate.toDateString() !== now.toDateString()) {
             return meetingDate > now;
         }
-        
+
         // If same date, compare end time
         const [endHours, endMinutes] = meeting.endTime.split(':').map(Number);
         const meetingEndTime = new Date(meetingDate);
         meetingEndTime.setHours(endHours, endMinutes, 0, 0);
-        
+
         return meetingEndTime > now;
     };
 
@@ -81,18 +81,18 @@ const EducatorNavbar = ({ homebg = {}, aboutBg = {}, contactbg = {}, navigateToP
                 setLoading(true);
                 const token = localStorage.getItem("token");
                 const educatorId = JSON.parse(localStorage.getItem("educatorDetails"))?._id;
-                
+
                 if (!educatorId) return;
-                
+
                 const response = await axiosInstance.get(`/educator/viewmeeting/${educatorId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
                 });
-                
+
                 const fetchedMeetings = response.data.meetings || [];
                 setMeetings(fetchedMeetings);
-                
+
                 // Calculate upcoming meetings
                 const upcoming = fetchedMeetings.filter(meeting => isMeetingUpcoming(meeting));
                 setUnreadCount(upcoming.length);
@@ -125,10 +125,10 @@ const EducatorNavbar = ({ homebg = {}, aboutBg = {}, contactbg = {}, navigateToP
     const formatDate = (dateString) => {
         if (!dateString) return '';
         const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', { 
-            weekday: 'short', 
-            month: 'short', 
-            day: 'numeric' 
+        return date.toLocaleDateString('en-US', {
+            weekday: 'short',
+            month: 'short',
+            day: 'numeric'
         });
     };
 
@@ -326,7 +326,7 @@ const EducatorNavbar = ({ homebg = {}, aboutBg = {}, contactbg = {}, navigateToP
                         <Box display={"flex"} justifyContent={"center"} alignItems={"center"} sx={{ gap: "30px" }}>
                             <Typography color='secondary'>Hi, {educatorDetails.name}</Typography>
                             {educatorDetails?.profilePic?.filename ? (
-                                <Avatar onClick={navigateToProfile} src={`http://localhost:4000/uploads/${educatorDetails?.profilePic?.filename}`} alt={educatorDetails?.name} />
+                                <Avatar onClick={navigateToProfile} src={`${import.meta.env.VITE_SERVER_URL}/uploads/${educatorDetails?.profilePic?.filename}`} alt={educatorDetails?.name} />
                             ) : (
                                 <Avatar onClick={navigateToProfile}>{educatorDetails?.name?.charAt(0)}</Avatar>
                             )}

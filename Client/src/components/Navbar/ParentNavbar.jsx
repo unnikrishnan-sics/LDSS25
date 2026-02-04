@@ -73,61 +73,61 @@ const ParentNavbar = ({ homebg = {}, aboutBg = {}, profilebg = {}, navigateToPro
     const location = useLocation();
 
     useEffect(() => {
-const fetchMeetings = async () => {
-    try {
-        setLoading(true);
-        const token = localStorage.getItem("token");
-        const parentId = (JSON.parse(localStorage.getItem("parentDetails"))?._id);
-        
-        if (!parentId) {
-            console.log("No parent ID found");
-            return;
-        }
-        
-        const response = await axiosInstance.get(`/parent/getallmeeting/${parentId}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
+        const fetchMeetings = async () => {
+            try {
+                setLoading(true);
+                const token = localStorage.getItem("token");
+                const parentId = (JSON.parse(localStorage.getItem("parentDetails"))?._id);
+
+                if (!parentId) {
+                    console.log("No parent ID found");
+                    return;
+                }
+
+                const response = await axiosInstance.get(`/parent/getallmeeting/${parentId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                // console.log("API Response:", response.data); // Debug log
+
+                if (!response.data || !response.data.meetings) {
+                    // console.log("No meetings data in response");
+                    setMeetings([]);
+                    setUnreadCount(0);
+                    return;
+                }
+
+                const currentDateTime = new Date();
+                const upcomingMeetings = response.data.meetings.filter(meeting => {
+                    if (!meeting.date || !meeting.endTime) return false;
+
+                    const meetingDate = new Date(meeting.date);
+                    const [hours, minutes] = meeting.endTime.split(':');
+
+                    const meetingEndDateTime = new Date(
+                        meetingDate.getFullYear(),
+                        meetingDate.getMonth(),
+                        meetingDate.getDate(),
+                        parseInt(hours, 10),
+                        parseInt(minutes, 10)
+                    );
+
+                    return meetingEndDateTime > currentDateTime;
+                });
+
+                // console.log("Upcoming meetings:", upcomingMeetings); // Debug log
+                setMeetings(upcomingMeetings);
+                setUnreadCount(upcomingMeetings.length);
+            } catch (error) {
+                console.error("Error fetching meetings:", error);
+                setMeetings([]);
+                setUnreadCount(0);
+            } finally {
+                setLoading(false);
             }
-        });
-
-        // console.log("API Response:", response.data); // Debug log
-        
-        if (!response.data || !response.data.meetings) {
-            // console.log("No meetings data in response");
-            setMeetings([]);
-            setUnreadCount(0);
-            return;
-        }
-
-        const currentDateTime = new Date();
-        const upcomingMeetings = response.data.meetings.filter(meeting => {
-            if (!meeting.date || !meeting.endTime) return false;
-            
-            const meetingDate = new Date(meeting.date);
-            const [hours, minutes] = meeting.endTime.split(':');
-            
-            const meetingEndDateTime = new Date(
-                meetingDate.getFullYear(),
-                meetingDate.getMonth(),
-                meetingDate.getDate(),
-                parseInt(hours, 10),
-                parseInt(minutes, 10)
-            );
-            
-            return meetingEndDateTime > currentDateTime;
-        });
-
-        // console.log("Upcoming meetings:", upcomingMeetings); // Debug log
-        setMeetings(upcomingMeetings);
-        setUnreadCount(upcomingMeetings.length);
-    } catch (error) {
-        console.error("Error fetching meetings:", error);
-        setMeetings([]);
-        setUnreadCount(0);
-    } finally {
-        setLoading(false);
-    }
-};
+        };
 
         fetchMeetings();
     }, []);
@@ -174,14 +174,14 @@ const fetchMeetings = async () => {
     };
 
     return (
-        <AppBar position="static" sx={{ 
-            backgroundColor: 'transparent', 
-            boxShadow: "none", 
-            backgroundImage: `url(${contactbg})`, 
-            ...profilebg, 
-            ...aboutBg, 
-            ...homebg, 
-            zIndex: 100 
+        <AppBar position="static" sx={{
+            backgroundColor: 'transparent',
+            boxShadow: "none",
+            backgroundImage: `url(${contactbg})`,
+            ...profilebg,
+            ...aboutBg,
+            ...homebg,
+            zIndex: 100
         }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters sx={{
@@ -280,33 +280,33 @@ const fetchMeetings = async () => {
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <Box sx={{ 
-                        flexGrow: 1, 
-                        display: { xs: 'none', md: 'flex' }, 
-                        justifyContent: 'center', 
-                        gap: "40px" 
+                    <Box sx={{
+                        flexGrow: 1,
+                        display: { xs: 'none', md: 'flex' },
+                        justifyContent: 'center',
+                        gap: "40px"
                     }}>
                         {pages.map((page) => (
-                            <Link 
+                            <Link
                                 style={{ textDecoration: "none" }}
                                 key={page.label}
                                 to={page.path}
                             >
-                                <Typography 
+                                <Typography
                                     sx={{
-                                        my: 2, 
-                                        fontSize: "14px", 
-                                        fontWeight: "500", 
-                                        display: 'block', 
-                                        textTransform: "inherit", 
-                                        borderBottom: location.pathname === page.path ? "1px solid #1967D2" : "none", 
+                                        my: 2,
+                                        fontSize: "14px",
+                                        fontWeight: "500",
+                                        display: 'block',
+                                        textTransform: "inherit",
+                                        borderBottom: location.pathname === page.path ? "1px solid #1967D2" : "none",
                                         '&:hover': {
                                             borderBottom: "1px solid #1967D2",
                                             color: '#1967D2'
                                         },
                                         color: location.pathname === page.path ? '#1967D2' : 'inherit'
                                     }}
-                                > 
+                                >
                                     {page.label}
                                 </Typography>
                             </Link>
@@ -325,60 +325,60 @@ const fetchMeetings = async () => {
                         {/* Notifications */}
                         <Tooltip title="Notifications">
                             <IconButton onClick={handleOpenNotificationMenu} color="inherit">
-                                    <NotificationsOutlinedIcon color="primary" sx={{ height: '24px' }} />
+                                <NotificationsOutlinedIcon color="primary" sx={{ height: '24px' }} />
                             </IconButton>
                         </Tooltip>
 
-{/* Notifications Dropdown */}
-<Menu
-    anchorEl={notificationAnchor}
-    open={Boolean(notificationAnchor)}
-    onClose={handleCloseNotificationMenu}
-    PaperProps={{
-        style: {
-            width: '350px',
-            maxHeight: '400px',
-            padding: '10px'
-        },
-    }}
->
-    <Typography variant="h6" sx={{ p: 2, fontWeight: 'bold', color: '#1967D2' }}>
-        Upcoming Meetings
-    </Typography>
-    <Divider />
-    {loading ? (
-        <Typography sx={{ p: 2 }}>Loading meetings...</Typography>
-    ) : meetings.length === 0 ? (
-        <Typography sx={{ p: 2 }}>No upcoming meetings scheduled</Typography>
-    ) : (
-        <List>
-            {meetings.map((meeting, index) => {
-                const participant = getMeetingParticipant(meeting);
-                return (
-                    <React.Fragment key={index}>
-                        <ListItem alignItems="flex-start">
-                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                <EventIcon color="primary" sx={{ mr: 1 }} />
-                            </Box>
-                            <ListItemText
-                                primary={
-                                    <Typography variant="subtitle1" color="text.primary">
-                                        {meeting.meetingTitle || "Meeting"}
-                                    </Typography>
-                                }
-                                secondary={
-                                    <>
-                                        <Typography
-                                            component="span"
-                                            variant="body2"
-                                            color="text.primary"
-                                            display="block"
-                                        >
-                                            {meeting.date ? new Date(meeting.date).toLocaleDateString() : "No date"} | 
-                                            {meeting.startTime ? formatTime(meeting.startTime) : "No start time"} - 
-                                            {meeting.endTime ? formatTime(meeting.endTime) : "No end time"}
-                                        </Typography>
-                                        {/* {participant && (
+                        {/* Notifications Dropdown */}
+                        <Menu
+                            anchorEl={notificationAnchor}
+                            open={Boolean(notificationAnchor)}
+                            onClose={handleCloseNotificationMenu}
+                            PaperProps={{
+                                style: {
+                                    width: '350px',
+                                    maxHeight: '400px',
+                                    padding: '10px'
+                                },
+                            }}
+                        >
+                            <Typography variant="h6" sx={{ p: 2, fontWeight: 'bold', color: '#1967D2' }}>
+                                Upcoming Meetings
+                            </Typography>
+                            <Divider />
+                            {loading ? (
+                                <Typography sx={{ p: 2 }}>Loading meetings...</Typography>
+                            ) : meetings.length === 0 ? (
+                                <Typography sx={{ p: 2 }}>No upcoming meetings scheduled</Typography>
+                            ) : (
+                                <List>
+                                    {meetings.map((meeting, index) => {
+                                        const participant = getMeetingParticipant(meeting);
+                                        return (
+                                            <React.Fragment key={index}>
+                                                <ListItem alignItems="flex-start">
+                                                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                        <EventIcon color="primary" sx={{ mr: 1 }} />
+                                                    </Box>
+                                                    <ListItemText
+                                                        primary={
+                                                            <Typography variant="subtitle1" color="text.primary">
+                                                                {meeting.meetingTitle || "Meeting"}
+                                                            </Typography>
+                                                        }
+                                                        secondary={
+                                                            <>
+                                                                <Typography
+                                                                    component="span"
+                                                                    variant="body2"
+                                                                    color="text.primary"
+                                                                    display="block"
+                                                                >
+                                                                    {meeting.date ? new Date(meeting.date).toLocaleDateString() : "No date"} |
+                                                                    {meeting.startTime ? formatTime(meeting.startTime) : "No start time"} -
+                                                                    {meeting.endTime ? formatTime(meeting.endTime) : "No end time"}
+                                                                </Typography>
+                                                                {/* {participant && (
                                             <Typography
                                                 component="span"
                                                 variant="body2"
@@ -398,17 +398,17 @@ const fetchMeetings = async () => {
                                                 Child: {meeting.childId.name}
                                             </Typography>
                                         )} */}
-                                    </>
-                                }
-                            />
-                        </ListItem>
-                        {index < meetings.length - 1 && <Divider variant="inset" component="li" />}
-                    </React.Fragment>
-                );
-            })}
-        </List>
-    )}
-</Menu>
+                                                            </>
+                                                        }
+                                                    />
+                                                </ListItem>
+                                                {index < meetings.length - 1 && <Divider variant="inset" component="li" />}
+                                            </React.Fragment>
+                                        );
+                                    })}
+                                </List>
+                            )}
+                        </Menu>
 
                         {/* User Profile */}
                         <Box display="flex" justifyContent="center" alignItems="center" sx={{ gap: "15px" }}>
@@ -418,9 +418,9 @@ const fetchMeetings = async () => {
                             <Tooltip title="Profile">
                                 <IconButton onClick={navigateToProfile} sx={{ p: 0 }}>
                                     {parentdetails?.profilePic?.filename ? (
-                                        <Avatar 
-                                            src={`http://localhost:4000/uploads/${parentdetails.profilePic.filename}`} 
-                                            alt={parentdetails.name} 
+                                        <Avatar
+                                            src={`${import.meta.env.VITE_SERVER_URL}/uploads/${parentdetails.profilePic.filename}`}
+                                            alt={parentdetails.name}
                                         />
                                     ) : (
                                         <Avatar>{parentdetails?.name?.charAt(0)}</Avatar>

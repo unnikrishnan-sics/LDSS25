@@ -8,8 +8,8 @@ import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import { Avatar } from '@mui/material';
 
-const AdminViewSingleTherapist = ({theraphistdetail,handleTheraphistClose,approve,rejectTheraphist}) => {
-  
+const AdminViewSingleTherapist = ({ theraphistdetail, handleTheraphistClose, approve, rejectTheraphist }) => {
+
   // Helper function to display value or "Not Updated"
   const displayValue = (value) => {
     return value ? value : "Not Updated";
@@ -21,14 +21,14 @@ const AdminViewSingleTherapist = ({theraphistdetail,handleTheraphistClose,approv
         {theraphistdetail.isAdminApproved ? (
           <Typography color='primary' variant='h5' sx={{ fontSize: "18px", fontWeight: "600" }}>Therapist Details </Typography>
         ) : (
-          <Typography color='primary' variant='h5' sx={{ fontSize: "18px", fontWeight: "600" }}>Therapist Request Details </Typography>    
+          <Typography color='primary' variant='h5' sx={{ fontSize: "18px", fontWeight: "600" }}>Therapist Request Details </Typography>
         )}
         <CloseIcon onClick={handleTheraphistClose} />
       </Box>
       <Box display={"flex"} alignItems={"center"} justifyContent={"center"} flexDirection={"column"} sx={{ p: "0px 10px", mt: "40px", gap: "15px" }}>
-        <Avatar 
-          sx={{ height: "150px", width: "150px" }} 
-          src={theraphistdetail.profilePic?.filename ? `http://localhost:4000/uploads/${theraphistdetail.profilePic?.filename}` : ""}
+        <Avatar
+          sx={{ height: "150px", width: "150px" }}
+          src={theraphistdetail.profilePic?.filename ? `${import.meta.env.VITE_SERVER_URL}/uploads/${theraphistdetail.profilePic?.filename}` : ""}
         ></Avatar>
         <Typography color='primary' variant='h5' sx={{ fontSize: "24px", fontWeight: "500" }}>
           {displayValue(theraphistdetail.name)}
@@ -96,21 +96,21 @@ const AdminViewSingleTherapist = ({theraphistdetail,handleTheraphistClose,approv
           </Box>
         </Box>
       </Box>
-      
+
       {!theraphistdetail.isAdminApproved && (
         <Box display={"flex"} justifyContent={"center"} mt={2} mb={2} gap={3}>
-          <Button 
-            onClick={() => rejectTheraphist(theraphistdetail._id)} 
-            variant='outlined' 
-            color='secondary' 
+          <Button
+            onClick={() => rejectTheraphist(theraphistdetail._id)}
+            variant='outlined'
+            color='secondary'
             sx={{ borderRadius: "25px", marginTop: "20px", height: "40px", width: '200px', padding: '10px 35px' }}
           >
             Reject
           </Button>
-          <Button 
-            onClick={() => approve(theraphistdetail._id)} 
-            variant='contained' 
-            color='secondary' 
+          <Button
+            onClick={() => approve(theraphistdetail._id)}
+            variant='contained'
+            color='secondary'
             sx={{ borderRadius: "25px", marginTop: "20px", height: "40px", width: '200px', padding: '10px 35px' }}
           >
             Approve

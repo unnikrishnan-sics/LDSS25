@@ -40,26 +40,26 @@ const AdminEditActivity = () => {
     'Digital Literacy', 'Social-Emotional Learning'
   ];
 
-useEffect(() => {
-  const fetchActivity = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const res = await axios.get(`http://localhost:4000/ldss/admin/activity/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      const data = res.data.activity;
-      setActivityName(data.activityName || '');
-      setDescription(data.description || '');
-      setCategory(data.category || '');
-      setFileName(data.activityPhoto || 'No file chosen');
-    } catch (error) {
-      console.error('Error fetching activity:', error);
-    }
-  };
-  fetchActivity();
-}, [id]);
+  useEffect(() => {
+    const fetchActivity = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/admin/activity/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        const data = res.data.activity;
+        setActivityName(data.activityName || '');
+        setDescription(data.description || '');
+        setCategory(data.category || '');
+        setFileName(data.activityPhoto || 'No file chosen');
+      } catch (error) {
+        console.error('Error fetching activity:', error);
+      }
+    };
+    fetchActivity();
+  }, [id]);
 
 
   const handleFileChange = (e) => {
@@ -70,31 +70,31 @@ useEffect(() => {
     }
   };
 
-const handleSubmit = async () => {
-  if (!activityName || !description || !category) {
-    toast.warning("Please fill in all fields.");
-    return;
-  }
+  const handleSubmit = async () => {
+    if (!activityName || !description || !category) {
+      toast.warning("Please fill in all fields.");
+      return;
+    }
 
-  const formData = new FormData();
-  formData.append('activityName', activityName);
-  formData.append('description', description);
-  formData.append('category', category);
-  if (photo) formData.append('activityPhoto', photo);
+    const formData = new FormData();
+    formData.append('activityName', activityName);
+    formData.append('description', description);
+    formData.append('category', category);
+    if (photo) formData.append('activityPhoto', photo);
 
-  try {
-    await axios.put(`http://localhost:4000/ldss/admin/activities/${id}`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    toast.success('Activity updated successfully!');
-    setTimeout(() => navigate('/admin/viewactivitylibrary'), 1500);
-  } catch (error) {
-    console.error('Error updating activity:', error);
-    toast.error('Failed to update activity');
-  }
-};
+    try {
+      await axios.put(`${import.meta.env.VITE_SERVER_URL}/ldss/admin/activities/${id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      toast.success('Activity updated successfully!');
+      setTimeout(() => navigate('/admin/viewactivitylibrary'), 1500);
+    } catch (error) {
+      console.error('Error updating activity:', error);
+      toast.error('Failed to update activity');
+    }
+  };
 
   return (
     <Box display={"flex"} sx={{ background: "#F6F7F9", p: "13px", height: "100vh", width: "100%", overflowY: "hidden" }}>
@@ -134,19 +134,19 @@ const handleSubmit = async () => {
                 }}>
                   <Tooltip title={fileName}>
                     <Typography
-                        variant="body1"
-                        sx={{
+                      variant="body1"
+                      sx={{
                         flexGrow: 1,
                         overflow: 'hidden',
                         whiteSpace: 'nowrap',
                         textOverflow: 'ellipsis',
                         color: fileName === 'No file chosen' ? '#999' : 'inherit',
                         maxWidth: '200px' // Adjust as needed to control the visible width
-                        }}
+                      }}
                     >
-                        {fileName}
+                      {fileName}
                     </Typography>
-                    </Tooltip>
+                  </Tooltip>
 
                   <input
                     type="file"

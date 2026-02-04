@@ -47,14 +47,14 @@ const textFieldStyle = { height: "65px", width: "360px", display: "flex", flexDi
 // Helper function to format date as MM-DD-YYYY
 const formatDate = (dateString) => {
   if (!dateString) return '';
-  
+
   const date = new Date(dateString);
   if (isNaN(date.getTime())) return dateString; // Return original if invalid date
-  
+
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
   const year = date.getFullYear();
-  
+
   return `${month}-${day}-${year}`;
 };
 
@@ -67,12 +67,12 @@ const ParentChildProfile = () => {
     const parentdetails = localStorage.getItem("parentDetails");
     setParentdetails(JSON.parse(parentdetails));
   }, []);
-  
+
   const navigate = useNavigate();
   const navigateToProfile = () => {
     navigate('/parent/profile');
   }
-  
+
   // add child modal
   const [addChildOpen, setAddChildOpen] = React.useState(false);
   const handleAddChildOpen = () => setAddChildOpen(true);
@@ -97,7 +97,7 @@ const ParentChildProfile = () => {
     gender: "",
     dateOfBirth: ""
   });
-  
+
   const validateName = (name) => {
     const regex = /^[a-zA-Z\s]*$/;
     return regex.test(name);
@@ -113,31 +113,31 @@ const ParentChildProfile = () => {
     const today = new Date();
     return selectedDate <= today;
   };
-        const handleQuizClick = (studentId) => {
-        // --- START DEBUG LOGS ---
-        console.log("TherapistAllStudents - handleQuizClick called with:");
-        console.log("  studentId (child._id):", studentId);
-        // --- END DEBUG LOGS ---
+  const handleQuizClick = (studentId) => {
+    // --- START DEBUG LOGS ---
+    console.log("TherapistAllStudents - handleQuizClick called with:");
+    console.log("  studentId (child._id):", studentId);
+    // --- END DEBUG LOGS ---
 
-        // Basic validation before navigating
-        if ( !studentId ) {
-            console.error("Missing required chat details:", { parentId, studentId, studentName });
-            alert("Could not start chat: Missing parent or student information. Please try again.");
-            return;
-        }
+    // Basic validation before navigating
+    if (!studentId) {
+      console.error("Missing required chat details:", { parentId, studentId, studentName });
+      alert("Could not start chat: Missing parent or student information. Please try again.");
+      return;
+    }
 
-        navigate(`/parent/child/${studentId}/quizzes`, {
-            state: {
-                studentId: studentId,   // Pass the student's ID
-            }
-        });
-    };
+    navigate(`/parent/child/${studentId}/quizzes`, {
+      state: {
+        studentId: studentId,   // Pass the student's ID
+      }
+    });
+  };
   const handleChange = (e) => {
     const { name, value } = e.target;
-    
+
     // Validation checks
     let error = "";
-    
+
     if (name === "name") {
       if (!validateName(value)) {
         error = "Name should contain only alphabets";
@@ -145,7 +145,7 @@ const ParentChildProfile = () => {
         error = "Name is required";
       }
     }
-    
+
     if (name === "schoolName") {
       if (!validateSchoolName(value)) {
         error = "School name should contain only alphabets and spaces";
@@ -153,7 +153,7 @@ const ParentChildProfile = () => {
         error = "School name is required";
       }
     }
-    
+
     if (name === "dateOfBirth") {
       if (!value) {
         error = "Date of birth is required";
@@ -167,22 +167,22 @@ const ParentChildProfile = () => {
         error = "Gender is required";
       }
     }
-    
+
     setErrors({
       ...errors,
       [name]: error
     });
-    
+
     setChildData({
       ...childData,
       [name]: value
     });
   };
-  
+
   const validateForm = () => {
     let valid = true;
-    const newErrors = {...errors};
-    
+    const newErrors = { ...errors };
+
     if (!childData.name.trim()) {
       newErrors.name = "Name is required";
       valid = false;
@@ -190,7 +190,7 @@ const ParentChildProfile = () => {
       newErrors.name = "Name should contain only alphabets";
       valid = false;
     }
-    
+
     if (!childData.schoolName.trim()) {
       newErrors.schoolName = "School name is required";
       valid = false;
@@ -198,7 +198,7 @@ const ParentChildProfile = () => {
       newErrors.schoolName = "School name should contain only alphabets and spaces";
       valid = false;
     }
-    
+
     if (!childData.dateOfBirth) {
       newErrors.dateOfBirth = "Date of birth is required";
       valid = false;
@@ -206,25 +206,25 @@ const ParentChildProfile = () => {
       newErrors.dateOfBirth = "Date of birth cannot be in the future";
       valid = false;
     }
-    
+
     if (!childData.gender) {
       newErrors.gender = "Gender is required";
       valid = false;
     }
-    
+
     setErrors(newErrors);
     return valid;
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
-    
+
     const token = localStorage.getItem("token");
-    const child = await axios.post(`http://localhost:4000/ldss/parent/addchild/${parentdetails._id}`, childData, {
+    const child = await axios.post(`${import.meta.env.VITE_SERVER_URL}/ldss/parent/addchild/${parentdetails._id}`, childData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -247,12 +247,12 @@ const ParentChildProfile = () => {
   // getting all child details
   const [childDetails, setChildDetails] = useState([]);
   const [filteredChildDetails, setFilteredChildDetails] = useState([]);
-  
+
   const fetchAllChilds = async () => {
     const token = localStorage.getItem("token");
     const parentdetails = localStorage.getItem("parentDetails");
     const parent = JSON.parse(parentdetails);
-    const child = await axios.get(`http://localhost:4000/ldss/parent/getallchild`, {
+    const child = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/parent/getallchild`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -261,7 +261,7 @@ const ParentChildProfile = () => {
     setChildDetails(childsbyparent);
     setFilteredChildDetails(childsbyparent); // Initialize filtered list with all children
   };
-  
+
   useEffect(() => {
     fetchAllChilds();
   }, [])
@@ -283,14 +283,14 @@ const ParentChildProfile = () => {
       [name]: value
     })
   }
-  
+
   const fetchChildDetail = async (childId) => {
     handleEditChildOpen();
     setCurrentChildId(childId);
     const token = localStorage.getItem("token");
     const parentdetails = localStorage.getItem("parentDetails");
     const parent = JSON.parse(parentdetails);
-    const child = await axios.get(`http://localhost:4000/ldss/parent/getchild/${parent._id}/${childId}`, {
+    const child = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/parent/getchild/${parent._id}/${childId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -303,13 +303,13 @@ const ParentChildProfile = () => {
       gender: child.data.child.gender
     })
   }
-  
+
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
     const parentdetails = localStorage.getItem("parentDetails");
     const parent = JSON.parse(parentdetails);
-    const child = await axios.post(`http://localhost:4000/ldss/parent/updatechild/${parent._id}/${currentChildId}`, editchild, {
+    const child = await axios.post(`${import.meta.env.VITE_SERVER_URL}/ldss/parent/updatechild/${parent._id}/${currentChildId}`, editchild, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -320,7 +320,7 @@ const ParentChildProfile = () => {
       handleEditChildClose();
     }
   }
-  
+
   const [editChildOpen, setEditChildOpen] = React.useState(false);
   const handleEditChildOpen = () => {
     setEditChildOpen(true);
@@ -332,7 +332,7 @@ const ParentChildProfile = () => {
     const token = localStorage.getItem("token");
     const parentdetails = localStorage.getItem("parentDetails");
     const parent = JSON.parse(parentdetails);
-    const child = await axios.delete(`http://localhost:4000/ldss/parent/deletechild/${parent._id}/${childId}`, {
+    const child = await axios.delete(`${import.meta.env.VITE_SERVER_URL}/ldss/parent/deletechild/${parent._id}/${childId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -342,24 +342,24 @@ const ParentChildProfile = () => {
       fetchAllChilds();
     }
   }
-  
+
   // filter child by their name
   const [searchChild, setSearchChild] = useState("");
-  
+
   const handleSearchChild = (e) => {
     const searchTerm = e.target.value.toLowerCase();
     setSearchChild(searchTerm);
-    
+
     if (searchTerm === "") {
       setFilteredChildDetails(childDetails);
     } else {
-      const filtered = childDetails.filter(child => 
+      const filtered = childDetails.filter(child =>
         child.name.toLowerCase().includes(searchTerm)
       );
       setFilteredChildDetails(filtered);
     }
   }
-  
+
   // Get today's date in YYYY-MM-DD format for date input max attribute
   const getTodayDate = () => {
     const today = new Date();
@@ -368,7 +368,7 @@ const ParentChildProfile = () => {
     const day = String(today.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   };
-  
+
   return (
     <>
       <ParentNavbar aboutBg={aboutBg} parentdetails={parentdetails} navigateToProfile={navigateToProfile} />
@@ -384,11 +384,11 @@ const ParentChildProfile = () => {
             <Typography color='primary' sx={{ fontSize: "12px", fontWeight: "500" }}>Child</Typography>
           </Breadcrumbs>
           <Box display={"flex"} justifyContent={"center"} alignItems={"center"} gap={3}>
-            <Button 
-              endIcon={<AddOutlinedIcon />} 
-              variant='contained' 
-              color='secondary' 
-              sx={{ borderRadius: "25px", height: "40px", width: '200px', padding: '10px 35px' }} 
+            <Button
+              endIcon={<AddOutlinedIcon />}
+              variant='contained'
+              color='secondary'
+              sx={{ borderRadius: "25px", height: "40px", width: '200px', padding: '10px 35px' }}
               onClick={handleAddChildOpen}
             >Add Child</Button>
           </Box>
@@ -401,11 +401,11 @@ const ParentChildProfile = () => {
               <Grid key={index} item xs={12} md={6} width={"49%"}>
                 <Box display={"flex"} flexDirection={"column"} alignItems={"start"} sx={{ p: "50px 30px", height: "400px", background: "#F6F7F9", borderRadius: "25px", gap: "20px", width: "100%" }}>
                   <Box width={"100%"} display={"flex"} gap={5} justifyContent={"space-between"} alignItems={"center"}>
-                    <Typography sx={{ fontSize: "32px", fontWeight: "600" }} color='primary' 
+                    <Typography sx={{ fontSize: "32px", fontWeight: "600" }} color='primary'
                       onClick={() => { fetchChildDetail(child._id) }}
                     >{child.name} <BorderColorOutlinedIcon /></Typography>
                     <Typography sx={{ color: "#E52323" }}>
-                      <DeleteOutlinedIcon 
+                      <DeleteOutlinedIcon
                         onClick={() => handleDeleteChild(child._id)}
                       />
                     </Typography>
@@ -448,28 +448,28 @@ const ParentChildProfile = () => {
                     <Typography variant='h5' sx={{ fontSize: "18px", fontWeight: "500" }} color='secondary'>Description</Typography>
                     <Typography variant='p' sx={{ fontSize: "14px", fontWeight: "500" }} color='primary'>{child.description}</Typography>
                   </Box>
-                  
+
                   <Button
-                                                    startIcon={<QuizIcon />}
-                                                    variant='outlined'
-                                                    color='secondary'
-                                                    sx={{
-                                                        borderRadius: "25px",
-                                                        height: "45px",
-                                                        minWidth: '120px',
-                                                        fontSize: "14px",
-                                                        fontWeight: "500",
-                                                        mr:2
-                                                    }}
-                                                    // MODIFIED: Pass all required data to handleChatClick
-                                                    onClick={() => handleQuizClick( child._id)}
-                                                    // Disable the button if critical data is missing
-                                                    disabled={ !child._id}
-                                                >
-                                                    Quiz
-                                                </Button> 
+                    startIcon={<QuizIcon />}
+                    variant='outlined'
+                    color='secondary'
+                    sx={{
+                      borderRadius: "25px",
+                      height: "45px",
+                      minWidth: '120px',
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      mr: 2
+                    }}
+                    // MODIFIED: Pass all required data to handleChatClick
+                    onClick={() => handleQuizClick(child._id)}
+                    // Disable the button if critical data is missing
+                    disabled={!child._id}
+                  >
+                    Quiz
+                  </Button>
                 </Box>
-                
+
               </Grid>
             )
           })
@@ -510,7 +510,7 @@ const ParentChildProfile = () => {
                     <Stack direction="row" sx={{ display: "flex", gap: "15px", alignItems: "center" }}>
                       <div style={textFieldStyle}>
                         <label>Name*</label>
-                        <input 
+                        <input
                           style={{ height: "40px", borderRadius: "8px", border: errors.name ? "1px solid red" : "1px solid #CCCCCC", padding: '8px' }}
                           name='name'
                           type='text'
@@ -523,30 +523,30 @@ const ParentChildProfile = () => {
                         <label>Gender*</label>
                         <div style={{ display: 'flex', gap: '20px', alignItems: 'center', marginTop: '8px' }}>
                           <label>
-                            <input 
-                              type="radio" 
-                              name="gender" 
-                              value="male" 
-                              onChange={handleChange} 
-                              checked={childData.gender === "male"} 
+                            <input
+                              type="radio"
+                              name="gender"
+                              value="male"
+                              onChange={handleChange}
+                              checked={childData.gender === "male"}
                             /> Male
                           </label>
                           <label>
-                            <input 
-                              type="radio" 
-                              name="gender" 
-                              value="female" 
-                              onChange={handleChange} 
-                              checked={childData.gender === "female"} 
+                            <input
+                              type="radio"
+                              name="gender"
+                              value="female"
+                              onChange={handleChange}
+                              checked={childData.gender === "female"}
                             /> Female
                           </label>
                           <label>
-                            <input 
-                              type="radio" 
-                              name="gender" 
-                              value="others" 
-                              onChange={handleChange} 
-                              checked={childData.gender === "others"} 
+                            <input
+                              type="radio"
+                              name="gender"
+                              value="others"
+                              onChange={handleChange}
+                              checked={childData.gender === "others"}
                             /> Others
                           </label>
                         </div>
@@ -556,7 +556,7 @@ const ParentChildProfile = () => {
                     <Stack direction={'row'} sx={{ display: "flex", gap: "15px" }}>
                       <div style={textFieldStyle}>
                         <label>School Name*</label>
-                        <input 
+                        <input
                           style={{ height: "40px", borderRadius: "8px", border: errors.schoolName ? "1px solid red" : "1px solid #CCCCCC", padding: '8px' }}
                           name='schoolName'
                           value={childData.schoolName}
@@ -566,7 +566,7 @@ const ParentChildProfile = () => {
                       </div>
                       <div style={textFieldStyle}>
                         <label>Date Of Birth*</label>
-                        <input 
+                        <input
                           style={{ height: "40px", borderRadius: "8px", border: errors.dateOfBirth ? "1px solid red" : "1px solid #CCCCCC", padding: '8px' }}
                           name='dateOfBirth'
                           type='date'
@@ -579,7 +579,7 @@ const ParentChildProfile = () => {
                     </Stack>
                     <Box sx={{ display: "flex", flexDirection: "column", gap: "15px", width: "100%" }}>
                       <label>Description</label>
-                      <textarea 
+                      <textarea
                         style={{ height: "70px", borderRadius: "8px", border: "1px solid #CCCCCC", padding: '8px' }}
                         name='description'
                         value={childData.description}
@@ -588,9 +588,9 @@ const ParentChildProfile = () => {
                     </Box>
                   </Box>
                   <Box display={'flex'} alignItems={'center'} justifyContent={'center'} flexDirection={'column'} sx={{ width: '253px', height: "93px", gap: '10px', mt: "70px" }}>
-                    <Button 
-                      variant='contained' 
-                      color='secondary' 
+                    <Button
+                      variant='contained'
+                      color='secondary'
                       sx={{ borderRadius: "25px", marginTop: "20px", height: "40px", width: '200px', padding: '10px 35px' }}
                       onClick={handleSubmit}
                     >Confirm</Button>
@@ -631,7 +631,7 @@ const ParentChildProfile = () => {
                     <Stack direction="row" sx={{ display: "flex", gap: "15px", alignItems: "center" }}>
                       <div style={textFieldStyle}>
                         <label>Name</label>
-                        <input 
+                        <input
                           style={{ height: "40px", borderRadius: "8px", border: "1px solid #CCCCCC", padding: '8px' }}
                           name='name'
                           type='text'
@@ -655,7 +655,7 @@ const ParentChildProfile = () => {
                     <Stack direction={'row'} sx={{ display: "flex", gap: "15px" }}>
                       <div style={textFieldStyle}>
                         <label>School Name</label>
-                        <input 
+                        <input
                           style={{ height: "40px", borderRadius: "8px", border: "1px solid #CCCCCC", padding: '8px' }}
                           name='schoolName'
                           onChange={handleEditChange}
@@ -664,7 +664,7 @@ const ParentChildProfile = () => {
                       </div>
                       <div style={textFieldStyle}>
                         <label>Date Of Birth</label>
-                        <input 
+                        <input
                           style={{ height: "40px", borderRadius: "8px", border: "1px solid #CCCCCC", padding: '8px' }}
                           name='dateOfBirth'
                           type='date'
@@ -676,7 +676,7 @@ const ParentChildProfile = () => {
                     </Stack>
                     <Box sx={{ display: "flex", flexDirection: "column", gap: "15px", width: "100%" }}>
                       <label>Description</label>
-                      <textarea 
+                      <textarea
                         style={{ height: "70px", borderRadius: "8px", border: "1px solid #CCCCCC", padding: '8px' }}
                         name='description'
                         onChange={handleEditChange}
@@ -685,15 +685,15 @@ const ParentChildProfile = () => {
                     </Box>
                   </Box>
                   <Box display={'flex'} alignItems={'center'} justifyContent={'center'} sx={{ width: '253px', height: "93px", gap: '10px', mt: "70px" }}>
-                    <Button 
-                      variant='outlined' 
-                      color='secondary' 
+                    <Button
+                      variant='outlined'
+                      color='secondary'
                       sx={{ borderRadius: "25px", marginTop: "20px", height: "40px", width: '200px', padding: '10px 35px' }}
                       onClick={handleEditChildClose}
                     >Cancel</Button>
-                    <Button 
-                      variant='contained' 
-                      color='secondary' 
+                    <Button
+                      variant='contained'
+                      color='secondary'
                       sx={{ borderRadius: "25px", marginTop: "20px", height: "40px", width: '200px', padding: '10px 35px' }}
                       onClick={handleEditSubmit}
                     >Update</Button>

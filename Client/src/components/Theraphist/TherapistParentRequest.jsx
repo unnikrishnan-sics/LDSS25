@@ -22,13 +22,13 @@ const TherapistParentRequest = () => {
         try {
             const token = localStorage.getItem('token');
             if (!token) throw new Error("No token found");
-            
+
             const decoded = jwtDecode(token);
             const response = await axios.get(
-                `http://localhost:4000/ldss/theraphist/gettheraphist/${decoded.id}`, 
+                `${import.meta.env.VITE_SERVER_URL}/ldss/theraphist/gettheraphist/${decoded.id}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-            
+
             if (response.data?.theraphist) {
                 const therapistData = response.data.theraphist;
                 localStorage.setItem("theraphistDetails", JSON.stringify(therapistData));
@@ -49,12 +49,12 @@ const TherapistParentRequest = () => {
         try {
             const token = localStorage.getItem("token");
             const therapistId = JSON.parse(localStorage.getItem("theraphistDetails"))?._id;
-            
+
             const response = await axios.get(
-                `http://localhost:4000/ldss/theraphist/parentsrequest/${therapistId}`,
+                `${import.meta.env.VITE_SERVER_URL}/ldss/theraphist/parentsrequest/${therapistId}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-            
+
             setParentRequests(response.data?.request || []);
         } catch (error) {
             console.error("Error fetching parent requests:", error);
@@ -69,7 +69,7 @@ const TherapistParentRequest = () => {
         try {
             const token = localStorage.getItem("token");
             await axios.post(
-                `http://localhost:4000/ldss/theraphist/acceptrequest/${requestId}`,
+                `${import.meta.env.VITE_SERVER_URL}/ldss/theraphist/acceptrequest/${requestId}`,
                 {},
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -85,7 +85,7 @@ const TherapistParentRequest = () => {
         try {
             const token = localStorage.getItem("token");
             await axios.post(
-                `http://localhost:4000/ldss/theraphist/rejectrequest/${requestId}`,
+                `${import.meta.env.VITE_SERVER_URL}/ldss/theraphist/rejectrequest/${requestId}`,
                 {},
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -101,10 +101,10 @@ const TherapistParentRequest = () => {
         try {
             const token = localStorage.getItem("token");
             const response = await axios.get(
-                `http://localhost:4000/ldss/theraphist/viewrequestedparent/${requestId}`,
+                `${import.meta.env.VITE_SERVER_URL}/ldss/theraphist/viewrequestedparent/${requestId}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-            
+
             if (response.data?.viewRequest) {
                 setRequestDetail(response.data.viewRequest);
                 setOpenParent(true);
@@ -127,21 +127,21 @@ const TherapistParentRequest = () => {
 
     const getProfileImageUrl = (profilePic) => {
         if (!profilePic?.filename) return image68;
-        return `http://localhost:4000/uploads/${profilePic.filename}`;
+        return `${import.meta.env.VITE_SERVER_URL}/uploads/${profilePic.filename}`;
     };
 
     return (
         <>
-            <TheraphistNavbar 
-                theraphistdetails={therapistDetails} 
-                navigateToProfile={() => navigate('/therapist/profile')} 
+            <TheraphistNavbar
+                theraphistdetails={therapistDetails}
+                navigateToProfile={() => navigate('/therapist/profile')}
             />
-            
+
             <Box sx={{ background: "white", width: "100vw" }}>
                 <Box sx={{ height: "46px", background: "#DBE8FA", display: "flex", justifyContent: "center", alignItems: "center" }}>
                     <Typography color='primary' sx={{ fontSize: "18px", fontWeight: "600" }}>Parent's Request</Typography>
                 </Box>
-                
+
                 <Box sx={{ mt: "30px", ml: "50px", mr: "50px", display: "flex", justifyContent: "space-between", alignItems: "start" }}>
                     <Breadcrumbs aria-label="breadcrumb" separator="›">
                         <Link style={{ fontSize: "12px", fontWeight: "500", color: "#7F7F7F", textDecoration: "none" }} to="/therapist/home">
@@ -149,19 +149,19 @@ const TherapistParentRequest = () => {
                         </Link>
                         <Typography color='primary' sx={{ fontSize: "12px", fontWeight: "500" }}>Parent Requests</Typography>
                     </Breadcrumbs>
-                    
+
                     <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 1, padding: "8px 15px", borderRadius: "25px", border: "1px solid #CCCCCC", height: "40px" }}>
                         <SearchOutlinedIcon />
                         <input placeholder='Search here' style={{ padding: "8px 15px", border: 0, outline: 0, height: "100%" }} />
                     </Box>
                 </Box>
-                
+
                 {error && (
                     <Box sx={{ mt: 2, textAlign: "center" }}>
                         <Typography color="error">{error}</Typography>
                     </Box>
                 )}
-                
+
                 <Box sx={{ width: "100%", backgroundColor: "#F6F7F9", py: 4, minHeight: "calc(100vh - 200px)", display: "flex", justifyContent: "center" }}>
                     {loading ? (
                         <Typography>Loading parent requests...</Typography>
@@ -179,9 +179,9 @@ const TherapistParentRequest = () => {
                             {parentRequests
                                 .filter(request => request.status === "pending")
                                 .map((request) => (
-                                    <Card key={request._id} sx={{ 
-                                        height: "205px", 
-                                        borderRadius: "20px", 
+                                    <Card key={request._id} sx={{
+                                        height: "205px",
+                                        borderRadius: "20px",
                                         p: "20px",
                                         transition: "transform 0.3s ease, box-shadow 0.3s ease",
                                         '&:hover': {
@@ -208,9 +208,9 @@ const TherapistParentRequest = () => {
                                                     <Typography sx={{ color: '#7F7F7F', fontSize: "13px" }}>
                                                         {request.parentId?.phone || "Phone not available"}
                                                     </Typography>
-                                                    <Button 
+                                                    <Button
                                                         onClick={() => fetchParentDetails(request._id)}
-                                                        sx={{ 
+                                                        sx={{
                                                             textTransform: "none",
                                                             color: '#1976d2',
                                                             p: 0,
@@ -221,19 +221,19 @@ const TherapistParentRequest = () => {
                                                     </Button>
                                                 </Box>
                                                 <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
-                                                    <Button 
-                                                        onClick={() => rejectParentRequest(request._id)} 
-                                                        variant='outlined' 
-                                                        color='secondary' 
+                                                    <Button
+                                                        onClick={() => rejectParentRequest(request._id)}
+                                                        variant='outlined'
+                                                        color='secondary'
                                                         sx={{ borderRadius: "25px", height: "35px", width: '50px' }}
                                                     >
                                                         Reject
                                                     </Button>
-                                                    <Button 
-                                                        onClick={() => acceptParentRequest(request._id)} 
-                                                        variant='contained' 
-                                                        color='secondary' 
-                                                        sx={{ borderRadius: "25px", height: "35px", width: '50px',padding:"10px" }}
+                                                    <Button
+                                                        onClick={() => acceptParentRequest(request._id)}
+                                                        variant='contained'
+                                                        color='secondary'
+                                                        sx={{ borderRadius: "25px", height: "35px", width: '50px', padding: "10px" }}
                                                     >
                                                         Accept
                                                     </Button>
@@ -269,10 +269,10 @@ const TherapistParentRequest = () => {
                             overflow: "hidden"
                         }}>
                             {requestDetail && (
-                                <TherapistViewParentDetails 
-                                    acceptParentRequest={acceptParentRequest} 
-                                    rejectParentRequest={rejectParentRequest} 
-                                    handleParentClose={handleParentClose} 
+                                <TherapistViewParentDetails
+                                    acceptParentRequest={acceptParentRequest}
+                                    rejectParentRequest={rejectParentRequest}
+                                    handleParentClose={handleParentClose}
                                     requestDetail={requestDetail}
                                 />
                             )}

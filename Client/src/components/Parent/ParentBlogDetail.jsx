@@ -10,12 +10,12 @@ const ParentBlogDetail = () => {
     const navigate = useNavigate();
     const [blog, setBlog] = useState(null);
     const [loading, setLoading] = useState(true);
-const parentDetails = JSON.parse(localStorage.getItem('parentDetails')) || {};
+    const parentDetails = JSON.parse(localStorage.getItem('parentDetails')) || {};
     useEffect(() => {
         const fetchBlog = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get(`http://localhost:4000/ldss/blog/${id}`, {
+                const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/blog/${id}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setBlog(response.data.blog);
@@ -32,16 +32,16 @@ const parentDetails = JSON.parse(localStorage.getItem('parentDetails')) || {};
         try {
             const token = localStorage.getItem('token');
             if (blog.likes.some(like => like._id === jwtDecode(token).id)) {
-                await axios.delete(`http://localhost:4000/ldss/blog/unlike/${id}`, {
+                await axios.delete(`${import.meta.env.VITE_SERVER_URL}/ldss/blog/unlike/${id}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
             } else {
-                await axios.post(`http://localhost:4000/ldss/blog/like/${id}`, {}, {
+                await axios.post(`${import.meta.env.VITE_SERVER_URL}/ldss/blog/like/${id}`, {}, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
             }
             // Refresh blog data
-            const response = await axios.get(`http://localhost:4000/ldss/blog/${id}`, {
+            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/blog/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setBlog(response.data.blog);
@@ -62,9 +62,9 @@ const parentDetails = JSON.parse(localStorage.getItem('parentDetails')) || {};
         return (
             <Box sx={{ p: 3 }}>
                 <ParentNavbar
-        parentdetails={parentDetails}
-        navigateToProfile={() => navigate('/parent/profile')}
-      />
+                    parentdetails={parentDetails}
+                    navigateToProfile={() => navigate('/parent/profile')}
+                />
                 <Typography variant="h5">Blog not found</Typography>
             </Box>
         );
@@ -72,24 +72,24 @@ const parentDetails = JSON.parse(localStorage.getItem('parentDetails')) || {};
 
     return (
         <>
-<ParentNavbar
-        parentdetails={parentDetails}
-        navigateToProfile={() => navigate('/parent/profile')}
-      />            <Box sx={{ p: 3, maxWidth: 800, mx: 'auto' }}>
-                <Button 
-                    startIcon={<ArrowBack />} 
+            <ParentNavbar
+                parentdetails={parentDetails}
+                navigateToProfile={() => navigate('/parent/profile')}
+            />            <Box sx={{ p: 3, maxWidth: 800, mx: 'auto' }}>
+                <Button
+                    startIcon={<ArrowBack />}
                     onClick={() => navigate(-1)}
                     sx={{ mb: 2 }}
                 >
                     Back to Blogs
                 </Button>
-                
+
                 <Card>
                     {blog.image && (
                         <CardMedia
                             component="img"
                             height="300"
-                            image={`http://localhost:4000/uploads/blogs/${blog.image.filename}`}
+                            image={`${import.meta.env.VITE_SERVER_URL}/uploads/blogs/${blog.image.filename}`}
                             alt={blog.title}
                         />
                     )}
@@ -97,11 +97,11 @@ const parentDetails = JSON.parse(localStorage.getItem('parentDetails')) || {};
                         <Typography variant="h4" component="div" sx={{ mb: 2 }}>
                             {blog.title}
                         </Typography>
-                        
+
                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                            <Avatar 
-                                src={blog.creatorId.profilePic?.filename ? 
-                                    `http://localhost:4000/uploads/${blog.creatorId.profilePic?.filename}` : ''}
+                            <Avatar
+                                src={blog.creatorId.profilePic?.filename ?
+                                    `${import.meta.env.VITE_SERVER_URL}/uploads/${blog.creatorId.profilePic?.filename}` : ''}
                             />
                             <Box sx={{ ml: 2 }}>
                                 <Typography variant="body1">{blog.creatorId?.name}</Typography>
@@ -110,12 +110,12 @@ const parentDetails = JSON.parse(localStorage.getItem('parentDetails')) || {};
                                 </Typography>
                             </Box>
                         </Box>
-                        
+
                         <Typography variant="body1" paragraph>
                             {blog.description}
                         </Typography>
-                        
-                        
+
+
                     </CardContent>
                 </Card>
             </Box>

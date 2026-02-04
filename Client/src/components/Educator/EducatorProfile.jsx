@@ -69,7 +69,7 @@ const EducatorProfile = () => {
 
     const [imagePreview, setImagePreview] = useState(null);
     const [certificationPreview, setCertificationPreview] = useState(null);
-    
+
     const [educatorDetails, setEducatorDetails] = useState({
         name: "",
         email: "",
@@ -82,7 +82,7 @@ const EducatorProfile = () => {
         availability: "",
         certification: null
     });
-    
+
     const [error, setError] = useState({});
     const [personalError, setPersonalError] = useState({});
     const [open, setOpen] = useState(false);
@@ -154,7 +154,7 @@ const EducatorProfile = () => {
         let isValid = true;
         let errorMessage = {};
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        
+
         if (!data.name.trim()) {
             errorMessage.name = "Name should not be empty"
             isValid = false;
@@ -195,7 +195,7 @@ const EducatorProfile = () => {
     const personalInfoValidation = () => {
         let isValid = true;
         let errorMessage = {};
-        
+
         if (!personalData.educationalQualification) {
             errorMessage.educationalQualification = "Educational qualification is required";
             isValid = false;
@@ -228,7 +228,7 @@ const EducatorProfile = () => {
             return;
         }
         e.preventDefault();
-        
+
         const formData = new FormData();
         formData.append('name', data.name);
         formData.append('email', data.email);
@@ -238,8 +238,8 @@ const EducatorProfile = () => {
 
         const token = localStorage.getItem("token");
         const updated = await axios.post(
-            `http://localhost:4000/ldss/educator/updateeducator/${educatorDetails._id}`, 
-            formData, 
+            `${import.meta.env.VITE_SERVER_URL}/ldss/educator/updateeducator/${educatorDetails._id}`,
+            formData,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -249,16 +249,16 @@ const EducatorProfile = () => {
 
         if (updated.data.message === "educator updated successfully.") {
             toast.success("Educator updated successfully.")
-            
+
             const res = await axios.get(
-                `http://localhost:4000/ldss/educator/geteducator/${educatorDetails._id}`, 
+                `${import.meta.env.VITE_SERVER_URL}/ldss/educator/geteducator/${educatorDetails._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 }
             );
-            
+
             localStorage.setItem("educatorDetails", JSON.stringify(res.data.educator));
             setEducatorDetails(res.data.educator);
             setEditOpen(false);
@@ -273,7 +273,7 @@ const EducatorProfile = () => {
             return;
         }
         e.preventDefault();
-        
+
         const formData = new FormData();
         formData.append("educationalQualification", personalData.educationalQualification);
         formData.append("yearsOfExperience", personalData.yearsOfExperience);
@@ -285,8 +285,8 @@ const EducatorProfile = () => {
 
         const token = localStorage.getItem("token");
         const updated = await axios.post(
-            `http://localhost:4000/ldss/educator/addpersonal/${educatorDetails._id}`, 
-            formData, 
+            `${import.meta.env.VITE_SERVER_URL}/ldss/educator/addpersonal/${educatorDetails._id}`,
+            formData,
             {
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -297,16 +297,16 @@ const EducatorProfile = () => {
 
         if (updated.data.message === "educator personal details added successfully.") {
             toast.success("Educator personal details updated successfully.");
-            
+
             const res = await axios.get(
-                `http://localhost:4000/ldss/educator/geteducator/${educatorDetails._id}`, 
+                `${import.meta.env.VITE_SERVER_URL}/ldss/educator/geteducator/${educatorDetails._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 }
             );
-            
+
             localStorage.setItem("educatorDetails", JSON.stringify(res.data.educator));
             setEducatorDetails(res.data.educator);
             setPersonalEditOpen(false);
@@ -328,7 +328,7 @@ const EducatorProfile = () => {
             profilePic: null,
         });
         setImagePreview(educatorDetails?.profilePic?.filename
-            ? `http://localhost:4000/uploads/${educatorDetails.profilePic.filename}`
+            ? `${import.meta.env.VITE_SERVER_URL}/uploads/${educatorDetails.profilePic.filename}`
             : null);
         setEditOpen(true);
     }
@@ -343,7 +343,7 @@ const EducatorProfile = () => {
             certification: null,
         });
         setCertificationPreview(educatorDetails?.certification?.filename
-            ? `http://localhost:4000/uploads/${educatorDetails.certification.filename}`
+            ? `${import.meta.env.VITE_SERVER_URL}/uploads/${educatorDetails.certification.filename}`
             : null);
         setPersonalEditOpen(true);
     }
@@ -516,7 +516,7 @@ const EducatorProfile = () => {
                                     <Stack direction="row" sx={{ display: "flex", gap: "15px" }}>
                                         <div style={textFieldStyle}>
                                             <label>Educational Qualification</label>
-                                            <select 
+                                            <select
                                                 style={{ height: "40px", borderRadius: "8px", border: " 1px solid #CCCCCC", padding: '8px' }}
                                                 onChange={handlePersonalDataChange}
                                                 name='educationalQualification'
@@ -533,7 +533,7 @@ const EducatorProfile = () => {
 
                                         <div style={textFieldStyle}>
                                             <label>Years of Experience</label>
-                                            <input 
+                                            <input
                                                 style={{ height: "40px", borderRadius: "8px", border: " 1px solid #CCCCCC", padding: '8px' }}
                                                 onChange={handlePersonalDataChange}
                                                 name='yearsOfExperience'
@@ -546,7 +546,7 @@ const EducatorProfile = () => {
                                     <Stack direction="row" sx={{ display: "flex", gap: "15px" }}>
                                         <div style={textFieldStyle}>
                                             <label>Languages</label>
-                                            <select 
+                                            <select
                                                 style={{ height: "40px", borderRadius: "8px", border: " 1px solid #CCCCCC", padding: '8px' }}
                                                 onChange={handlePersonalDataChange}
                                                 name='languages'
@@ -566,7 +566,7 @@ const EducatorProfile = () => {
 
                                         <div style={textFieldStyle}>
                                             <label>Availability</label>
-                                            <select 
+                                            <select
                                                 style={{ height: "40px", borderRadius: "8px", border: " 1px solid #CCCCCC", padding: '8px' }}
                                                 onChange={handlePersonalDataChange}
                                                 name='availability'
@@ -591,8 +591,8 @@ const EducatorProfile = () => {
                                                 style={{ display: "none" }}
                                             />
                                             <label htmlFor="certification-upload" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                                                <Button 
-                                                    variant="outlined" 
+                                                <Button
+                                                    variant="outlined"
                                                     component="span"
                                                     startIcon={<UploadIcon />}
                                                     sx={{ height: "40px", width: "200px" }}
@@ -614,9 +614,9 @@ const EducatorProfile = () => {
                                         </div>
                                     </Stack>
                                     <Box display={'flex'} alignItems={'center'} justifyContent={'center'} flexDirection={'column'} sx={{ width: '253px', height: "93px", gap: '10px' }}>
-                                        <Button 
-                                            variant='contained' 
-                                            color='secondary' 
+                                        <Button
+                                            variant='contained'
+                                            color='secondary'
                                             sx={{ borderRadius: "25px", marginTop: "20px", height: "40px", width: '200px', padding: '10px 35px' }}
                                             onClick={handlePersonalInfoSubmit}
                                         >
@@ -654,7 +654,7 @@ const EducatorProfile = () => {
                             {
                                 educatorDetails.profilePic?.filename ? (
                                     <Avatar sx={{ height: "100%", width: "180px" }}
-                                        src={`http://localhost:4000/uploads/${educatorDetails?.profilePic?.filename}`} alt={educatorDetails?.name}
+                                        src={`${import.meta.env.VITE_SERVER_URL}/uploads/${educatorDetails?.profilePic?.filename}`} alt={educatorDetails?.name}
                                     />
                                 ) :
                                     (

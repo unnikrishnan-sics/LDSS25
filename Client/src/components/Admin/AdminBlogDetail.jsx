@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Card, CardContent, CardMedia, Avatar, Button,CircularProgress } from '@mui/material';
+import { Box, Typography, Card, CardContent, CardMedia, Avatar, Button, CircularProgress } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import AdminSideBar from './Common/AdminSideBar';
@@ -14,7 +14,7 @@ const AdminBlogDetail = () => {
         const fetchBlog = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get(`http://localhost:4000/ldss/blog/${id}`, {
+                const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/blog/${id}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setBlog(response.data.blog);
@@ -47,20 +47,20 @@ const AdminBlogDetail = () => {
         <Box sx={{ display: 'flex' }}>
             <AdminSideBar />
             <Box sx={{ flexGrow: 1, p: 3, maxWidth: 800 }}>
-                <Button 
-                    variant="outlined" 
+                <Button
+                    variant="outlined"
                     onClick={() => navigate(-1)}
                     sx={{ mb: 2 }}
                 >
                     Back to Blogs
                 </Button>
-                
+
                 <Card>
                     {blog.image && (
                         <CardMedia
                             component="img"
                             height="300"
-                            image={`http://localhost:4000/uploads/blogs/${blog.image.filename}`}
+                            image={`${import.meta.env.VITE_SERVER_URL}/uploads/blogs/${blog.image.filename}`}
                             alt={blog.title}
                         />
                     )}
@@ -68,11 +68,11 @@ const AdminBlogDetail = () => {
                         <Typography variant="h4" component="div" sx={{ mb: 2 }}>
                             {blog.title}
                         </Typography>
-                        
+
                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                            <Avatar 
-                                src={blog.creatorId.profilePic?.filename ? 
-                                    `http://localhost:4000/uploads/${blog.creatorId.profilePic?.filename}` : ''}
+                            <Avatar
+                                src={blog.creatorId.profilePic?.filename ?
+                                    `${import.meta.env.VITE_SERVER_URL}/uploads/${blog.creatorId.profilePic?.filename}` : ''}
                             />
                             <Box sx={{ ml: 2 }}>
                                 <Typography variant="body1">{blog.creatorId.name}</Typography>
@@ -81,11 +81,11 @@ const AdminBlogDetail = () => {
                                 </Typography>
                             </Box>
                         </Box>
-                        
+
                         <Typography variant="body1" paragraph>
                             {blog.description}
                         </Typography>
-                        
+
                         {/* <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
                             {blog.likes.length} likes
                         </Typography> */}

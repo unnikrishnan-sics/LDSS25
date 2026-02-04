@@ -109,7 +109,7 @@ const EducatorPersonal = () => {
         return isValid;
 
     }
-const navigate=useNavigate();
+    const navigate = useNavigate();
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (validation()) {
@@ -127,7 +127,7 @@ const navigate=useNavigate();
         const educatorId = JSON.parse(educatorDetails)._id;
         const token = localStorage.getItem("token")
 
-        const addEducatorInfo = await axios.post(`http://localhost:4000/ldss/educator/addpersonal/${educatorId}`, formData, {
+        const addEducatorInfo = await axios.post(`${import.meta.env.VITE_SERVER_URL}/ldss/educator/addpersonal/${educatorId}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 Authorization: `Bearer ${token}`,
@@ -282,7 +282,7 @@ const navigate=useNavigate();
                 </Box>
 
             </Container>
-<Footer userRole="educator" />        </>
+            <Footer userRole="educator" />        </>
     )
 }
 

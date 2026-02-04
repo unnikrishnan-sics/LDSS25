@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react"; 
+import React, { useState, useEffect, useRef } from "react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import {
   Card,
@@ -9,7 +9,6 @@ import {
 } from "@mui/material";
 import ChatBotHistory from "./ChatBotHistory";
 import ChatBotLoading from "./ChatBotLoading";
-import { secret_key } from "./SecretKey";
 
 function ChatBot() {
   const [userInput, setUserInput] = useState("");
@@ -18,7 +17,7 @@ function ChatBot() {
 
   const chatHistoryRef = useRef(null);
 
-  const genAI = new GoogleGenerativeAI(secret_key);
+  const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
   const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
   const handleUserInput = (e) => {
@@ -33,11 +32,11 @@ function ChatBot() {
       ...prevHistory,
       { type: "user", message: messageToSend },
     ]);
-    setUserInput(""); 
+    setUserInput("");
 
     setIsLoading(true);
     try {
-      const result = await model.generateContent(messageToSend); 
+      const result = await model.generateContent(messageToSend);
       const response = await result.response;
       setChatHistory((prevHistory) => [
         ...prevHistory,
@@ -72,7 +71,7 @@ function ChatBot() {
         behavior: "smooth"
       });
     }
-  }, [chatHistory, isLoading]); 
+  }, [chatHistory, isLoading]);
 
   return (
     <Box
@@ -86,7 +85,7 @@ function ChatBot() {
       <Card
         raised
         sx={{
-          flexGrow: 1, 
+          flexGrow: 1,
           borderRadius: 4,
           boxShadow: 3,
           display: 'flex',
@@ -96,9 +95,9 @@ function ChatBot() {
       >
         <CardContent
           sx={{
-            flexGrow: 1, 
+            flexGrow: 1,
             display: 'flex',
-            flexDirection: 'column', 
+            flexDirection: 'column',
             p: 2,
             pb: 1,
             height: '100%', // Ensure CardContent takes full height
@@ -133,7 +132,7 @@ function ChatBot() {
             <ChatBotLoading isLoading={isLoading} />
           </Box>
 
-          <Box sx={{ display: "flex", gap: 1 }}> 
+          <Box sx={{ display: "flex", gap: 1 }}>
             <TextField
               fullWidth
               variant="outlined"
@@ -149,7 +148,7 @@ function ChatBot() {
               variant="contained"
               onClick={sendMessage}
               disabled={isLoading}
-              sx={{ borderRadius: 4 , backgroundColor:"#1967D2" }}
+              sx={{ borderRadius: 4, backgroundColor: "#1967D2" }}
             >
               Send
             </Button>
@@ -160,7 +159,7 @@ function ChatBot() {
             color="secondary"
             onClick={clearChat}
             fullWidth
-            sx={{ mt: 1.5, borderRadius: 4 }} 
+            sx={{ mt: 1.5, borderRadius: 4 }}
           >
             Clear Chat
           </Button>

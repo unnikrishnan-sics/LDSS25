@@ -77,10 +77,10 @@ const ParentChat = () => {
       let endpoint = '';
 
       if (userType === 'educator') {
-        endpoint = `http://localhost:4000/ldss/educator/geteducator/${participantId}`;
+        endpoint = `${import.meta.env.VITE_SERVER_URL}/ldss/educator/geteducator/${participantId}`;
         setStudentName(location.state?.studentName || '');
       } else if (userType === 'theraphist') {
-        endpoint = `http://localhost:4000/ldss/theraphist/gettheraphist/${participantId}`;
+        endpoint = `${import.meta.env.VITE_SERVER_URL}/ldss/theraphist/gettheraphist/${participantId}`;
         setStudentName(location.state?.studentName || '');
       } else {
         return;
@@ -99,7 +99,7 @@ const ParentChat = () => {
       setLoading(false);
     }
   };
-console.log(participantDetails);
+  console.log(participantDetails);
 
   const getOrCreateConversation = async () => {
     try {
@@ -118,7 +118,7 @@ console.log(participantDetails);
       }
 
       const existingConvs = await axios.get(
-        `http://localhost:4000/ldss/conversations/user/${educatorId}`,
+        `${import.meta.env.VITE_SERVER_URL}/ldss/conversations/user/${educatorId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -144,7 +144,7 @@ console.log(participantDetails);
       }
 
       const newConv = await axios.post(
-        'http://localhost:4000/ldss/conversations',
+        `${import.meta.env.VITE_SERVER_URL}/ldss/conversations`,
         requestData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -164,7 +164,7 @@ console.log(participantDetails);
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get(
-        `http://localhost:4000/ldss/conversations/${convId}`,
+        `${import.meta.env.VITE_SERVER_URL}/ldss/conversations/${convId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -206,7 +206,7 @@ console.log(participantDetails);
       setNewMessage("");
 
       await axios.post(
-        `http://localhost:4000/ldss/conversations/${conversationId}/messages`,
+        `${import.meta.env.VITE_SERVER_URL}/ldss/conversations/${conversationId}/messages`,
         newMsg,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -237,7 +237,7 @@ console.log(participantDetails);
         try {
           const decoded = jwtDecode(token);
           const educatorId = decoded.id;
-          const response = await axios.get(`http://localhost:4000/ldss/educator/geteducator/${educatorId}`, {
+          const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/educator/geteducator/${educatorId}`, {
             headers: { Authorization: `Bearer ${token}` }
           });
           if (response.data?.educator) {
@@ -374,8 +374,8 @@ console.log(participantDetails);
                     <ArrowBackIcon />
                   </IconButton>
                   {participantDetails.profilePic?.filename ? (
-                    <Avatar 
-                      src={`http://localhost:4000/uploads/${participantDetails.profilePic.filename}`}
+                    <Avatar
+                      src={`${import.meta.env.VITE_SERVER_URL}/uploads/${participantDetails.profilePic.filename}`}
                       sx={{ width: 32, height: 32 }}
                     />
                   ) : (
@@ -437,8 +437,8 @@ console.log(participantDetails);
                     pt: 4,
                   }}>
                     {participantDetails.profilePic?.filename ? (
-                      <Avatar 
-                        src={`http://localhost:4000/uploads/${participantDetails.profilePic?.filename}`}
+                      <Avatar
+                        src={`${import.meta.env.VITE_SERVER_URL}/uploads/${participantDetails.profilePic?.filename}`}
                         sx={{ width: 80, height: 80, mb: 2 }}
                       />
                     ) : (
@@ -504,8 +504,8 @@ console.log(participantDetails);
                           }}>
                             {!isEducator && (
                               participantDetails.profilePic?.filename ? (
-                                <Avatar 
-                                  src={`http://localhost:4000/uploads${participantDetails.profilePic.filename}`}
+                                <Avatar
+                                  src={`${import.meta.env.VITE_SERVER_URL}/uploads${participantDetails.profilePic.filename}`}
                                   sx={{ width: 32, height: 32 }}
                                 />
                               ) : (
@@ -556,7 +556,7 @@ console.log(participantDetails);
                 </Box>
               )}
 
-              <Divider sx={{backgroundColor: '#f0f0f0'}} />
+              <Divider sx={{ backgroundColor: '#f0f0f0' }} />
               <Box sx={{ p: 2, display: 'flex', alignItems: 'center' }}>
                 <TextField
                   fullWidth

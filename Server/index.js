@@ -5,11 +5,11 @@ dotenv.config();
 const PORT = process.env.PORT
 const db = require("./dbConnection");
 const router = require("./router");
-const cors=require("cors")
+const cors = require("cors")
 
 // In your Express backend
 app.use(cors({
-  origin: 'http://localhost:5173', // Your frontend URL
+  origin: process.env.CLIENT_URL, // Your frontend URL
   credentials: true
 }));
 app.use(express.json());
@@ -20,6 +20,6 @@ app.use('/uploads', express.static('uploads'));
 
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 })
 

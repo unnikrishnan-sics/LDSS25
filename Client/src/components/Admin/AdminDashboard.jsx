@@ -1,16 +1,16 @@
-import { 
-  Avatar, 
-  Box, 
-  Button, 
-  Grid, 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableContainer, 
-  TableHead, 
-  TableRow, 
+import {
+  Avatar,
+  Box,
+  Button,
+  Grid,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   Typography,
-  Paper 
+  Paper
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -62,15 +62,15 @@ const AdminDashboard = () => {
 
       // Parallel API calls
       const [
-        parentsRes, 
-        childrenRes, 
-        educatorsRes, 
+        parentsRes,
+        childrenRes,
+        educatorsRes,
         therapistsRes
       ] = await Promise.all([
-        axios.get("http://localhost:4000/ldss/parent/getallparents", { headers }),
-        axios.get("http://localhost:4000/ldss/parent/getallchild", { headers }),
-        axios.get("http://localhost:4000/ldss/educator/getalleducators", { headers }),
-        axios.get("http://localhost:4000/ldss/theraphist/getalltheraphist", { headers })
+        axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/parent/getallparents`, { headers }),
+        axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/parent/getallchild`, { headers }),
+        axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/educator/getalleducators`, { headers }),
+        axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/theraphist/getalltheraphist`, { headers })
       ]);
 
       // Process responses
@@ -105,10 +105,10 @@ const AdminDashboard = () => {
   return (
     <Box sx={{ display: 'flex', backgroundColor: '#F6F7F9', minHeight: '100vh' }}>
       {/* Sidebar */}
-      <Box sx={{ 
-        width: '250px', 
-        backgroundColor: 'white', 
-        margin: '15px', 
+      <Box sx={{
+        width: '250px',
+        backgroundColor: 'white',
+        margin: '15px',
         borderRadius: '8px',
         position: 'sticky',
         top: '15px',
@@ -119,43 +119,43 @@ const AdminDashboard = () => {
       </Box>
 
       {/* Main Content */}
-      <Box sx={{ 
-        flexGrow: 1, 
+      <Box sx={{
+        flexGrow: 1,
         p: '15px',
         maxWidth: 'calc(100% - 280px)'
       }}>
         {/* Header */}
-        <Box sx={{ 
-          height: "70px", 
-          background: "white", 
-          borderRadius: "8px", 
-          mb: 3, 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center', 
+        <Box sx={{
+          height: "70px",
+          background: "white",
+          borderRadius: "8px",
+          mb: 3,
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
           p: 2,
           boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.05)'
         }}>
-          <Typography variant='h3' sx={{ 
-            fontSize: "24px", 
-            fontWeight: "500", 
+          <Typography variant='h3' sx={{
+            fontSize: "24px",
+            fontWeight: "500",
             ml: "30px",
             color: '#1967D2'
           }}>
             Dashboard Overview
           </Typography>
-          <Button 
-            onClick={handleOpenLogout} 
-            color='primary' 
-            sx={{ 
-              height: "40px", 
+          <Button
+            onClick={handleOpenLogout}
+            color='primary'
+            sx={{
+              height: "40px",
               minWidth: '120px',
               padding: '0 20px',
               textTransform: 'none',
               '&:hover': {
                 backgroundColor: '#f0f4f9'
               }
-            }} 
+            }}
             startIcon={<LogoutIcon />}
           >
             Logout
@@ -165,16 +165,16 @@ const AdminDashboard = () => {
         {/* Stats Cards */}
         <Grid container spacing={12} sx={{ mb: 3 }}>
           <Grid item xs={12} sm={6} md={3} >
-            <StatsCard 
+            <StatsCard
               icon={<PeopleOutlineIcon sx={{ color: "#1967D2" }} />}
               title="Total Students"
               value={child.length}
               loading={loading.children}
-              
+
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <StatsCard 
+            <StatsCard
               icon={<SchoolIcon sx={{ color: "#1967D2" }} />}
               title="Approved Educators"
               value={educator.length}
@@ -182,7 +182,7 @@ const AdminDashboard = () => {
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <StatsCard 
+            <StatsCard
               icon={<SpaIcon sx={{ color: "#1967D2" }} />}
               title="Approved Therapists"
               value={therapist.length}
@@ -190,7 +190,7 @@ const AdminDashboard = () => {
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <StatsCard 
+            <StatsCard
               icon={<PersonIcon sx={{ color: "#1967D2" }} />}
               title="Registered Parents"
               value={parentDetails.length}
@@ -200,19 +200,19 @@ const AdminDashboard = () => {
         </Grid>
 
         {/* Therapist Request Table */}
-        <DataTable 
+        <DataTable
           title="Therapist Requests"
           data={therapistDetails}
           loading={loading.therapists}
           viewAllLink="/admin/viewtheraphist"
           columns={[
             { header: "S.NO", render: (item, index) => index + 1 },
-            { 
-              header: "Profile", 
+            {
+              header: "Profile",
               render: (item) => (
-                <Avatar 
-                  src={item.profilePic?.filename ? 
-                    `http://localhost:4000/uploads/${item.profilePic.filename}` : 
+                <Avatar
+                  src={item.profilePic?.filename ?
+                    `${import.meta.env.VITE_SERVER_URL}/uploads/${item.profilePic.filename}` :
                     undefined
                   }
                   sx={{ bgcolor: '#1967D2' }}
@@ -242,19 +242,19 @@ const AdminDashboard = () => {
         />
 
         {/* Educator Request Table */}
-        <DataTable 
+        <DataTable
           title="Educator Requests"
           data={educatorDetails}
           loading={loading.educators}
           viewAllLink="/admin/viewEducator"
           columns={[
             { header: "S.NO", render: (item, index) => index + 1 },
-            { 
-              header: "Profile", 
+            {
+              header: "Profile",
               render: (item) => (
-                <Avatar 
-                  src={item.profilePic?.filename ? 
-                    `http://localhost:4000/uploads/${item.profilePic.filename}` : 
+                <Avatar
+                  src={item.profilePic?.filename ?
+                    `${import.meta.env.VITE_SERVER_URL}/uploads/${item.profilePic.filename}` :
                     undefined
                   }
                   sx={{ bgcolor: '#1967D2' }}
@@ -285,9 +285,9 @@ const AdminDashboard = () => {
       </Box>
 
       {/* Logout Modal */}
-      <AdminLogout 
-        handleCloseLogout={handleCloseLogout} 
-        openLogout={openLogout} 
+      <AdminLogout
+        handleCloseLogout={handleCloseLogout}
+        openLogout={openLogout}
       />
     </Box>
   );
@@ -295,9 +295,9 @@ const AdminDashboard = () => {
 
 // Reusable Stats Card Component
 const StatsCard = ({ icon, title, value, loading }) => (
-  <Box sx={{ 
-    width: "100%", 
-    minHeight: "138px", 
+  <Box sx={{
+    width: "100%",
+    minHeight: "138px",
     background: "#FFFFFF",
     p: "20px",
     display: 'flex',
@@ -323,8 +323,8 @@ const StatsCard = ({ icon, title, value, loading }) => (
       }}>
         {icon}
       </Box>
-      <Typography variant='h6' sx={{ 
-        fontSize: "16px", 
+      <Typography variant='h6' sx={{
+        fontSize: "16px",
         fontWeight: "500",
         color: '#5F6368'
       }}>
@@ -332,16 +332,16 @@ const StatsCard = ({ icon, title, value, loading }) => (
       </Typography>
     </Box>
     {loading ? (
-      <Box sx={{ 
-        width: '60%', 
-        height: 24, 
+      <Box sx={{
+        width: '60%',
+        height: 24,
         backgroundColor: '#f0f0f0',
         borderRadius: 4,
         alignSelf: 'center'
       }} />
     ) : (
-      <Typography variant='h3' sx={{ 
-        fontSize: "28px", 
+      <Typography variant='h3' sx={{
+        fontSize: "28px",
         fontWeight: "600",
         color: '#1967D2',
         textAlign: 'center',
@@ -369,8 +369,8 @@ const DataTable = ({ title, data, loading, viewAllLink, columns }) => (
       justifyContent: "space-between",
       mb: 2
     }}>
-      <Typography variant='h4' sx={{ 
-        fontSize: "18px", 
+      <Typography variant='h4' sx={{
+        fontSize: "18px",
         fontWeight: "600",
         color: '#1967D2'
       }}>
@@ -378,8 +378,8 @@ const DataTable = ({ title, data, loading, viewAllLink, columns }) => (
       </Typography>
       {data.length > 0 && (
         <Link to={viewAllLink} style={{ textDecoration: "none" }}>
-          <Button 
-            variant="text" 
+          <Button
+            variant="text"
             color="primary"
             size="small"
             sx={{ textTransform: 'none' }}
@@ -391,11 +391,11 @@ const DataTable = ({ title, data, loading, viewAllLink, columns }) => (
     </Box>
 
     {loading ? (
-      <Box sx={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: 200 
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 200
       }}>
         <Typography color="textSecondary">Loading data...</Typography>
       </Box>
@@ -405,10 +405,10 @@ const DataTable = ({ title, data, loading, viewAllLink, columns }) => (
           <TableHead>
             <TableRow sx={{ backgroundColor: '#F6F7F9' }}>
               {columns.map((col, index) => (
-                <TableCell 
-                  key={index} 
-                  sx={{ 
-                    color: "#1967D2", 
+                <TableCell
+                  key={index}
+                  sx={{
+                    color: "#1967D2",
                     fontWeight: 600,
                     fontSize: '14px'
                   }}
@@ -420,16 +420,16 @@ const DataTable = ({ title, data, loading, viewAllLink, columns }) => (
           </TableHead>
           <TableBody>
             {data.map((item, index) => (
-              <TableRow 
+              <TableRow
                 key={index}
-                sx={{ 
+                sx={{
                   '&:hover': {
                     backgroundColor: '#f9f9f9'
                   }
                 }}
               >
                 {columns.map((col, colIndex) => (
-                  <TableCell 
+                  <TableCell
                     key={colIndex}
                     sx={{
                       borderBottom: '1px solid #f0f0f0',
@@ -445,10 +445,10 @@ const DataTable = ({ title, data, loading, viewAllLink, columns }) => (
         </Table>
       </TableContainer>
     ) : (
-      <Box sx={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
         height: 100,
         border: '1px dashed #e0e0e0',
         borderRadius: 1

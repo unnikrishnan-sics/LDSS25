@@ -14,7 +14,7 @@ import FemaleIcon from '@mui/icons-material/Female';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 
 const TherapistViewParentDetails = ({ handleParentClose, requestDetail, onAccept, onReject }) => {
-    const useDummyData = false;    
+    const useDummyData = false;
     // Dummy data for parent
     const dummyParent = {
         _id: 'parent1',
@@ -57,19 +57,19 @@ const TherapistViewParentDetails = ({ handleParentClose, requestDetail, onAccept
             setChildren(dummyChildren);
             return;
         }
-        
+
         try {
             const parentId = requestDetail?.parentId?._id || requestDetail?.parentId;
             console.log("[DEBUG] fetchChildOfParent called with parentId:", parentId);
-            
+
             if (!parentId) {
                 console.error("Parent ID is missing");
                 return;
             }
-            
+
             const token = localStorage.getItem("token");
             const response = await axios.get(
-                `http://localhost:4000/ldss/parent/getallchildofparent/${parentId}`,
+                `${import.meta.env.VITE_SERVER_URL}/ldss/parent/getallchildofparent/${parentId}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             setChildren(response.data.child || []);
@@ -87,16 +87,16 @@ const TherapistViewParentDetails = ({ handleParentClose, requestDetail, onAccept
             setParent(dummyParent);
             return;
         }
-        
+
         try {
             const parentId = requestDetail?.parentId?._id || requestDetail?.parentId;
             if (!parentId) {
                 throw new Error("Parent ID is missing");
             }
-            
+
             const token = localStorage.getItem("token");
             const response = await axios.get(
-                `http://localhost:4000/ldss/parent/getparent/${parentId}`,
+                `${import.meta.env.VITE_SERVER_URL}/ldss/parent/getparent/${parentId}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             setParent(response.data.parent || {});
@@ -137,7 +137,7 @@ const TherapistViewParentDetails = ({ handleParentClose, requestDetail, onAccept
     if (error) {
         return <Box sx={{ p: 4, textAlign: 'center', color: 'error.main' }}>{error}</Box>;
     }
-    
+
 
     return (
         <>
@@ -145,14 +145,14 @@ const TherapistViewParentDetails = ({ handleParentClose, requestDetail, onAccept
                 <Typography color='primary' variant='h5' sx={{ fontSize: "18px", fontWeight: "600" }}>Parent Details</Typography>
                 <CloseIcon onClick={handleParentClose} />
             </Box>
-            <Box sx={{border:"1px solid #CCCCCC"}}/>
+            <Box sx={{ border: "1px solid #CCCCCC" }} />
 
             <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"} sx={{ height: "220px", borderRadius: "20px", width: "100%", padding: "0px 40px" }}>
                 <Box display={"flex"} justifyContent={"center"} alignItems={"center"} sx={{ height: "180px", gap: "70px" }}>
                     {parent?.profilePic?.filename ? (
-                        <Avatar 
+                        <Avatar
                             sx={{ height: "100%", width: "180px" }}
-                            src={`http://localhost:4000/uploads/${parent?.profilePic?.filename}`}
+                            src={`${import.meta.env.VITE_SERVER_URL}/uploads/${parent?.profilePic?.filename}`}
                             alt={parent?.name}
                         />
                     ) : (
@@ -167,7 +167,7 @@ const TherapistViewParentDetails = ({ handleParentClose, requestDetail, onAccept
                                 <Typography><PersonOutlinedIcon /> {parent.name}</Typography>
                                 <Typography><MailOutlinedIcon /> {parent.email}</Typography>
                             </Box>
-                           
+
                             <Box display={"flex"} justifyContent={"start"} alignItems={"start"} flexDirection={"column"} sx={{ gap: "20px", borderLeft: "1px solid #CCCCCC", ml: "50px", pl: "40px" }}>
                                 <Typography><LocationOnOutlinedIcon /> {parent.address}</Typography>
                                 <Typography><PhoneEnabledOutlinedIcon /> {parent.phone}</Typography>
@@ -186,7 +186,7 @@ const TherapistViewParentDetails = ({ handleParentClose, requestDetail, onAccept
                 <Grid container spacing={2} sx={{ pt: "20px", width: "100%" }}>
                     {children.map((child, index) => (
                         <Grid key={index} item xs={12} md={6}>
-                            <Box sx={{ 
+                            <Box sx={{
                                 height: "330px",
                                 background: "#F0F6FE",
                                 borderRadius: "20px",
@@ -216,7 +216,7 @@ const TherapistViewParentDetails = ({ handleParentClose, requestDetail, onAccept
                                             </Box>
                                         </Box>
                                     </Box>
-                                    <Box sx={{ borderLeft: "1px solid #CCCCCC" ,marginLeft:"30px"}}>
+                                    <Box sx={{ borderLeft: "1px solid #CCCCCC", marginLeft: "30px" }}>
                                         <Box sx={{ gap: "60px" }} display={"flex"} flexDirection={"column"} alignItems={"start"}>
                                             <Box display={"flex"} alignItems={"start"} sx={{ gap: "10px", pl: "40px" }}>
                                                 <Box sx={{ color: "#1967D2" }}><DateRangeIcon /></Box>
@@ -246,28 +246,28 @@ const TherapistViewParentDetails = ({ handleParentClose, requestDetail, onAccept
             )}
 
             {/* Action Buttons */}
-           {requestDetail.status === "accepted" ? (
+            {requestDetail.status === "accepted" ? (
                 <Box></Box>
             ) : (
                 <Box display={"flex"} justifyContent={"center"} mt={2} mb={2} gap={3}>
-                    <Button 
+                    <Button
                         onClick={() => {
                             onReject();
                             handleParentClose();
-                        }} 
-                        variant='outlined' 
-                        color='secondary' 
+                        }}
+                        variant='outlined'
+                        color='secondary'
                         sx={{ borderRadius: "25px", height: "40px", width: '200px', padding: '10px 35px' }}
                     >
                         Reject
                     </Button>
-                    <Button 
+                    <Button
                         onClick={() => {
                             onAccept();
                             handleParentClose();
-                        }} 
-                        variant='contained' 
-                        color='secondary' 
+                        }}
+                        variant='contained'
+                        color='secondary'
                         sx={{ borderRadius: "25px", height: "40px", width: '200px', padding: '10px 35px' }}
                     >
                         Accept

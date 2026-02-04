@@ -37,7 +37,7 @@ const ParentEducatorLearning = () => {
                 toast.error("Learning plan ID is missing. Cannot complete activity.");
                 return;
             }
-            
+
             // Optimistic UI update
             setLearningPlan(prev => {
                 const updatedPlan = JSON.parse(JSON.stringify(prev)); // Deep copy
@@ -49,7 +49,7 @@ const ParentEducatorLearning = () => {
 
             // FIXED: Send learningPlan._id instead of childId
             const response = await axios.put(
-                `http://localhost:4000/ldss/parent/completeactivity/${learningPlan._id}/${weekIndex}/${activityIndex}`,
+                `${import.meta.env.VITE_SERVER_URL}/ldss/parent/completeactivity/${learningPlan._id}/${weekIndex}/${activityIndex}`,
                 {},
                 {
                     headers: { Authorization: `Bearer ${token}` }
@@ -58,7 +58,7 @@ const ParentEducatorLearning = () => {
 
             // Finalize UI with data from the server response
             if (response.data.success) {
-                 setLearningPlan(prev => {
+                setLearningPlan(prev => {
                     const updatedPlan = JSON.parse(JSON.stringify(prev));
                     const activity = updatedPlan.weeks[weekIndex].activities[activityIndex];
                     activity.completedDate = response.data.data.completedDate;
@@ -69,7 +69,7 @@ const ParentEducatorLearning = () => {
             } else {
                 throw new Error(response.data.message || "Failed to mark activity as completed");
             }
-            
+
         } catch (error) {
             console.error("Error marking activity as completed:", error);
             // Revert the UI to its original state on failure
@@ -85,7 +85,7 @@ const ParentEducatorLearning = () => {
 
             if (!childId) throw new Error("Missing child ID");
 
-            const url = `http://localhost:4000/ldss/parent/getstudentplan/${educatorId}/${childId}`;
+            const url = `${import.meta.env.VITE_SERVER_URL}/ldss/parent/getstudentplan/${educatorId}/${childId}`;
 
             const response = await axios.get(url, {
                 headers: { Authorization: `Bearer ${token}` }
@@ -133,22 +133,22 @@ const ParentEducatorLearning = () => {
         if (activity.completed) {
             return (
                 <Typography variant='h6' sx={{ fontSize: "18px", fontWeight: "500", color: "#149319" }}>
-                    Completed 
+                    Completed
                 </Typography>
             );
         } else {
             const weekActivities = learningPlan.weeks[weekIndex]?.activities || [];
             const isFirstIncomplete = weekActivities.findIndex(a => !a.completed) === activityIndex;
-            
+
             if (isFirstIncomplete) {
                 return (
                     <Box display="flex" alignItems="center" gap={2} mt={1}>
                         <Typography variant='h6' sx={{ fontSize: "18px", fontWeight: "500", color: "#1967D2" }}>
                             In Progress
                         </Typography>
-                        <Button 
-                            variant='outlined' 
-                            color='secondary' 
+                        <Button
+                            variant='outlined'
+                            color='secondary'
                             sx={{ borderRadius: "25px", height: "36px", width: '100px', fontSize: "14px", fontWeight: "500" }}
                             onClick={() => markAsCompleted(weekIndex, activityIndex)}
                         >
@@ -178,8 +178,8 @@ const ParentEducatorLearning = () => {
                     <Typography color="primary" variant="h5" sx={{ mb: 2 }}>
                         {error}
                     </Typography>
-                    <Button 
-                        variant="outlined" 
+                    <Button
+                        variant="outlined"
                         color="primary"
                         onClick={() => navigate(-1)}
                         sx={{ mt: 2 }}
@@ -219,7 +219,7 @@ const ParentEducatorLearning = () => {
                     <Typography variant='h4' color='primary' sx={{ fontSize: "24px", fontWeight: "600", pl: "20px" }}>Goal : {learningPlan.goal || 'No goal specified'}</Typography>
                     <Typography variant='h4' color='primary' sx={{ fontSize: "24px", fontWeight: "600", pr: "20px" }}>{learningPlan.planDuration || learningPlan.weeks?.length || 1} Weeks Plan</Typography>
                 </Box>
-                
+
                 {learningPlan.weeks.map((week, weekIndex) => (
                     <Box key={week._id || weekIndex} display={'flex'} flexDirection={'column'} m={"20px 50px"} sx={{ background: "#F0F6FE", borderRadius: "12px" }}>
                         <Typography variant='h6' color='primary' sx={{ fontSize: "24px", fontWeight: "500", p: "20px 30px" }}>Week {weekIndex + 1}</Typography>
@@ -235,7 +235,7 @@ const ParentEducatorLearning = () => {
                         </Box>
                     </Box>
                 ))}
-                
+
                 <Box display='flex' justifyContent='center' gap={2} sx={{ mb: 4, mt: 2 }}>
                     <Button
                         variant='outlined'

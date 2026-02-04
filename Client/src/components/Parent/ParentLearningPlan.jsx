@@ -72,7 +72,7 @@ const ParentLearningPlan = () => {
         // console.log("Submitting rating with:", { professionalId, professionalType, childId, parentId, newRating }); // Add for debugging
 
         try {
-            const response = await axios.post(`http://localhost:4000/ldss/addrating`, {
+            const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/ldss/addrating`, {
                 professionalId,
                 professionalType,
                 childId,
@@ -114,7 +114,7 @@ const ParentLearningPlan = () => {
         }
 
         try {
-            const allChildRes = await axios.get(`http://localhost:4000/ldss/parent/getallchildofparent/${parentId}`, {
+            const allChildRes = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/parent/getallchildofparent/${parentId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -127,7 +127,7 @@ const ParentLearningPlan = () => {
 
             // Fetch educators for parent
             try {
-                const educatorRes = await axios.get(`http://localhost:4000/ldss/parent/getacceptededucator/${parentId}`, {
+                const educatorRes = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/parent/getacceptededucator/${parentId}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 if (educatorRes.data && educatorRes.data.acceptedEducators && educatorRes.data.acceptedEducators.length > 0) {
@@ -143,7 +143,7 @@ const ParentLearningPlan = () => {
 
             // Fetch therapists for parent
             try {
-                const therapistRes = await axios.get(`http://localhost:4000/ldss/parent/getacceptedtherapist/${parentId}`, {
+                const therapistRes = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/parent/getacceptedtherapist/${parentId}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 if (therapistRes.data && therapistRes.data.acceptedTherapists && therapistRes.data.acceptedTherapists.length > 0) {
@@ -170,7 +170,7 @@ const ParentLearningPlan = () => {
 
                 if (educatorId) {
                     try {
-                        const ratingRes = await axios.get(`http://localhost:4000/ldss/specific`, {
+                        const ratingRes = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/specific`, {
                             params: {
                                 professionalId: educatorId,
                                 professionalType: 'educator',
@@ -191,7 +191,7 @@ const ParentLearningPlan = () => {
 
                 if (therapistId) {
                     try {
-                        const ratingRes = await axios.get(`http://localhost:4000/ldss/specific`, {
+                        const ratingRes = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/specific`, {
                             params: {
                                 professionalId: therapistId,
                                 professionalType: 'theraphist',
@@ -254,7 +254,7 @@ const ParentLearningPlan = () => {
                     </Box> */}
                 </Box>
 
-                <Grid sx={{ pt: "10px", pl: "50px", pr: "50px", width: "%", pb: "50px" ,display:"flex",justifyContent:"center" }} container spacing={3}> {/* Added pb and spacing */}
+                <Grid sx={{ pt: "10px", pl: "50px", pr: "50px", width: "%", pb: "50px", display: "flex", justifyContent: "center" }} container spacing={3}> {/* Added pb and spacing */}
                     {allchild.map((child) => {
                         const educator = educators[child._id]; // This is the value stored (object or ID string)
                         const therapist = therapists[child._id]; // This is the value stored (object or ID string)
@@ -280,107 +280,107 @@ const ParentLearningPlan = () => {
                                         <Typography sx={{ fontSize: "32px", fontWeight: "600" }} color='primary'>{child.name}</Typography>
                                         <Box display={"flex"} alignItems={"center"} sx={{ gap: "10px", flexWrap: "wrap" }}> {/* Added flexWrap */}
                                             {/* Chat buttons also need to use the actual ID */}
-{educatorId && <Button
-  startIcon={<ChatIcon />}
-  variant='outlined'
-  color='secondary'
-  sx={{ borderRadius: "25px", mt: "10px", height: "40px", width: 'auto', padding: '8px 20px', fontSize: "13px" }}
-  onClick={async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const parentId = parentdetails._id;
-      
-      // First check if conversation exists
-      const convsResponse = await axios.get(
-        `http://localhost:4000/ldss/conversations/user/${parentId}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      
-      const existingConv = convsResponse.data.find(conv => 
-        conv.participants.includes(educatorId) && 
-        conv.participants.includes(parentId) &&
-        (conv.student?._id === child._id || conv.student === child._id)
-      );
-      
-      if (!existingConv) {
-        // Create new conversation if doesn't exist
-        await axios.post(
-          'http://localhost:4000/ldss/conversations',
-          {
-            participants: [parentId, educatorId],
-            participantModels: ['parent', 'educator'],
-            student: child._id
-          },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-      }
-      
-      // Navigate to chat
-      navigate(`/parent/chat/${educatorId}`, { 
-        state: { 
-          userType: 'educator', 
-          studentId: child._id, 
-          studentName: child.name 
-        } 
-      });
-    } catch (error) {
-      console.error('Error initiating chat:', error);
-    }
-  }}
->
-  Chat Educator
-</Button>}
+                                            {educatorId && <Button
+                                                startIcon={<ChatIcon />}
+                                                variant='outlined'
+                                                color='secondary'
+                                                sx={{ borderRadius: "25px", mt: "10px", height: "40px", width: 'auto', padding: '8px 20px', fontSize: "13px" }}
+                                                onClick={async () => {
+                                                    try {
+                                                        const token = localStorage.getItem('token');
+                                                        const parentId = parentdetails._id;
 
-{therapistId && <Button
-  startIcon={<ChatIcon />}
-  variant='outlined'
-  color='secondary'
-  sx={{ borderRadius: "25px", mt: "10px", height: "40px", width: 'auto', padding: '8px 20px', fontSize: "13px" }}
-  onClick={async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const parentId = parentdetails._id;
-      
-      // First check if conversation exists
-      const convsResponse = await axios.get(
-        `http://localhost:4000/ldss/conversations/user/${parentId}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      
-      const existingConv = convsResponse.data.find(conv => 
-        conv.participants.includes(therapistId) && 
-        conv.participants.includes(parentId) &&
-        (conv.student?._id === child._id || conv.student === child._id)
-      );
-      
-      if (!existingConv) {
-        // Create new conversation if doesn't exist
-        await axios.post(
-          'http://localhost:4000/ldss/conversations',
-          {
-            participants: [parentId, therapistId],
-            participantModels: ['parent', 'theraphist'],
-            student: child._id
-          },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-      }
-      
-      // Navigate to chat
-      navigate(`/parent/chat/${therapistId}`, { 
-        state: { 
-          userType: 'theraphist', 
-          studentId: child._id, 
-          studentName: child.name 
-        } 
-      });
-    } catch (error) {
-      console.error('Error initiating chat:', error);
-    }
-  }}
->
-  Chat Therapist
-</Button>}
+                                                        // First check if conversation exists
+                                                        const convsResponse = await axios.get(
+                                                            `${import.meta.env.VITE_SERVER_URL}/ldss/conversations/user/${parentId}`,
+                                                            { headers: { Authorization: `Bearer ${token}` } }
+                                                        );
+
+                                                        const existingConv = convsResponse.data.find(conv =>
+                                                            conv.participants.includes(educatorId) &&
+                                                            conv.participants.includes(parentId) &&
+                                                            (conv.student?._id === child._id || conv.student === child._id)
+                                                        );
+
+                                                        if (!existingConv) {
+                                                            // Create new conversation if doesn't exist
+                                                            await axios.post(
+                                                                `${import.meta.env.VITE_SERVER_URL}/ldss/conversations`,
+                                                                {
+                                                                    participants: [parentId, educatorId],
+                                                                    participantModels: ['parent', 'educator'],
+                                                                    student: child._id
+                                                                },
+                                                                { headers: { Authorization: `Bearer ${token}` } }
+                                                            );
+                                                        }
+
+                                                        // Navigate to chat
+                                                        navigate(`/parent/chat/${educatorId}`, {
+                                                            state: {
+                                                                userType: 'educator',
+                                                                studentId: child._id,
+                                                                studentName: child.name
+                                                            }
+                                                        });
+                                                    } catch (error) {
+                                                        console.error('Error initiating chat:', error);
+                                                    }
+                                                }}
+                                            >
+                                                Chat Educator
+                                            </Button>}
+
+                                            {therapistId && <Button
+                                                startIcon={<ChatIcon />}
+                                                variant='outlined'
+                                                color='secondary'
+                                                sx={{ borderRadius: "25px", mt: "10px", height: "40px", width: 'auto', padding: '8px 20px', fontSize: "13px" }}
+                                                onClick={async () => {
+                                                    try {
+                                                        const token = localStorage.getItem('token');
+                                                        const parentId = parentdetails._id;
+
+                                                        // First check if conversation exists
+                                                        const convsResponse = await axios.get(
+                                                            `${import.meta.env.VITE_SERVER_URL}/ldss/conversations/user/${parentId}`,
+                                                            { headers: { Authorization: `Bearer ${token}` } }
+                                                        );
+
+                                                        const existingConv = convsResponse.data.find(conv =>
+                                                            conv.participants.includes(therapistId) &&
+                                                            conv.participants.includes(parentId) &&
+                                                            (conv.student?._id === child._id || conv.student === child._id)
+                                                        );
+
+                                                        if (!existingConv) {
+                                                            // Create new conversation if doesn't exist
+                                                            await axios.post(
+                                                                `${import.meta.env.VITE_SERVER_URL}/ldss/conversations`,
+                                                                {
+                                                                    participants: [parentId, therapistId],
+                                                                    participantModels: ['parent', 'theraphist'],
+                                                                    student: child._id
+                                                                },
+                                                                { headers: { Authorization: `Bearer ${token}` } }
+                                                            );
+                                                        }
+
+                                                        // Navigate to chat
+                                                        navigate(`/parent/chat/${therapistId}`, {
+                                                            state: {
+                                                                userType: 'theraphist',
+                                                                studentId: child._id,
+                                                                studentName: child.name
+                                                            }
+                                                        });
+                                                    } catch (error) {
+                                                        console.error('Error initiating chat:', error);
+                                                    }
+                                                }}
+                                            >
+                                                Chat Therapist
+                                            </Button>}
 
                                         </Box>
                                     </Box>

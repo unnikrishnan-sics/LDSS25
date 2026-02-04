@@ -33,7 +33,7 @@ const AdminViewEducator = () => {
     const fetchAllEducators = async () => {
         const token = localStorage.getItem("token");
         try {
-            const alleducators = await axios.get("http://localhost:4000/ldss/educator/getalleducators", {
+            const alleducators = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/educator/getalleducators`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -58,7 +58,7 @@ const AdminViewEducator = () => {
             if (searchTerm === '') {
                 setFilteredEducators(educatorDetails);
             } else {
-                const filtered = educatorDetails.filter(educator => 
+                const filtered = educatorDetails.filter(educator =>
                     (educator.name && educator.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
                     (educator.email && educator.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
                     (educator.address && educator.address.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -86,7 +86,7 @@ const AdminViewEducator = () => {
     const fetchEducatorDetail = async (educatorId) => {
         const token = localStorage.getItem("token");
         try {
-            const response = await axios.get(`http://localhost:4000/ldss/educator/geteducator/${educatorId}`, {
+            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/educator/geteducator/${educatorId}`, {
                 headers: {
                     Authorization: `bearer ${token}`
                 }
@@ -101,7 +101,7 @@ const AdminViewEducator = () => {
     const approve = async (educatorId) => {
         const token = localStorage.getItem("token");
         try {
-            await axios.post(`http://localhost:4000/ldss/admin/educator/accept/${educatorId}`, {}, {
+            await axios.post(`${import.meta.env.VITE_SERVER_URL}/ldss/admin/educator/accept/${educatorId}`, {}, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -116,7 +116,7 @@ const AdminViewEducator = () => {
     const rejectEducator = async (educatorId) => {
         const token = localStorage.getItem("token");
         try {
-            await axios.delete(`http://localhost:4000/ldss/admin/educator/reject/${educatorId}`, {
+            await axios.delete(`${import.meta.env.VITE_SERVER_URL}/ldss/admin/educator/reject/${educatorId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -137,9 +137,9 @@ const AdminViewEducator = () => {
             <Container maxWidth="x-lg" sx={{ background: "#F6F7F9" }}>
                 <Grid container spacing={2} sx={{ height: "100vh", width: "100%" }}>
                     <Grid size={{ xs: 6, md: 2 }} sx={{ height: "100%", background: "white", margin: "15px 0px", borderRadius: "8px" }} display={'flex'} justifyContent={'start'} alignItems={'center'} flexDirection={'column'}>
-                        <AdminSideBar/>
+                        <AdminSideBar />
                     </Grid>
-                    
+
                     {/* Content (right part) */}
                     <Grid item xs={6} md={10} sx={{ height: "100%", display: "flex", justifyContent: "start", alignItems: "center", gap: "30px", flexDirection: "column", padding: "15px 0px", borderRadius: "8px", flexGrow: 1 }}>
                         <Box sx={{ height: "70px", background: "white", borderRadius: "8px", width: "100%" }} display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
@@ -215,9 +215,9 @@ const AdminViewEducator = () => {
                                 <Typography variant='h4' color='primary' sx={{ fontSize: '18px', fontWeight: "600" }}>
                                     {activeTab === 'request' ? 'Requests' : 'Educators'}
                                 </Typography>
-                                <TextField 
-                                    placeholder='search here...' 
-                                    variant="outlined" 
+                                <TextField
+                                    placeholder='search here...'
+                                    variant="outlined"
                                     value={searchTerm}
                                     onChange={handleSearchChange}
                                     InputProps={{
@@ -261,7 +261,7 @@ const AdminViewEducator = () => {
                                                         </TableCell>
                                                         <TableCell align="left">
                                                             {educator.profilePic?.filename ? (
-                                                                <Avatar src={`http://localhost:4000/uploads/${educator.profilePic.filename}`}></Avatar>
+                                                                <Avatar src={`${import.meta.env.VITE_SERVER_URL}/uploads/${educator.profilePic.filename}`}></Avatar>
                                                             ) : (
                                                                 <Avatar>{educator.name?.charAt(0)}</Avatar>
                                                             )}
@@ -272,9 +272,9 @@ const AdminViewEducator = () => {
                                                         <TableCell align="left">{educator.address}</TableCell>
                                                         <TableCell align="left">
                                                             <Tooltip title="View Details">
-                                                                <VisibilityIcon 
-                                                                    color='secondary' 
-                                                                    onClick={() => fetchEducatorDetail(educator._id)} 
+                                                                <VisibilityIcon
+                                                                    color='secondary'
+                                                                    onClick={() => fetchEducatorDetail(educator._id)}
                                                                     sx={{ cursor: 'pointer' }}
                                                                 />
                                                             </Tooltip>
@@ -321,18 +321,18 @@ const AdminViewEducator = () => {
                             height: "600px",
                             borderRadius: '8px'
                         }}>
-                            <AdminViewSingleEducator 
-                                educatordetail={educatordetail} 
-                                handleEducatorClose={handleEducatorClose} 
-                                approve={approve} 
-                                rejectEducator={rejectEducator} 
+                            <AdminViewSingleEducator
+                                educatordetail={educatordetail}
+                                handleEducatorClose={handleEducatorClose}
+                                approve={approve}
+                                rejectEducator={rejectEducator}
                             />
                         </Box>
                     </Fade>
                 </Modal>
-                
+
                 {/* Logout modal */}
-                <AdminLogout handleCloseLogout={handleCloseLogout} openLogout={openLogout}/>
+                <AdminLogout handleCloseLogout={handleCloseLogout} openLogout={openLogout} />
             </Container>
         </>
     );

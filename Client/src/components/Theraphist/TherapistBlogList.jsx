@@ -24,14 +24,14 @@ const TherapistBlogList = () => {
         // console.log('Fetching blogs from backend...'); // Debug log
         try {
             const token = localStorage.getItem('token');
-             if (!token) {
+            if (!token) {
                 console.error('No token found. Redirecting to login.');
-                 // Optionally redirect to login
-                 // navigate('/therapist/login');
-                 return; // Stop fetching
-             }
+                // Optionally redirect to login
+                // navigate('/therapist/login');
+                return; // Stop fetching
+            }
 
-            const response = await axios.get('http://localhost:4000/ldss/blog/all', {
+            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/blog/all`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -39,12 +39,12 @@ const TherapistBlogList = () => {
 
             let userId = null;
             try {
-               const decoded = jwtDecode(token);
-               userId = decoded.id; // Get user ID from token (usually a string)
+                const decoded = jwtDecode(token);
+                userId = decoded.id; // Get user ID from token (usually a string)
             } catch (e) {
-               console.error("Failed to decode token during fetch:", e);
-               // Handle error, maybe clear token or redirect
-               return;
+                console.error("Failed to decode token during fetch:", e);
+                // Handle error, maybe clear token or redirect
+                return;
             }
 
 
@@ -55,32 +55,32 @@ const TherapistBlogList = () => {
                 ...blog,
                 // Normalize likes array to always contain objects with _id
                 // This helps the isBlogLikedByUser function
-                 likes: blog.likes.map(like => typeof like === 'string' ? { _id: like } : like)
+                likes: blog.likes.map(like => typeof like === 'string' ? { _id: like } : like)
             }));
             // console.log('Processed blogs:', processedBlogs); // Debug log
 
             const myBlogsData = processedBlogs.filter(blog =>
                 blog.creatorId && String(blog.creatorId._id) === String(userId) && blog.creatorType === 'theraphist'
             );
-             // console.log('Filtered myBlogs length:', myBlogsData.length); // Debug log
+            // console.log('Filtered myBlogs length:', myBlogsData.length); // Debug log
 
             const allOtherBlogsData = processedBlogs.filter(blog =>
-                 // Check if the blog has a creatorId and it's NOT the current user
-                 blog.creatorId && String(blog.creatorId._id) !== String(userId)
-                 // Or if it is the current user but the creatorType is different (less common scenario)
-                 // || (blog.creatorId && String(blog.creatorId._id) === String(userId) && blog.creatorType !== 'theraphist')
+                // Check if the blog has a creatorId and it's NOT the current user
+                blog.creatorId && String(blog.creatorId._id) !== String(userId)
+                // Or if it is the current user but the creatorType is different (less common scenario)
+                // || (blog.creatorId && String(blog.creatorId._id) === String(userId) && blog.creatorType !== 'theraphist')
             );
-             // console.log('Filtered allOtherBlogs length:', allOtherBlogsData.length); // Debug log
+            // console.log('Filtered allOtherBlogs length:', allOtherBlogsData.length); // Debug log
 
             setMyBlogs(myBlogsData);
             setBlogs(allOtherBlogsData); // Setting state will trigger re-render
 
         } catch (error) {
             console.error('Error fetching blogs:', error);
-             if (error.response) {
+            if (error.response) {
                 console.error('Fetch error response data:', error.response.data);
                 console.error('Fetch error response status:', error.response.status);
-             }
+            }
         }
     };
 
@@ -90,37 +90,37 @@ const TherapistBlogList = () => {
     }, []); // Empty dependency array means this effect runs once on mount
 
     // Helper function to check if the current user has liked a specific blog
-     const isBlogLikedByUser = (blog) => {
-         const token = localStorage.getItem('token');
-         if (!token) return false;
+    const isBlogLikedByUser = (blog) => {
+        const token = localStorage.getItem('token');
+        if (!token) return false;
 
-         let userId = null;
-         try {
+        let userId = null;
+        try {
             const decoded = jwtDecode(token);
             userId = decoded.id; // Get user ID string from token
-         } catch (e) {
+        } catch (e) {
             console.error("Failed to decode token in isBlogLikedByUser:", e);
             return false; // Cannot get user ID
-         }
+        }
 
-         if (!userId) return false; // No user ID obtained
+        if (!userId) return false; // No user ID obtained
 
-         // Check if the likes array contains the current user's ID
-         // The likes array can contain either populated user objects or just IDs
-         return blog.likes.some(like => {
-             let likeId = null;
-             // Safely extract the ID from the 'like' entry
-             if (typeof like === 'string') {
-                 likeId = like;
-             } else if (like && typeof like === 'object' && like._id) {
-                 likeId = like._id;
-             }
+        // Check if the likes array contains the current user's ID
+        // The likes array can contain either populated user objects or just IDs
+        return blog.likes.some(like => {
+            let likeId = null;
+            // Safely extract the ID from the 'like' entry
+            if (typeof like === 'string') {
+                likeId = like;
+            } else if (like && typeof like === 'object' && like._id) {
+                likeId = like._id;
+            }
 
-             // Compare IDs after ensuring both are strings
-             // Use String() to handle potential ObjectId objects or strings consistently
-             return likeId !== null && String(likeId) === String(userId);
-         });
-     };
+            // Compare IDs after ensuring both are strings
+            // Use String() to handle potential ObjectId objects or strings consistently
+            return likeId !== null && String(likeId) === String(userId);
+        });
+    };
 
 
     const handleLike = async (blogId) => {
@@ -128,8 +128,8 @@ const TherapistBlogList = () => {
         setIsLiking(blogId); // Disable button for this blog
         try {
             const token = localStorage.getItem('token');
-             if (!token) { console.error('No token for like.'); return; }
-            await axios.post(`http://localhost:4000/ldss/blog/like/${blogId}`, {}, {
+            if (!token) { console.error('No token for like.'); return; }
+            await axios.post(`${import.meta.env.VITE_SERVER_URL}/ldss/blog/like/${blogId}`, {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             // console.log(`Blog liked: ${blogId}. Refetching...`); // Debug log
@@ -137,33 +137,33 @@ const TherapistBlogList = () => {
             await fetchBlogs(); // Use await to ensure state is updated before potentially enabling button
         } catch (error) {
             console.error(`Error liking blog ${blogId}:`, error);
-             if (error.response) {
-                 console.error('Like error response data:', error.response.data);
-                 console.error('Like error response status:', error.response.status);
-             }
+            if (error.response) {
+                console.error('Like error response data:', error.response.data);
+                console.error('Like error response status:', error.response.status);
+            }
         } finally {
             setIsLiking(null); // Enable button
         }
     };
 
     const handleUnlike = async (blogId) => {
-         // console.log(`Attempting to unlike blog: ${blogId}`); // Debug log
-         setIsLiking(blogId); // Disable button for this blog
+        // console.log(`Attempting to unlike blog: ${blogId}`); // Debug log
+        setIsLiking(blogId); // Disable button for this blog
         try {
             const token = localStorage.getItem('token');
             if (!token) { console.error('No token for unlike.'); return; }
-            await axios.delete(`http://localhost:4000/ldss/blog/unlike/${blogId}`, {
+            await axios.delete(`${import.meta.env.VITE_SERVER_URL}/ldss/blog/unlike/${blogId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             // console.log(`Blog unliked: ${blogId}. Refetching...`); // Debug log
             // Refetch all blogs to update like counts and statuses
             await fetchBlogs(); // Use await to ensure state is updated
         } catch (error) {
-             console.error(`Error unliking blog ${blogId}:`, error);
-             if (error.response) {
-                 console.error('Unlike error response data:', error.response.data);
-                 console.error('Unlike error response status:', error.response.status);
-             }
+            console.error(`Error unliking blog ${blogId}:`, error);
+            if (error.response) {
+                console.error('Unlike error response data:', error.response.data);
+                console.error('Unlike error response status:', error.response.status);
+            }
         } finally {
             setIsLiking(null); // Enable button
         }
@@ -181,10 +181,10 @@ const TherapistBlogList = () => {
 
         try {
             const token = localStorage.getItem('token');
-             if (!token) { console.error('No token for delete.'); setIsDeleting(false); return; }
+            if (!token) { console.error('No token for delete.'); setIsDeleting(false); return; }
 
             // console.log(`Sending DELETE request for blog ID: ${blogId}`); // Debug log
-            const response = await axios.delete(`http://localhost:4000/ldss/blog/delete/${blogId}`, {
+            const response = await axios.delete(`${import.meta.env.VITE_SERVER_URL}/ldss/blog/delete/${blogId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -206,10 +206,10 @@ const TherapistBlogList = () => {
             });
 
             setBlogs(prevBlogs => {
-                 const newState = prevBlogs.filter(blog => blog._id !== blogId);
-                 // console.log('State AFTER filtering - new blogs length:', newState.length); // Debug log
-                 // console.log('State AFTER filtering - new blogs IDs:', newState.map(b => b._id)); // Debug log
-                 return newState;
+                const newState = prevBlogs.filter(blog => blog._id !== blogId);
+                // console.log('State AFTER filtering - new blogs length:', newState.length); // Debug log
+                // console.log('State AFTER filtering - new blogs IDs:', newState.map(b => b._id)); // Debug log
+                return newState;
             });
 
             // console.log(`State update called. Blog ${blogId} should be removed from view on next render.`); // Debug log
@@ -219,10 +219,10 @@ const TherapistBlogList = () => {
 
         } catch (error) {
             console.error(`Error deleting blog ${blogId}:`, error);
-             if (error.response) {
-                 console.error('Delete error response data:', error.response.data);
-                 console.error('Delete error response status:', error.response.status);
-             }
+            if (error.response) {
+                console.error('Delete error response data:', error.response.data);
+                console.error('Delete error response status:', error.response.status);
+            }
             alert('Failed to delete blog. Please check console for details.');
         } finally {
             // console.log('Delete process finished for blog ID:', blogId); // Debug log
@@ -234,10 +234,10 @@ const TherapistBlogList = () => {
     const filteredBlogs = blogs.filter(blog =>
         blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         blog.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-         // Add creator name to search? Safely access creatorId and name
+        // Add creator name to search? Safely access creatorId and name
         (blog.creatorId?.name || '').toLowerCase().includes(searchTerm.toLowerCase())
     );
-     // console.log('Filtered blogs length for display:', filteredBlogs.length); // Debug log
+    // console.log('Filtered blogs length for display:', filteredBlogs.length); // Debug log
 
     return (
         <>
@@ -280,14 +280,14 @@ const TherapistBlogList = () => {
                                     <CardMedia
                                         component="img"
                                         height="140"
-                                        image={`http://localhost:4000/uploads/blogs/${blog.image.filename}`}
+                                        image={`${import.meta.env.VITE_SERVER_URL}/uploads/blogs/${blog.image.filename}`}
                                         alt={blog.title}
                                     />
                                 ) : (
                                     // Placeholder or nothing if no image
-                                     <Box sx={{ height: 140, bgcolor: 'grey.300', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    <Box sx={{ height: 140, bgcolor: 'grey.300', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                         <Typography variant="caption" color="text.secondary">No Image</Typography>
-                                     </Box>
+                                    </Box>
                                 )}
                                 <CardContent sx={{ flexGrow: 1 }}>
                                     <Typography gutterBottom variant="h5" component="div">
@@ -302,8 +302,8 @@ const TherapistBlogList = () => {
                                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                                         <Avatar
                                             src={blog.creatorId?.profilePic?.filename ?
-                                                `http://localhost:4000/uploads/${blog.creatorId.profilePic.filename}` : ''}
-                                             alt={blog.creatorId?.name || 'Creator'} // Added alt text
+                                                `${import.meta.env.VITE_SERVER_URL}/uploads/${blog.creatorId.profilePic.filename}` : ''}
+                                            alt={blog.creatorId?.name || 'Creator'} // Added alt text
                                         />
                                         <Typography variant="body2" sx={{ ml: 1 }}>
                                             {blog.creatorId?.name || 'Unknown Creator'} {/* Added fallback name */}
@@ -369,14 +369,14 @@ const TherapistBlogList = () => {
                                         <CardMedia
                                             component="img"
                                             height="140"
-                                            image={`http://localhost:4000/uploads/blogs/${blog.image.filename}`}
+                                            image={`${import.meta.env.VITE_SERVER_URL}/uploads/blogs/${blog.image.filename}`}
                                             alt={blog.title}
                                         />
                                     ) : (
-                                         // Placeholder or nothing if no image
-                                         <Box sx={{ height: 140, bgcolor: 'grey.300', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        // Placeholder or nothing if no image
+                                        <Box sx={{ height: 140, bgcolor: 'grey.300', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                             <Typography variant="caption" color="text.secondary">No Image</Typography>
-                                         </Box>
+                                        </Box>
                                     )}
                                     <CardContent sx={{ flexGrow: 1 }}>
                                         <Typography gutterBottom variant="h5" component="div">
@@ -390,16 +390,16 @@ const TherapistBlogList = () => {
                                         </Typography>
                                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                                             <Avatar
-                                                 src={blog.creatorId?.profilePic?.filename ?
-                                                    `http://localhost:4000/uploads/${blog.creatorId.profilePic.filename}` : ''}
-                                                 alt={blog.creatorId?.name || 'Creator'} // Added alt text
+                                                src={blog.creatorId?.profilePic?.filename ?
+                                                    `${import.meta.env.VITE_SERVER_URL}/uploads/${blog.creatorId.profilePic.filename}` : ''}
+                                                alt={blog.creatorId?.name || 'Creator'} // Added alt text
                                             />
                                             <Typography variant="body2" sx={{ ml: 1 }}>
                                                 {blog.creatorId?.name || 'Unknown Creator'} {/* Added fallback name */}
                                             </Typography>
                                         </Box>
                                     </CardContent>
-                                     {/* Actions section - Only Like/Unlike for other users' blogs */}
+                                    {/* Actions section - Only Like/Unlike for other users' blogs */}
                                     {/* <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', p: 2, pt: 0 }}>
                                         {isBlogLikedByUser(blog) ? (
                                             <IconButton

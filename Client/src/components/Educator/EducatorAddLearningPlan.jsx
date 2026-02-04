@@ -7,7 +7,7 @@ import axios from "axios";
 import { toast } from 'react-toastify';
 
 const EducatorAddLearningPlan = () => {
-    const activityContainerStyle = { 
+    const activityContainerStyle = {
         width: '360px',
         p: 2,
         borderRadius: '8px',
@@ -89,13 +89,13 @@ const EducatorAddLearningPlan = () => {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         let error = '';
-        
+
         if (name === 'goal') {
             error = validateGoal(value);
         } else if (name === 'planDuration') {
             error = validatePlanDuration(value);
         }
-        
+
         setLearningPlan(prev => ({ ...prev, [name]: value }));
         setErrors(prev => ({
             ...prev,
@@ -107,7 +107,7 @@ const EducatorAddLearningPlan = () => {
         const { name, value } = e.target;
         const updatedWeeks = [...learningPlan.weeks];
         updatedWeeks[weekIndex].activities[activityIndex][name] = value;
-        
+
         // Validate the field
         let error = '';
         if (name === 'title') {
@@ -115,7 +115,7 @@ const EducatorAddLearningPlan = () => {
         } else if (name === 'description') {
             error = validateDescription(value);
         }
-        
+
         // Update errors
         const updatedErrors = JSON.parse(JSON.stringify(errors));
         if (!updatedErrors.weeks[weekIndex]) {
@@ -125,7 +125,7 @@ const EducatorAddLearningPlan = () => {
             updatedErrors.weeks[weekIndex].activities[activityIndex] = {};
         }
         updatedErrors.weeks[weekIndex].activities[activityIndex][name] = error;
-        
+
         setLearningPlan(prev => ({ ...prev, weeks: updatedWeeks }));
         setErrors(updatedErrors);
     };
@@ -133,14 +133,14 @@ const EducatorAddLearningPlan = () => {
     const handleAddActivity = (weekIndex) => {
         const updatedWeeks = [...learningPlan.weeks];
         updatedWeeks[weekIndex].activities.push({ title: '', description: '' });
-        
+
         // Add corresponding error structure
         const updatedErrors = JSON.parse(JSON.stringify(errors));
         if (!updatedErrors.weeks[weekIndex]) {
             updatedErrors.weeks[weekIndex] = { activities: [] };
         }
         updatedErrors.weeks[weekIndex].activities.push({ title: '', description: '' });
-        
+
         setLearningPlan(prev => ({ ...prev, weeks: updatedWeeks }));
         setErrors(updatedErrors);
     };
@@ -150,80 +150,80 @@ const EducatorAddLearningPlan = () => {
             ...prev,
             weeks: [...prev.weeks, { activities: [{ title: '', description: '' }] }]
         }));
-        
+
         setErrors(prev => ({
             ...prev,
             weeks: [...prev.weeks, { activities: [{ title: '', description: '' }] }]
         }));
     };
-    
+
     const validateAllFields = () => {
         let isValid = true;
         const newErrors = JSON.parse(JSON.stringify(errors));
-        
+
         // Validate goal
         newErrors.goal = validateGoal(learningPlan.goal);
         if (newErrors.goal) isValid = false;
-        
+
         // Validate plan duration
         newErrors.planDuration = validatePlanDuration(learningPlan.planDuration);
         if (newErrors.planDuration) isValid = false;
-        
+
         // Validate weeks and activities
         learningPlan.weeks.forEach((week, weekIndex) => {
             week.activities.forEach((activity, activityIndex) => {
                 newErrors.weeks[weekIndex] = newErrors.weeks[weekIndex] || { activities: [] };
                 newErrors.weeks[weekIndex].activities[activityIndex] = newErrors.weeks[weekIndex].activities[activityIndex] || {};
-                
+
                 // Validate title
                 newErrors.weeks[weekIndex].activities[activityIndex].title = validateTitle(activity.title);
                 if (newErrors.weeks[weekIndex].activities[activityIndex].title) isValid = false;
-                
+
                 // Validate description
                 newErrors.weeks[weekIndex].activities[activityIndex].description = validateDescription(activity.description);
                 if (newErrors.weeks[weekIndex].activities[activityIndex].description) isValid = false;
             });
         });
-        
+
         setErrors(newErrors);
         return isValid;
     };
-    
-    const navigate = useNavigate();
-const handleSubmit = async () => {
-    if (!validateAllFields()) {
-        toast.error('Please fix all validation errors before submitting');
-        return;
-    }
-    
-    console.log("Submitted Learning Plan:", learningPlan);
-    const token = localStorage.getItem('token');
-    const educatorId = (JSON.parse(localStorage.getItem("educatorDetails")))._id;
-    const payload = {
-        ...learningPlan,
-        educatorId: educatorId,
-        childId: childId
-    };
 
-    try {
-        const plan = await axios.post(`http://localhost:4000/ldss/educator/addlearning`, payload, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        console.log(plan);
-        if (plan.data.message === "Learning plan already added for this student.") {
-            toast.error("Learning plan already added for this student");
-            navigate(`/educator/viewlearningplan/${childId}`);
-        } else {
-            toast.success("Learning plan added successfully!");
-            navigate(-1); // This will go back to the previous page
+    const navigate = useNavigate();
+    const handleSubmit = async () => {
+        if (!validateAllFields()) {
+            toast.error('Please fix all validation errors before submitting');
+            return;
         }
-    } catch (error) {
-        toast.error('Error submitting learning plan');
-        console.error(error);
-    }
-};
+
+        console.log("Submitted Learning Plan:", learningPlan);
+        const token = localStorage.getItem('token');
+        const educatorId = (JSON.parse(localStorage.getItem("educatorDetails")))._id;
+        const payload = {
+            ...learningPlan,
+            educatorId: educatorId,
+            childId: childId
+        };
+
+        try {
+            const plan = await axios.post(`${import.meta.env.VITE_SERVER_URL}/ldss/educator/addlearning`, payload, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            console.log(plan);
+            if (plan.data.message === "Learning plan already added for this student.") {
+                toast.error("Learning plan already added for this student");
+                navigate(`/educator/viewlearningplan/${childId}`);
+            } else {
+                toast.success("Learning plan added successfully!");
+                navigate(-1); // This will go back to the previous page
+            }
+        } catch (error) {
+            toast.error('Error submitting learning plan');
+            console.error(error);
+        }
+    };
     return (
         <>
             <EducatorNavbar educatorDetails={educatorDetails} navigateToProfile={navigateToProfile} />
@@ -285,7 +285,7 @@ const handleSubmit = async () => {
                     <Box key={weekIndex} display="flex" flexDirection="column" gap={2} alignItems="center" sx={{ width: '100%' }}>
                         <Typography color='primary' sx={{ fontSize: "18px", fontWeight: "600" }}>{`Week ${weekIndex + 1}`}</Typography>
 
-                        <Box sx={{ 
+                        <Box sx={{
                             width: '100%',
                             display: 'flex',
                             flexWrap: 'wrap',
@@ -307,18 +307,18 @@ const handleSubmit = async () => {
                                             onChange={(e) => handleActivityChange(weekIndex, activityIndex, e)}
                                             type='text'
                                         />
-                                        {errors.weeks[weekIndex]?.activities[activityIndex]?.title && 
+                                        {errors.weeks[weekIndex]?.activities[activityIndex]?.title &&
                                             <span style={errorStyle}>{errors.weeks[weekIndex].activities[activityIndex].title}</span>}
                                     </div>
-                                    <div style={{height: "85px", width: "100%", display: "flex", flexDirection: "column", justifyContent: "start", position: "relative"}}>
+                                    <div style={{ height: "85px", width: "100%", display: "flex", flexDirection: "column", justifyContent: "start", position: "relative" }}>
                                         <label>Description</label>
                                         <input
-                                            style={{height: "60px", borderRadius: "8px", border: "1px solid #CCCCCC", padding: '8px', width: '100%'} }
+                                            style={{ height: "60px", borderRadius: "8px", border: "1px solid #CCCCCC", padding: '8px', width: '100%' }}
                                             name='description'
                                             value={activity.description}
                                             onChange={(e) => handleActivityChange(weekIndex, activityIndex, e)}
                                         />
-                                        {errors.weeks[weekIndex]?.activities[activityIndex]?.description && 
+                                        {errors.weeks[weekIndex]?.activities[activityIndex]?.description &&
                                             <span style={errorStyle}>{errors.weeks[weekIndex].activities[activityIndex].description}</span>}
                                     </div>
                                 </Box>
@@ -371,9 +371,9 @@ const handleSubmit = async () => {
                 >
                     Submit
                 </Button>
-                
+
             </Box>
-            
+
         </>
     );
 };

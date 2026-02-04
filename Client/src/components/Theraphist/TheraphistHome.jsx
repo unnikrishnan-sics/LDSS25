@@ -50,7 +50,7 @@ const TheraphistHome = () => {
             const token = localStorage.getItem('token');
             if (!token) return;
             const decoded = jwtDecode(token);
-            const response = await axios.get(`http://localhost:4000/ldss/theraphist/gettheraphist/${decoded.id}`, {
+            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/theraphist/gettheraphist/${decoded.id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (response.data?.theraphist) {
@@ -69,7 +69,7 @@ const TheraphistHome = () => {
             const therapistId = therapistDetails._id;
             if (!therapistId) return;
             const response = await axios.get(
-                `http://localhost:4000/ldss/theraphist/parentsrequest/${therapistId}`,
+                `${import.meta.env.VITE_SERVER_URL}/ldss/theraphist/parentsrequest/${therapistId}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             if (response.data?.request) {
@@ -84,7 +84,7 @@ const TheraphistHome = () => {
         try {
             const token = localStorage.getItem("token");
             const response = await axios.get(
-                `http://localhost:4000/ldss/theraphist/viewrequestedparent/${requestId}`,
+                `${import.meta.env.VITE_SERVER_URL}/ldss/theraphist/viewrequestedparent/${requestId}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             if (response.data?.viewRequest) {
@@ -100,7 +100,7 @@ const TheraphistHome = () => {
         try {
             const token = localStorage.getItem("token");
             await axios.post(
-                `http://localhost:4000/ldss/theraphist/acceptrequest/${requestId}`,
+                `${import.meta.env.VITE_SERVER_URL}/ldss/theraphist/acceptrequest/${requestId}`,
                 {},
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -115,7 +115,7 @@ const TheraphistHome = () => {
         try {
             const token = localStorage.getItem("token");
             await axios.post(
-                `http://localhost:4000/ldss/theraphist/rejectrequest/${requestId}`,
+                `${import.meta.env.VITE_SERVER_URL}/ldss/theraphist/rejectrequest/${requestId}`,
                 {},
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -285,181 +285,181 @@ const TheraphistHome = () => {
                 </Container>
             </Box>
 
-                   
 
-{parentRequest.filter(request => request.status === "pending").length > 0 && (
-    <Box id="requests-section" sx={{ py: 8, backgroundColor: '#F0F6FE' }}>
-        <Container maxWidth="xl">
-            <Box textAlign="center" mb={6}>
-                <Typography variant="h2" sx={{
-                    fontSize: { xs: '2rem', md: '2.5rem' },
-                    fontWeight: 800,
-                    mb: 2,
-                    position: 'relative',
-                    display: 'inline-block',
-                    '&::after': {
-                        content: '""',
-                        position: 'absolute',
-                        bottom: '-10px',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        width: '80px',
-                        height: '4px',
-                        backgroundColor: '#1967D2',
-                        borderRadius: '2px'
-                    }
-                }}>
-                    Parent's Requests
-                </Typography>
-                <Typography variant="body1" sx={{ color: '#718096', maxWidth: '600px', mx: 'auto' }}>
-                    Review and respond to requests from parents seeking your expertise
-                </Typography>
-            </Box>
 
-            <Grid container spacing={4}>
-                {parentRequest.filter(request => request.status === "pending").map((request, index) => (
-                    <Grid item xs={12} sm={6} md={4} key={index}>
-                        <Card sx={{
-                            borderRadius: '16px',
-                            boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
-                            overflow: 'hidden',
-                            transition: 'all 0.3s ease',
-                            height: '100%',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            '&:hover': {
-                                transform: 'translateY(-5px)',
-                                boxShadow: '0 15px 35px rgba(0,0,0,0.1)'
-                            }
-                        }}>
-                            <Box sx={{ p: 3, flexGrow: 1 }}>
-                                <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                                    <Box sx={{
-                                        width: '80px',
-                                        height: '80px',
-                                        borderRadius: '12px',
-                                        overflow: 'hidden',
-                                        flexShrink: 0,
-                                        mr: 3,
-                                        position: 'relative'
-                                    }}>
-                                        <CardMedia
-                                            component="img"
-                                            image={`http://localhost:4000/uploads/${request.parentId.profilePic?.filename}`}
-                                            alt="Parent profile"
-                                            sx={{
-                                                width: '100%',
-                                                height: '100%',
-                                                objectFit: 'cover'
-                                            }}
-                                        />
-                                        <VerifiedIcon sx={{
-                                            position: 'absolute',
-                                            bottom: 5,
-                                            right: 5,
-                                            color: '#1967D2',
-                                            backgroundColor: 'white',
-                                            borderRadius: '50%',
-                                            padding: '2px'
-                                        }} />
-                                    </Box>
-                                    <Box>
-                                        <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
-                                            {request.parentId.name}
-                                        </Typography>
-                                        <Typography variant="body2" sx={{ color: '#718096', mb: 1 }}>
-                                            {request.parentId.address}
-                                        </Typography>
-                                        <Typography variant="body2" sx={{ color: '#718096' }}>
-                                            {request.parentId.phone}
-                                        </Typography>
-                                    </Box>
-                                </Box>
-                            </Box>
-                            <Box sx={{
-                                px: 3,
-                                pb: 3,
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center'
+            {parentRequest.filter(request => request.status === "pending").length > 0 && (
+                <Box id="requests-section" sx={{ py: 8, backgroundColor: '#F0F6FE' }}>
+                    <Container maxWidth="xl">
+                        <Box textAlign="center" mb={6}>
+                            <Typography variant="h2" sx={{
+                                fontSize: { xs: '2rem', md: '2.5rem' },
+                                fontWeight: 800,
+                                mb: 2,
+                                position: 'relative',
+                                display: 'inline-block',
+                                '&::after': {
+                                    content: '""',
+                                    position: 'absolute',
+                                    bottom: '-10px',
+                                    left: '50%',
+                                    transform: 'translateX(-50%)',
+                                    width: '80px',
+                                    height: '4px',
+                                    backgroundColor: '#1967D2',
+                                    borderRadius: '2px'
+                                }
                             }}>
+                                Parent's Requests
+                            </Typography>
+                            <Typography variant="body1" sx={{ color: '#718096', maxWidth: '600px', mx: 'auto' }}>
+                                Review and respond to requests from parents seeking your expertise
+                            </Typography>
+                        </Box>
+
+                        <Grid container spacing={4}>
+                            {parentRequest.filter(request => request.status === "pending").map((request, index) => (
+                                <Grid item xs={12} sm={6} md={4} key={index}>
+                                    <Card sx={{
+                                        borderRadius: '16px',
+                                        boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
+                                        overflow: 'hidden',
+                                        transition: 'all 0.3s ease',
+                                        height: '100%',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        '&:hover': {
+                                            transform: 'translateY(-5px)',
+                                            boxShadow: '0 15px 35px rgba(0,0,0,0.1)'
+                                        }
+                                    }}>
+                                        <Box sx={{ p: 3, flexGrow: 1 }}>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+                                                <Box sx={{
+                                                    width: '80px',
+                                                    height: '80px',
+                                                    borderRadius: '12px',
+                                                    overflow: 'hidden',
+                                                    flexShrink: 0,
+                                                    mr: 3,
+                                                    position: 'relative'
+                                                }}>
+                                                    <CardMedia
+                                                        component="img"
+                                                        image={`${import.meta.env.VITE_SERVER_URL}/uploads/${request.parentId.profilePic?.filename}`}
+                                                        alt="Parent profile"
+                                                        sx={{
+                                                            width: '100%',
+                                                            height: '100%',
+                                                            objectFit: 'cover'
+                                                        }}
+                                                    />
+                                                    <VerifiedIcon sx={{
+                                                        position: 'absolute',
+                                                        bottom: 5,
+                                                        right: 5,
+                                                        color: '#1967D2',
+                                                        backgroundColor: 'white',
+                                                        borderRadius: '50%',
+                                                        padding: '2px'
+                                                    }} />
+                                                </Box>
+                                                <Box>
+                                                    <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
+                                                        {request.parentId.name}
+                                                    </Typography>
+                                                    <Typography variant="body2" sx={{ color: '#718096', mb: 1 }}>
+                                                        {request.parentId.address}
+                                                    </Typography>
+                                                    <Typography variant="body2" sx={{ color: '#718096' }}>
+                                                        {request.parentId.phone}
+                                                    </Typography>
+                                                </Box>
+                                            </Box>
+                                        </Box>
+                                        <Box sx={{
+                                            px: 3,
+                                            pb: 3,
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center'
+                                        }}>
+                                            <Button
+                                                onClick={() => fetchParentByRequestId(request._id)}
+                                                sx={{
+                                                    textTransform: 'none',
+                                                    color: '#1967D2',
+                                                    fontWeight: 600,
+                                                    '&:hover': {
+                                                        backgroundColor: 'transparent',
+                                                        textDecoration: 'underline'
+                                                    }
+                                                }}
+                                            >
+                                                View Child
+                                            </Button>
+                                            <Box sx={{ display: 'flex', gap: 1 }}>
+                                                <Button
+                                                    onClick={() => rejectParentRequest(request._id)}
+                                                    variant="outlined"
+                                                    sx={{
+                                                        borderRadius: '50px',
+                                                        px: 2,
+                                                        py: 0.5,
+                                                        borderColor: '#E53E3E',
+                                                        color: '#E53E3E',
+                                                        '&:hover': {
+                                                            backgroundColor: 'rgba(229, 62, 62, 0.04)',
+                                                            borderColor: '#E53E3E'
+                                                        }
+                                                    }}
+                                                >
+                                                    Reject
+                                                </Button>
+                                                <Button
+                                                    onClick={() => acceptParentRequest(request._id)}
+                                                    variant="contained"
+                                                    sx={{
+                                                        borderRadius: '50px',
+                                                        px: 2,
+                                                        py: 0.5,
+                                                        backgroundColor: '#1967D2',
+                                                        '&:hover': {
+                                                            backgroundColor: '#1659b5'
+                                                        }
+                                                    }}
+                                                >
+                                                    Accept
+                                                </Button>
+                                            </Box>
+                                        </Box>
+                                    </Card>
+                                </Grid>
+                            ))}
+                        </Grid>
+
+                        <Box textAlign="center" mt={6}>
+                            <Link
+                                to="/therapist/parentsrequest"
+                                style={{ textDecoration: 'none' }}
+                            >
                                 <Button
-                                    onClick={() => fetchParentByRequestId(request._id)}
+                                    variant="text"
+                                    endIcon={<ArrowRightAltIcon />}
                                     sx={{
-                                        textTransform: 'none',
                                         color: '#1967D2',
                                         fontWeight: 600,
                                         '&:hover': {
-                                            backgroundColor: 'transparent',
-                                            textDecoration: 'underline'
+                                            backgroundColor: 'rgba(25, 103, 210, 0.04)'
                                         }
                                     }}
                                 >
-                                    View Child
+                                    View All Requests
                                 </Button>
-                                <Box sx={{ display: 'flex', gap: 1 }}>
-                                    <Button
-                                        onClick={() => rejectParentRequest(request._id)}
-                                        variant="outlined"
-                                        sx={{
-                                            borderRadius: '50px',
-                                            px: 2,
-                                            py: 0.5,
-                                            borderColor: '#E53E3E',
-                                            color: '#E53E3E',
-                                            '&:hover': {
-                                                backgroundColor: 'rgba(229, 62, 62, 0.04)',
-                                                borderColor: '#E53E3E'
-                                            }
-                                        }}
-                                    >
-                                        Reject
-                                    </Button>
-                                    <Button
-                                        onClick={() => acceptParentRequest(request._id)}
-                                        variant="contained"
-                                        sx={{
-                                            borderRadius: '50px',
-                                            px: 2,
-                                            py: 0.5,
-                                            backgroundColor: '#1967D2',
-                                            '&:hover': {
-                                                backgroundColor: '#1659b5'
-                                            }
-                                        }}
-                                    >
-                                        Accept
-                                    </Button>
-                                </Box>
-                            </Box>
-                        </Card>
-                    </Grid>
-                ))}
-            </Grid>
-
-            <Box textAlign="center" mt={6}>
-                <Link
-                    to="/therapist/parentsrequest"
-                    style={{ textDecoration: 'none' }}
-                >
-                    <Button
-                        variant="text"
-                        endIcon={<ArrowRightAltIcon />}
-                        sx={{
-                            color: '#1967D2',
-                            fontWeight: 600,
-                            '&:hover': {
-                                backgroundColor: 'rgba(25, 103, 210, 0.04)'
-                            }
-                        }}
-                    >
-                        View All Requests
-                    </Button>
-                </Link>
-            </Box>
-        </Container>
-    </Box>
-)}
+                            </Link>
+                        </Box>
+                    </Container>
+                </Box>
+            )}
 
 
 
@@ -592,40 +592,40 @@ const TheraphistHome = () => {
                 </Container>
             </Box>
 
-<Modal
-    open={openParent}
-    onClose={handleParentClose}
-    closeAfterTransition
-    BackdropComponent={Backdrop}
-    BackdropProps={{ timeout: 500 }}
->
-    <Fade in={openParent}>
-        <Box sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            bgcolor: 'background.paper',
-            boxShadow: 24,
-            borderRadius: '16px',
-            overflow: 'hidden',
-            width: { xs: '90%', md: '80%' },
-            maxHeight: '90vh',
-            overflowY: 'auto'
-        }}>
-            {requestDetail && (
-                <TherapistViewParentDetails
-                    handleParentClose={handleParentClose}
-                    requestDetail={requestDetail}
-                    onAccept={() => acceptParentRequest(requestDetail._id)}
-                    onReject={() => rejectParentRequest(requestDetail._id)}
-                />
-            )}
-        </Box>
-    </Fade>
-</Modal>
+            <Modal
+                open={openParent}
+                onClose={handleParentClose}
+                closeAfterTransition
+                BackdropComponent={Backdrop}
+                BackdropProps={{ timeout: 500 }}
+            >
+                <Fade in={openParent}>
+                    <Box sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        bgcolor: 'background.paper',
+                        boxShadow: 24,
+                        borderRadius: '16px',
+                        overflow: 'hidden',
+                        width: { xs: '90%', md: '80%' },
+                        maxHeight: '90vh',
+                        overflowY: 'auto'
+                    }}>
+                        {requestDetail && (
+                            <TherapistViewParentDetails
+                                handleParentClose={handleParentClose}
+                                requestDetail={requestDetail}
+                                onAccept={() => acceptParentRequest(requestDetail._id)}
+                                onReject={() => rejectParentRequest(requestDetail._id)}
+                            />
+                        )}
+                    </Box>
+                </Fade>
+            </Modal>
 
-<Footer userRole="therapist" />        </>
+            <Footer userRole="therapist" />        </>
     );
 };
 

@@ -38,7 +38,7 @@ const EducatorAllStudents = () => {
     try {
       const decoded = jwtDecode(token);
       const response = await axios.get(
-        `http://localhost:4000/ldss/educator/geteducator/${decoded.id}`,
+        `${import.meta.env.VITE_SERVER_URL}/ldss/educator/geteducator/${decoded.id}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -71,7 +71,7 @@ const EducatorAllStudents = () => {
       const educatorId = JSON.parse(localStorage.getItem("educatorDetails"))?._id;
 
       const childrenResponse = await axios.get(
-        `http://localhost:4000/ldss/educator/getchildrenofallapprovedparents/${educatorId}`,
+        `${import.meta.env.VITE_SERVER_URL}/ldss/educator/getchildrenofallapprovedparents/${educatorId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -79,7 +79,7 @@ const EducatorAllStudents = () => {
         childrenResponse.data.children.map(async (child) => {
           try {
             const planResponse = await axios.get(
-              `http://localhost:4000/ldss/educator/getstudentplan/${educatorId}/${child._id}`,
+              `${import.meta.env.VITE_SERVER_URL}/ldss/educator/getstudentplan/${educatorId}/${child._id}`,
               { headers: { Authorization: `Bearer ${token}` } }
             );
 
@@ -89,17 +89,17 @@ const EducatorAllStudents = () => {
 
             if (learningPlan) {
               weeks = learningPlan.planDuration || 0;
-                console.log(`Learning Plan for child ${child.name}:`, learningPlan); // DEBUG
+              console.log(`Learning Plan for child ${child.name}:`, learningPlan); // DEBUG
 
               // Calculate completed weeks (all activities in week must be completed)
               const completedWeeks = learningPlan.weeks?.filter(week => {
-                   if (!week.activities || week.activities.length === 0) return false; // Skip weeks with no activities
+                if (!week.activities || week.activities.length === 0) return false; // Skip weeks with no activities
 
-                  const allActivitiesCompleted = week.activities.every(activity => activity.status === "completed");
-                  console.log(`Week activities for child ${child.name}:`, week.activities); // DEBUG
-                  console.log(`All activities completed for the weeks for ${child.name}:`, allActivitiesCompleted); // DEBUG
+                const allActivitiesCompleted = week.activities.every(activity => activity.status === "completed");
+                console.log(`Week activities for child ${child.name}:`, week.activities); // DEBUG
+                console.log(`All activities completed for the weeks for ${child.name}:`, allActivitiesCompleted); // DEBUG
 
-                  return allActivitiesCompleted;
+                return allActivitiesCompleted;
               }).length || 0;
               console.log(`Completed Weeks for child ${child.name}:`, completedWeeks); // DEBUG
 

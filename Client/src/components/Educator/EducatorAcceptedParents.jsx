@@ -50,7 +50,7 @@ const EducatorAcceptedParents = () => {
     const fetchEducator = async () => {
         const token = localStorage.getItem('token');
         const decoded = jwtDecode(token);
-        const response = await axios.get(`http://localhost:4000/ldss/educator/geteducator/${decoded.id}`, {
+        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/educator/geteducator/${decoded.id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -68,7 +68,7 @@ const EducatorAcceptedParents = () => {
             try {
                 const token = localStorage.getItem("token");
                 const educatorId = JSON.parse(localStorage.getItem("educatorDetails"))._id;
-                const response = await axios.get(`http://localhost:4000/ldss/educator/parentsrequest/${educatorId}`, {
+                const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/educator/parentsrequest/${educatorId}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setParentRequest(response.data.request);
@@ -95,15 +95,15 @@ const EducatorAcceptedParents = () => {
     // Modal state
     const [requestDetail, setRequestDetail] = useState({});
     const [openParent, setOpenParent] = useState(false);
-    
+
     const handleParentOpen = () => {
         setOpenParent(true);
     };
-    
+
     const handleParentClose = () => {
         setOpenParent(false);
     };
-    
+
     const fetchParentByRequestId = async (requestId) => {
         try {
             // For dummy data
@@ -123,10 +123,10 @@ const EducatorAcceptedParents = () => {
             // For real API
             const token = localStorage.getItem("token");
             const response = await axios.get(
-                `http://localhost:4000/ldss/educator/viewrequestedparent/${requestId}`,
+                `${import.meta.env.VITE_SERVER_URL}/ldss/educator/viewrequestedparent/${requestId}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-            
+
             if (response.data.viewRequest) {
                 setRequestDetail({
                     _id: response.data.viewRequest._id,
@@ -143,10 +143,10 @@ const EducatorAcceptedParents = () => {
     // Filter parents based on search term with null checks
     const filteredParents = parentRequest.filter(request => {
         if (request.status !== "accepted") return false;
-        
+
         const searchLower = searchTerm.toLowerCase();
         const parent = request.parentId || {};
-        
+
         return (
             (parent.name && parent.name.toLowerCase().includes(searchLower)) ||
             (parent.email && parent.email.toLowerCase().includes(searchLower)) ||
@@ -158,14 +158,14 @@ const EducatorAcceptedParents = () => {
     return (
         <>
             <EducatorNavbar educatorDetails={educatorDetails} navigateToProfile={navigateToProfile} />
-            
+
             <Box sx={{ background: "white", width: "100vw" }}>
                 <Box display="flex" justifyContent="center" alignItems="center" sx={{ height: "46px", background: "#DBE8FA" }}>
                     <Typography color="primary" textAlign="center" sx={{ fontSize: "18px", fontWeight: "600" }}>
                         Parents
                     </Typography>
                 </Box>
-                
+
                 <Box display="flex" justifyContent="space-between" alignItems="start" sx={{ mt: "30px", ml: "50px", mr: "50px" }}>
                     <Breadcrumbs aria-label="breadcrumb" separator="›">
                         <Link style={{ fontSize: "12px", fontWeight: "500", color: "#7F7F7F", textDecoration: "none" }} to="/educator/home">
@@ -175,26 +175,26 @@ const EducatorAcceptedParents = () => {
                             Parents
                         </Typography>
                     </Breadcrumbs>
-                    
-                    <Box display="flex" alignItems="center" gap={1} sx={{ 
-                        padding: "8px 15px", 
-                        borderRadius: "25px", 
-                        border: "1px solid #CCCCCC", 
-                        height: "40px" 
+
+                    <Box display="flex" alignItems="center" gap={1} sx={{
+                        padding: "8px 15px",
+                        borderRadius: "25px",
+                        border: "1px solid #CCCCCC",
+                        height: "40px"
                     }}>
                         <SearchOutlinedIcon />
-                        <input 
-                            placeholder="search here" 
-                            style={{ border: 0, outline: 0, height: "100%" }} 
+                        <input
+                            placeholder="search here"
+                            style={{ border: 0, outline: 0, height: "100%" }}
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </Box>
                 </Box>
-                
+
                 {/* Parents Grid */}
-                <Box sx={{ 
-                    width: "100%", 
+                <Box sx={{
+                    width: "100%",
                     backgroundColor: "#F6F7F9",
                     py: 4,
                     minHeight: "calc(100vh - 200px)",
@@ -209,96 +209,96 @@ const EducatorAcceptedParents = () => {
                         maxWidth: "1200px",
                         px: 3
                     }}>
-                        {filteredParents.length === 0 ? 
+                        {filteredParents.length === 0 ?
                             (
-                                <Typography sx={{ 
-                                    fontSize: "32px", 
+                                <Typography sx={{
+                                    fontSize: "32px",
                                     gridColumn: "1 / -1",
                                     textAlign: "center"
                                 }} color="primary">
                                     {searchTerm ? "No matching parents found" : "No parents accepted yet"}
                                 </Typography>
                             ) : (
-                            filteredParents.map((request, index) => (   
-                                <Card key={index} sx={{ 
-                                    height: "197px", 
-                                    borderRadius: "20px", 
-                                    p: "20px",
-                                    transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                                    '&:hover': {
-                                        transform: "translateY(-5px)",
-                                        boxShadow: "0 4px 20px rgba(0,0,0,0.1)"
-                                    }
-                                }}>
-                                    <Box display="flex" alignItems="center" sx={{ height: "100%" }}>
-                                        <Box display="flex" sx={{ 
-                                            height: "100%", 
-                                            gap: "10px",
-                                            width: "100%"
-                                        }}>
-                                            <CardMedia
-                                                component="img"
-                                                sx={{ 
-                                                    height: "150px", 
-                                                    width: "150px", 
-                                                    borderRadius: "10px", 
-                                                    flexShrink: 0 
-                                                }}
-                                                image={`http://localhost:4000/uploads/${request.parentId?.profilePic?.filename || 'default-profile.jpg'}`}
-                                                alt="Profile"
-                                            />
-                                            <Box sx={{
+                                filteredParents.map((request, index) => (
+                                    <Card key={index} sx={{
+                                        height: "197px",
+                                        borderRadius: "20px",
+                                        p: "20px",
+                                        transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                                        '&:hover': {
+                                            transform: "translateY(-5px)",
+                                            boxShadow: "0 4px 20px rgba(0,0,0,0.1)"
+                                        }
+                                    }}>
+                                        <Box display="flex" alignItems="center" sx={{ height: "100%" }}>
+                                            <Box display="flex" sx={{
                                                 height: "100%",
-                                                overflow: "hidden",
-                                                p: "10px",
-                                                display: "flex",
-                                                flexDirection: "column",
-                                                justifyContent: "space-between",
-                                                flexGrow: 1
+                                                gap: "10px",
+                                                width: "100%"
                                             }}>
-                                                <Box display="flex" flexDirection="column" gap={2}>
-                                                    <Typography variant="h6" color="primary">
-                                                        {request.parentId?.name || 'No name'}
-                                                    </Typography>
-                                                    <Typography sx={{ 
-                                                        color: '#7F7F7F', 
-                                                        fontSize: "13px", 
-                                                        fontWeight: "500" 
-                                                    }}>
-                                                        {request.parentId?.address || 'No address'}
-                                                    </Typography>
-                                                    <Typography sx={{ 
-                                                        color: '#7F7F7F', 
-                                                        fontSize: "13px", 
-                                                        fontWeight: "500" 
-                                                    }}>
-                                                        {request.parentId?.phone || 'No phone'}
-                                                    </Typography>
-                                                </Box>
-                                                <Button 
-                                                    onClick={() => fetchParentByRequestId(request._id)}
-                                                    sx={{ 
-                                                        alignSelf: "flex-start",
-                                                        textTransform: "none",
-                                                        color: '#1976d2',
-                                                        p: 0,
-                                                        '&:hover': {
-                                                            backgroundColor: "transparent",
-                                                            textDecoration: "underline"
-                                                        }
+                                                <CardMedia
+                                                    component="img"
+                                                    sx={{
+                                                        height: "150px",
+                                                        width: "150px",
+                                                        borderRadius: "10px",
+                                                        flexShrink: 0
                                                     }}
-                                                >
-                                                    View Child
-                                                </Button>
+                                                    image={`${import.meta.env.VITE_SERVER_URL}/uploads/${request.parentId?.profilePic?.filename || 'default-profile.jpg'}`}
+                                                    alt="Profile"
+                                                />
+                                                <Box sx={{
+                                                    height: "100%",
+                                                    overflow: "hidden",
+                                                    p: "10px",
+                                                    display: "flex",
+                                                    flexDirection: "column",
+                                                    justifyContent: "space-between",
+                                                    flexGrow: 1
+                                                }}>
+                                                    <Box display="flex" flexDirection="column" gap={2}>
+                                                        <Typography variant="h6" color="primary">
+                                                            {request.parentId?.name || 'No name'}
+                                                        </Typography>
+                                                        <Typography sx={{
+                                                            color: '#7F7F7F',
+                                                            fontSize: "13px",
+                                                            fontWeight: "500"
+                                                        }}>
+                                                            {request.parentId?.address || 'No address'}
+                                                        </Typography>
+                                                        <Typography sx={{
+                                                            color: '#7F7F7F',
+                                                            fontSize: "13px",
+                                                            fontWeight: "500"
+                                                        }}>
+                                                            {request.parentId?.phone || 'No phone'}
+                                                        </Typography>
+                                                    </Box>
+                                                    <Button
+                                                        onClick={() => fetchParentByRequestId(request._id)}
+                                                        sx={{
+                                                            alignSelf: "flex-start",
+                                                            textTransform: "none",
+                                                            color: '#1976d2',
+                                                            p: 0,
+                                                            '&:hover': {
+                                                                backgroundColor: "transparent",
+                                                                textDecoration: "underline"
+                                                            }
+                                                        }}
+                                                    >
+                                                        View Child
+                                                    </Button>
+                                                </Box>
                                             </Box>
                                         </Box>
-                                    </Box>
-                                </Card>
-                            )))
+                                    </Card>
+                                )))
                         }
                     </Box>
                 </Box>
-                
+
                 {/* Parent Details Modal */}
                 <Modal
                     open={openParent}
@@ -321,11 +321,11 @@ const EducatorAcceptedParents = () => {
                             borderRadius: "20px",
                             overflow: "hidden"
                         }}>
-                            <EducatorViewParentDetails 
-                                handleParentClose={handleParentClose} 
+                            <EducatorViewParentDetails
+                                handleParentClose={handleParentClose}
                                 requestDetail={requestDetail}
-                                acceptParentrequest={() => {}}
-                                rejectParentrequest={() => {}}
+                                acceptParentrequest={() => { }}
+                                rejectParentrequest={() => { }}
                             />
                         </Box>
                     </Fade>

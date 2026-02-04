@@ -21,10 +21,10 @@ const ParentQuizList = () => {
             setParentDetails(JSON.parse(details));
         }
         if (childId) {
-             fetchQuizzesForChild();
+            fetchQuizzesForChild();
         } else {
-             setError("Child ID is missing.");
-             setLoading(false);
+            setError("Child ID is missing.");
+            setLoading(false);
         }
 
     }, [childId]); // Depend on childId
@@ -39,7 +39,7 @@ const ParentQuizList = () => {
         try {
             const token = localStorage.getItem('token');
             const response = await axios.get(
-                `http://localhost:4000/ldss/parent/quizzes/child/${childId}`,
+                `${import.meta.env.VITE_SERVER_URL}/ldss/parent/quizzes/child/${childId}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             if (response.data.success) {
@@ -49,28 +49,28 @@ const ParentQuizList = () => {
             }
         } catch (err) {
             console.error("Error fetching parent quizzes:", err);
-             setError(err.response?.data?.message || "An error occurred while fetching quizzes.");
+            setError(err.response?.data?.message || "An error occurred while fetching quizzes.");
         } finally {
             setLoading(false);
         }
     };
-console.log(quizzes);
+    console.log(quizzes);
 
     if (loading) {
         return (
-             <>
+            <>
                 <ParentNavbar parentdetails={parentDetails} navigateToProfile={navigateToProfile} />
-                 <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
-                     <CircularProgress />
-                 </Box>
-             </>
+                <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
+                    <CircularProgress />
+                </Box>
+            </>
         );
     }
 
     if (error) {
         return (
             <>
-                 <ParentNavbar parentdetails={parentDetails} navigateToProfile={navigateToProfile} />
+                <ParentNavbar parentdetails={parentDetails} navigateToProfile={navigateToProfile} />
                 <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
                     <Typography color="error">{error}</Typography>
                 </Box>
@@ -84,21 +84,21 @@ console.log(quizzes);
             <ParentNavbar parentdetails={parentDetails} navigateToProfile={navigateToProfile} />
             <Box display="flex" justifyContent="center" alignItems="center" sx={{ height: "46px", background: "#DBE8FA" }}>
                 <Typography color='primary' textAlign="center" sx={{ fontSize: "18px", fontWeight: "600" }}>
-                    Quizzes 
+                    Quizzes
                 </Typography>
             </Box>
 
-             <Box display="flex" justifyContent="start" alignItems="start" sx={{ mt: "30px", mx: "50px" }}>
+            <Box display="flex" justifyContent="start" alignItems="start" sx={{ mt: "30px", mx: "50px" }}>
                 <Breadcrumbs aria-label="breadcrumb" separator="›">
                     <Link to="/parent/home" style={{ fontSize: "12px", fontWeight: "500", color: "#7F7F7F", textDecoration: "none" }}>
                         Home
                     </Link>
-                     {/* Assuming you have a page listing all children for the parent */}
-                     {/* <Link to="/parent/children" style={{ fontSize: "12px", fontWeight: "500", color: "#7F7F7F", textDecoration: "none" }}>
+                    {/* Assuming you have a page listing all children for the parent */}
+                    {/* <Link to="/parent/children" style={{ fontSize: "12px", fontWeight: "500", color: "#7F7F7F", textDecoration: "none" }}>
                         My Children
                     </Link> */}
                     <Typography color='primary' sx={{ fontSize: "12px", fontWeight: "500" }}>
-                       Quizzes
+                        Quizzes
                     </Typography>
                 </Breadcrumbs>
             </Box>
@@ -106,7 +106,7 @@ console.log(quizzes);
 
             <Box sx={{ p: 4, maxWidth: 800, mx: 'auto', mt: 3 }}>
                 <Typography variant="h5" color="primary" gutterBottom align="center">
-                   Available Quizzes
+                    Available Quizzes
                 </Typography>
 
                 {quizzes.length === 0 ? (
@@ -128,7 +128,7 @@ console.log(quizzes);
                                                 View Result ({quiz.attempt.score}/{quiz.questions.length})
                                             </Button>
                                         ) : (
-                                             <Button
+                                            <Button
                                                 variant="contained"
                                                 size="small"
                                                 color="secondary"
@@ -138,7 +138,7 @@ console.log(quizzes);
                                                 Take Quiz
                                             </Button>
                                         )
-                                     }
+                                    }
                                 >
                                     <ListItemText
                                         primary={quiz.title}
@@ -151,10 +151,10 @@ console.log(quizzes);
                     </List>
                 )}
 
-                 <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-                     {/* Link back to where you list children or the child's detail page */}
-                     {/* Example: navigate(`/parent/child/${childId}`) */}
-                     <Button
+                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+                    {/* Link back to where you list children or the child's detail page */}
+                    {/* Example: navigate(`/parent/child/${childId}`) */}
+                    <Button
                         variant='outlined'
                         color='secondary'
                         sx={{ borderRadius: '25px', width: '200px' }}

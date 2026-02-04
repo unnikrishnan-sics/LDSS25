@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import TherapistNavbar from '../Navbar/TheraphistNavbar'; // Corrected import to TherapistNavbar
 import {
-  Box,
-  Breadcrumbs,
-  Button,
-  Grid,
-  Typography,
-  LinearProgress
+    Box,
+    Breadcrumbs,
+    Button,
+    Grid,
+    Typography,
+    LinearProgress
 } from '@mui/material';
 import {
-  SearchOutlined,
-  PersonOutlined,
-  ApartmentOutlined,
-  Female,
-  DateRange,
-  Chat,
-  Add,
-  Assignment
+    SearchOutlined,
+    PersonOutlined,
+    ApartmentOutlined,
+    Female,
+    DateRange,
+    Chat,
+    Add,
+    Assignment
 } from '@mui/icons-material';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -45,7 +45,7 @@ const TherapistAllStudents = () => {
 
             const decoded = jwtDecode(token);
 
-            const response = await axios.get(`http://localhost:4000/ldss/theraphist/gettheraphist/${decoded.id}`, {
+            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/theraphist/gettheraphist/${decoded.id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -106,7 +106,7 @@ const TherapistAllStudents = () => {
                 }
 
                 const response = await axios.get(
-                    `http://localhost:4000/ldss/theraphist/getchildrenofallapprovedparents/${therapistId}`,
+                    `${import.meta.env.VITE_SERVER_URL}/ldss/theraphist/getchildrenofallapprovedparents/${therapistId}`,
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
 
@@ -118,7 +118,7 @@ const TherapistAllStudents = () => {
 
                         try {
                             const planResponse = await axios.get(
-                                `http://localhost:4000/ldss/theraphist/getstudentplan/${therapistId}/${child._id}`,
+                                `${import.meta.env.VITE_SERVER_URL}/ldss/theraphist/getstudentplan/${therapistId}/${child._id}`,
                                 { headers: { Authorization: `Bearer ${token}` } }
                             );
 
@@ -230,7 +230,7 @@ const TherapistAllStudents = () => {
         // --- END DEBUG LOGS ---
 
         // Basic validation before navigating
-        if ( !studentId || !studentName) {
+        if (!studentId || !studentName) {
             console.error("Missing required chat details:", { parentId, studentId, studentName });
             alert("Could not start chat: Missing parent or student information. Please try again.");
             return;
@@ -244,7 +244,7 @@ const TherapistAllStudents = () => {
         });
     };
 
-    
+
 
     // DO NOT CHANGE ANY OTHER FUNCTIONS - Confirmed
     const handleLearningPlanClick = (childId, hasLearningPlan) => {
@@ -288,7 +288,7 @@ const TherapistAllStudents = () => {
 
     return (
         <>
-            <TherapistNavbar theraphistdetails={therapistDetails} navigateToProfile={navigateToProfile}/>
+            <TherapistNavbar theraphistdetails={therapistDetails} navigateToProfile={navigateToProfile} />
 
             <Box sx={{ background: "white" }}>
                 {/* Header Section */}
@@ -409,7 +409,7 @@ const TherapistAllStudents = () => {
                                                 >
                                                     Chat
                                                 </Button>
-                                                
+
                                                 <Button
                                                     startIcon={child.hasLearningPlan ? <Assignment /> : <Add />}
                                                     variant='outlined'
@@ -574,24 +574,24 @@ const TherapistAllStudents = () => {
                                         {/* Action Buttons */}
                                         <Box display="flex" justifyContent="center" alignItems="center" width="100%" mt={2}>
                                             <Button
-                                                    startIcon={<QuizIcon />}
-                                                    variant='outlined'
-                                                    color='secondary'
-                                                    sx={{
-                                                        borderRadius: "25px",
-                                                        height: "45px",
-                                                        minWidth: '120px',
-                                                        fontSize: "14px",
-                                                        fontWeight: "500",
-                                                        mr:2
-                                                    }}
-                                                    // MODIFIED: Pass all required data to handleChatClick
-                                                    onClick={() => handleQuizClick( child._id, child.name)}
-                                                    // Disable the button if critical data is missing
-                                                    disabled={ !child._id || !child.name}
-                                                >
-                                                    Quiz
-                                                </Button> 
+                                                startIcon={<QuizIcon />}
+                                                variant='outlined'
+                                                color='secondary'
+                                                sx={{
+                                                    borderRadius: "25px",
+                                                    height: "45px",
+                                                    minWidth: '120px',
+                                                    fontSize: "14px",
+                                                    fontWeight: "500",
+                                                    mr: 2
+                                                }}
+                                                // MODIFIED: Pass all required data to handleChatClick
+                                                onClick={() => handleQuizClick(child._id, child.name)}
+                                                // Disable the button if critical data is missing
+                                                disabled={!child._id || !child.name}
+                                            >
+                                                Quiz
+                                            </Button>
                                             <Button
                                                 onClick={() => handleMeetingOpen(child._id)}
                                                 variant='contained'

@@ -36,7 +36,7 @@ const EducatorHome = () => {
     const fetchEducator = async () => {
         const token = localStorage.getItem('token');
         const decoded = jwtDecode(token);
-        const response = await axios.get(`http://localhost:4000/ldss/educator/geteducator/${decoded.id}`, {
+        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/educator/geteducator/${decoded.id}`, {
             headers: { Authorization: `Bearer ${token}` },
         });
         const educatorData = response.data.educator;
@@ -47,7 +47,7 @@ const EducatorHome = () => {
     const fetchParentsRequest = async () => {
         const token = localStorage.getItem("token");
         const educatorId = JSON.parse(localStorage.getItem("educatorDetails"))._id;
-        const request = await axios.get(`http://localhost:4000/ldss/educator/parentsrequest/${educatorId}`, {
+        const request = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/educator/parentsrequest/${educatorId}`, {
             headers: { Authorization: `Bearer ${token}` }
         });
         setParentRequest(request.data.request);
@@ -55,7 +55,7 @@ const EducatorHome = () => {
 
     const fetchParentByRequestId = async (requestId) => {
         const token = localStorage.getItem("token");
-        const parent = await axios.get(`http://localhost:4000/ldss/educator/viewrequestedparent/${requestId}`, {
+        const parent = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/educator/viewrequestedparent/${requestId}`, {
             headers: { Authorization: `Bearer ${token}` }
         });
         setRequestDetail(parent.data.viewRequest);
@@ -64,7 +64,7 @@ const EducatorHome = () => {
 
     const acceptParentrequest = async (requestId) => {
         const token = localStorage.getItem("token");
-        await axios.put(`http://localhost:4000/ldss/educator/acceptsrequest/${requestId}`, {}, {
+        await axios.put(`${import.meta.env.VITE_SERVER_URL}/ldss/educator/acceptsrequest/${requestId}`, {}, {
             headers: { Authorization: `Bearer ${token}` }
         });
         handleParentClose();
@@ -73,7 +73,7 @@ const EducatorHome = () => {
 
     const rejectParentrequest = async (requestId) => {
         const token = localStorage.getItem("token");
-        await axios.delete(`http://localhost:4000/ldss/educator/rejectparent/${requestId}`, {
+        await axios.delete(`${import.meta.env.VITE_SERVER_URL}/ldss/educator/rejectparent/${requestId}`, {
             headers: { Authorization: `Bearer ${token}` }
         });
         handleParentClose();
@@ -94,9 +94,9 @@ const EducatorHome = () => {
     return (
         <Box sx={{ backgroundColor: '#f8f9fa', minHeight: '100vh' }}>
             <EducatorNavbar educatorDetails={educatorDetails} navigateToProfile={navigateToProfile} />
-            
+
             {/* Hero Section */}
-            <Box sx={{ 
+            <Box sx={{
                 position: 'relative',
                 overflow: 'hidden',
                 background: 'linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)',
@@ -110,7 +110,7 @@ const EducatorHome = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8 }}
                     >
-                        <Typography variant="h3" sx={{ 
+                        <Typography variant="h3" sx={{
                             fontWeight: 700,
                             mb: 2,
                             fontSize: { xs: '2.5rem', md: '3.5rem' },
@@ -118,7 +118,7 @@ const EducatorHome = () => {
                         }}>
                             Welcome Back, {educatorDetails.name || 'Educator'}!
                         </Typography>
-                        <Typography variant="body1" sx={{ 
+                        <Typography variant="body1" sx={{
                             mb: 4,
                             fontSize: '1.1rem',
                             opacity: 0.9,
@@ -128,23 +128,23 @@ const EducatorHome = () => {
                             Empower children's learning journeys with personalized plans and collaborative tools.
                         </Typography>
                     </motion.div>
-                    
-                    <Box sx={{ 
+
+                    <Box sx={{
                         position: 'relative',
                         mt: 8,
                         height: { xs: 300, md: 400 },
                         animation: `${floatAnimation} 6s ease-in-out infinite`
                     }}>
-                        <Box component="img" 
+                        <Box component="img"
                             src={HomeImage}
-                            alt="Teaching" 
-                            sx={{ 
+                            alt="Teaching"
+                            sx={{
                                 width: '100%',
                                 height: '100%',
                                 objectFit: 'cover',
                                 borderRadius: 4,
                                 boxShadow: 6
-                            }} 
+                            }}
                         />
                     </Box>
                 </Container>
@@ -158,7 +158,7 @@ const EducatorHome = () => {
                     viewport={{ once: true }}
                     transition={{ duration: 0.8 }}
                 >
-                    <Typography variant="h4" sx={{ 
+                    <Typography variant="h4" sx={{
                         fontWeight: 700,
                         mb: 6,
                         textAlign: 'center',
@@ -168,7 +168,7 @@ const EducatorHome = () => {
                     </Typography>
 
                     {parentRequest.filter(request => request.status === "pending").length === 0 ? (
-                        <Box sx={{ 
+                        <Box sx={{
                             textAlign: 'center',
                             p: 4,
                             backgroundColor: 'white',
@@ -187,7 +187,7 @@ const EducatorHome = () => {
                                         whileHover={{ y: -5 }}
                                         transition={{ duration: 0.3 }}
                                     >
-                                        <Card sx={{ 
+                                        <Card sx={{
                                             height: '100%',
                                             borderRadius: 3,
                                             boxShadow: '0 8px 30px rgba(0,0,0,0.1)',
@@ -197,21 +197,21 @@ const EducatorHome = () => {
                                             }
                                         }}>
                                             <CardContent sx={{ p: 3 }}>
-                                                <Box sx={{ 
+                                                <Box sx={{
                                                     display: 'flex',
                                                     alignItems: 'center',
                                                     mb: 3
                                                 }}>
                                                     <CardMedia
                                                         component="img"
-                                                        sx={{ 
+                                                        sx={{
                                                             width: 80,
                                                             height: 80,
                                                             borderRadius: '50%',
                                                             objectFit: 'cover',
                                                             mr: 3
                                                         }}
-                                                        image={`http://localhost:4000/uploads/${request.parentId.profilePic?.filename}`}
+                                                        image={`${import.meta.env.VITE_SERVER_URL}/uploads/${request.parentId.profilePic?.filename}`}
                                                         alt={request.parentId.name}
                                                     />
                                                     <Box>
@@ -234,10 +234,10 @@ const EducatorHome = () => {
                                                 </Box>
 
                                                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                                    <Button 
+                                                    <Button
                                                         onClick={() => fetchParentByRequestId(request._id)}
                                                         variant="outlined"
-                                                        sx={{ 
+                                                        sx={{
                                                             borderRadius: 50,
                                                             textTransform: 'none',
                                                             px: 3
@@ -246,11 +246,11 @@ const EducatorHome = () => {
                                                         View Details
                                                     </Button>
                                                     <Box sx={{ display: 'flex', gap: 1 }}>
-                                                        <Button 
+                                                        <Button
                                                             onClick={() => rejectParentrequest(request._id)}
                                                             variant="outlined"
                                                             color="error"
-                                                            sx={{ 
+                                                            sx={{
                                                                 borderRadius: 50,
                                                                 minWidth: 0,
                                                                 px: 2
@@ -258,11 +258,11 @@ const EducatorHome = () => {
                                                         >
                                                             Reject
                                                         </Button>
-                                                        <Button 
+                                                        <Button
                                                             onClick={() => acceptParentrequest(request._id)}
                                                             variant="contained"
                                                             color="primary"
-                                                            sx={{ 
+                                                            sx={{
                                                                 borderRadius: 50,
                                                                 minWidth: 0,
                                                                 px: 2
@@ -282,7 +282,7 @@ const EducatorHome = () => {
 
                     {parentRequest.filter(request => request.status === "pending").length > 0 && (
                         <Box sx={{ textAlign: 'center', mt: 4 }}>
-                            <Button 
+                            <Button
                                 component={Link}
                                 to="/educator/parentsrequest"
                                 variant="text"
@@ -300,7 +300,7 @@ const EducatorHome = () => {
             </Container>
 
             {/* Features Section */}
-            <Box sx={{ 
+            <Box sx={{
                 py: 8,
                 background: 'linear-gradient(to right, #f5f7fa, #e4e8f0)'
             }}>
@@ -311,7 +311,7 @@ const EducatorHome = () => {
                         viewport={{ once: true }}
                         transition={{ duration: 0.8 }}
                     >
-                        <Typography variant="h4" sx={{ 
+                        <Typography variant="h4" sx={{
                             fontWeight: 700,
                             mb: 6,
                             textAlign: 'center',
@@ -343,7 +343,7 @@ const EducatorHome = () => {
                                         whileHover={{ scale: 1.03 }}
                                         transition={{ duration: 0.3 }}
                                     >
-                                        <Card sx={{ 
+                                        <Card sx={{
                                             height: '100%',
                                             borderRadius: 3,
                                             p: 4,
@@ -351,7 +351,7 @@ const EducatorHome = () => {
                                             boxShadow: '0 8px 30px rgba(0,0,0,0.05)',
                                             backgroundColor: 'white'
                                         }}>
-                                            <Typography variant="h2" sx={{ 
+                                            <Typography variant="h2" sx={{
                                                 fontSize: '3rem',
                                                 mb: 2,
                                                 animation: `${floatAnimation} 4s ease-in-out infinite`,
@@ -359,7 +359,7 @@ const EducatorHome = () => {
                                             }}>
                                                 {feature.icon}
                                             </Typography>
-                                            <Typography variant="h5" sx={{ 
+                                            <Typography variant="h5" sx={{
                                                 fontWeight: 600,
                                                 mb: 2
                                             }}>
@@ -404,17 +404,17 @@ const EducatorHome = () => {
                         overflowY: 'auto',
                         borderRadius: 3
                     }}>
-                        <EducatorViewParentDetails 
-                            acceptParentrequest={acceptParentrequest} 
-                            rejectParentrequest={rejectParentrequest} 
-                            handleParentClose={handleParentClose} 
+                        <EducatorViewParentDetails
+                            acceptParentrequest={acceptParentrequest}
+                            rejectParentrequest={rejectParentrequest}
+                            handleParentClose={handleParentClose}
                             requestDetail={requestDetail}
                         />
                     </Box>
                 </Fade>
             </Modal>
 
-<Footer userRole="educator" />        </Box>
+            <Footer userRole="educator" />        </Box>
     );
 };
 

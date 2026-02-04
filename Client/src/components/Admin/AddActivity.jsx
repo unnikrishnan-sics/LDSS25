@@ -103,7 +103,7 @@ const AddActivity = () => {
     try {
       setStatus({ submitting: true, success: null, message: '' });
 
-      const res = await axios.post(`http://localhost:4000/ldss/addactivity`, formData, {
+      const res = await axios.post(`${import.meta.env.VITE_SERVER_URL}/ldss/addactivity`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`,
@@ -228,7 +228,7 @@ const AddActivity = () => {
             <Box display={'flex'} alignItems={'center'} justifyContent={'center'} gap={3}>
               <div style={textFieldStyle}>
                 <label>Description</label>
-                 <input
+                <input
                   style={{
                     height: '40px',
                     borderRadius: '8px',

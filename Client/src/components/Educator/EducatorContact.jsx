@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { 
-  Box, 
-  Button, 
-  Container, 
-  Stack, 
-  TextField, 
-  Typography, 
-  styled 
+import {
+    Box,
+    Button,
+    Container,
+    Stack,
+    TextField,
+    Typography,
+    styled
 } from '@mui/material';
 import PhoneIcon from '@mui/icons-material/Phone';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
@@ -24,32 +24,32 @@ const EducatorContact = () => {
         width: "100%",
         border: "1px solid #CCCCCC",
         '& .MuiInputBase-root': {
-          height: "40px",
-          '& .MuiInputBase-input': {
-            padding: '10px 0px',
-          }
+            height: "40px",
+            '& .MuiInputBase-input': {
+                padding: '10px 0px',
+            }
         }
     });
-    
+
     const StyledTextFieldComment = styled(TextField)({
         borderRadius: "8px",
         width: "100%",
         border: "1px solid #CCCCCC",
         '& .MuiInputBase-root': {
-          height: "100px",
-          '& .MuiInputBase-input': {
-            padding: '10px 0px',
-          }
+            height: "100px",
+            '& .MuiInputBase-input': {
+                padding: '10px 0px',
+            }
         }
     });
 
     const [educatorDetails, setEducatorDetails] = useState({});
     const navigate = useNavigate();
-    
+
     const fetchEducator = async () => {
         const token = localStorage.getItem('token');
         const decoded = jwtDecode(token);
-        const response = await axios.get(`http://localhost:4000/ldss/educator/geteducator/${decoded.id}`, {
+        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/educator/geteducator/${decoded.id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -74,9 +74,9 @@ const EducatorContact = () => {
 
     return (
         <>
-            <EducatorNavbar 
-                contactbg={contactbg} 
-                educatorDetails={educatorDetails} 
+            <EducatorNavbar
+                contactbg={contactbg}
+                educatorDetails={educatorDetails}
                 navigateToProfile={navigateToProfile}
             />
 
@@ -90,14 +90,14 @@ const EducatorContact = () => {
                     padding: 0,
                 }}
             >
-                <Box 
-                    display="flex" 
-                    flexDirection="column" 
-                    justifyContent="center" 
-                    alignItems="center" 
-                    sx={{ 
-                        height: "370px", 
-                        gap: "35px" 
+                <Box
+                    display="flex"
+                    flexDirection="column"
+                    justifyContent="center"
+                    alignItems="center"
+                    sx={{
+                        height: "370px",
+                        gap: "35px"
                     }}
                 >
                     <Typography variant='h3' color='primary' sx={{ fontSize: "24px", fontWeight: "500" }}>
@@ -106,10 +106,10 @@ const EducatorContact = () => {
                     <Typography variant='h2' color='secondary' sx={{ fontSize: "32px", fontWeight: "600" }}>
                         We're Here to Help!
                     </Typography>
-                    <Typography 
-                        textAlign="center" 
-                        variant='p' 
-                        color='primary' 
+                    <Typography
+                        textAlign="center"
+                        variant='p'
+                        color='primary'
                         sx={{ fontSize: "14px", fontWeight: "500" }}
                     >
                         We'd love to hear from you! Whether it's a query, feedback, or assistance, feel free to connect with us anytime.<br />
@@ -121,15 +121,15 @@ const EducatorContact = () => {
             {/* Form and Contact Info Section */}
             <Container maxWidth="false">
                 <Box display="flex" justifyContent="center" alignItems="center">
-                    <Stack 
-                        direction="row" 
-                        justifyContent="center" 
-                        alignItems="center" 
-                        spacing={2} 
-                        sx={{ 
-                            height: "528px", 
-                            width: "70%", 
-                            gap: "100px" 
+                    <Stack
+                        direction="row"
+                        justifyContent="center"
+                        alignItems="center"
+                        spacing={2}
+                        sx={{
+                            height: "528px",
+                            width: "70%",
+                            gap: "100px"
                         }}
                     >
                         {/* Form */}
@@ -176,31 +176,31 @@ const EducatorContact = () => {
                         </Box> */}
 
                         {/* Contact Info */}
-                        <Box 
-                            display="flex" 
-                            flexDirection="column" 
-                            justifyContent="center" 
-                            alignItems="center" 
+                        <Box
+                            display="flex"
+                            flexDirection="column"
+                            justifyContent="center"
+                            alignItems="center"
                             sx={{ gap: "35px" }}
                         >
                             {/* Phone */}
-                            <Box 
-                                display="flex" 
-                                justifyContent="space-evenly" 
-                                alignItems="center" 
-                                sx={{ 
-                                    gap: "25px", 
-                                    border: "1px solid #CCCCCC", 
-                                    borderRadius: "10px", 
-                                    width: "360px", 
-                                    height: "100px" 
+                            <Box
+                                display="flex"
+                                justifyContent="space-evenly"
+                                alignItems="center"
+                                sx={{
+                                    gap: "25px",
+                                    border: "1px solid #CCCCCC",
+                                    borderRadius: "10px",
+                                    width: "360px",
+                                    height: "100px"
                                 }}
                             >
                                 <PhoneIcon />
-                                <Box 
-                                    display="flex" 
-                                    flexDirection="column" 
-                                    alignItems="start" 
+                                <Box
+                                    display="flex"
+                                    flexDirection="column"
+                                    alignItems="start"
                                     sx={{ gap: "15px" }}
                                 >
                                     <Typography color='primary' sx={{ fontSize: "18px", fontWeight: "500" }}>
@@ -213,23 +213,23 @@ const EducatorContact = () => {
                             </Box>
 
                             {/* Email */}
-                            <Box 
-                                display="flex" 
-                                justifyContent="space-evenly" 
-                                alignItems="center" 
-                                sx={{ 
-                                    gap: "25px", 
-                                    border: "1px solid #CCCCCC", 
-                                    borderRadius: "10px", 
-                                    width: "360px", 
-                                    height: "100px" 
+                            <Box
+                                display="flex"
+                                justifyContent="space-evenly"
+                                alignItems="center"
+                                sx={{
+                                    gap: "25px",
+                                    border: "1px solid #CCCCCC",
+                                    borderRadius: "10px",
+                                    width: "360px",
+                                    height: "100px"
                                 }}
                             >
                                 <MailOutlineIcon />
-                                <Box 
-                                    display="flex" 
-                                    flexDirection="column" 
-                                    alignItems="start" 
+                                <Box
+                                    display="flex"
+                                    flexDirection="column"
+                                    alignItems="start"
                                     sx={{ gap: "15px" }}
                                 >
                                     <Typography color='primary' sx={{ fontSize: "18px", fontWeight: "500" }}>
@@ -242,23 +242,23 @@ const EducatorContact = () => {
                             </Box>
 
                             {/* Location */}
-                            <Box 
-                                display="flex" 
-                                justifyContent="space-evenly" 
-                                alignItems="center" 
-                                sx={{ 
-                                    gap: "25px", 
-                                    border: "1px solid #CCCCCC", 
-                                    borderRadius: "10px", 
-                                    width: "360px", 
-                                    height: "100px" 
+                            <Box
+                                display="flex"
+                                justifyContent="space-evenly"
+                                alignItems="center"
+                                sx={{
+                                    gap: "25px",
+                                    border: "1px solid #CCCCCC",
+                                    borderRadius: "10px",
+                                    width: "360px",
+                                    height: "100px"
                                 }}
                             >
                                 <LocationOnIcon />
-                                <Box 
-                                    display="flex" 
-                                    flexDirection="column" 
-                                    alignItems="start" 
+                                <Box
+                                    display="flex"
+                                    flexDirection="column"
+                                    alignItems="start"
                                     sx={{ gap: "15px" }}
                                 >
                                     <Typography color='primary' sx={{ fontSize: "18px", fontWeight: "500" }}>
@@ -274,7 +274,7 @@ const EducatorContact = () => {
                 </Box>
             </Container>
 
-<Footer userRole="educator" />        </>
+            <Footer userRole="educator" />        </>
     );
 }
 

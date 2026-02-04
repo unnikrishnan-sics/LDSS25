@@ -43,13 +43,13 @@ const ParentSiginIn = () => {
 
     const handleDataChange = (e) => {
         const { name, value } = e.target;
-        
+
         // Clear error for the current field when user types
         setError((prevError) => ({
             ...prevError,
             [name]: ""
         }));
-        
+
         // For name field, only allow alphabets and spaces
         if (name === 'name') {
             if (value === '' || /^[A-Za-z\s]*$/.test(value)) {
@@ -58,7 +58,7 @@ const ParentSiginIn = () => {
                     [name]: value
                 }));
             }
-        } 
+        }
         // For phone field, only allow numbers and limit to 10 digits
         else if (name === 'phone') {
             if (value === '' || (/^\d*$/.test(value) && value.length <= 10)) {
@@ -177,7 +177,7 @@ const ParentSiginIn = () => {
         formData.append('agreed', checked);
 
         try {
-            const response = await axios.post("http://localhost:4000/ldss/parent/registration", formData);
+            const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/ldss/parent/registration`, formData);
             const result = response.data;
 
             if (result.message === "Parent already registered with this phone number") {
@@ -232,7 +232,7 @@ const ParentSiginIn = () => {
                         <Stack direction="row" sx={{ display: "flex", gap: "25px" }}>
                             <div style={textFieldStyle}>
                                 <label>Name</label>
-                                <input 
+                                <input
                                     style={{ height: "40px", borderRadius: "8px", border: error.name ? "1px solid red" : "1px solid #CCCCCC", padding: '8px' }}
                                     onChange={handleDataChange}
                                     name='name'
@@ -246,7 +246,7 @@ const ParentSiginIn = () => {
 
                             <div style={textFieldStyle}>
                                 <label>Address</label>
-                                <input 
+                                <input
                                     style={{ height: "40px", borderRadius: "8px", border: error.address ? "1px solid red" : "1px solid #CCCCCC", padding: '8px' }}
                                     onChange={handleDataChange}
                                     name='address'
@@ -258,7 +258,7 @@ const ParentSiginIn = () => {
                         <Stack direction={'row'} sx={{ display: "flex", gap: "25px" }}>
                             <div style={textFieldStyle}>
                                 <label>Email</label>
-                                <input 
+                                <input
                                     style={{ height: "40px", borderRadius: "8px", border: error.email ? "1px solid red" : "1px solid #CCCCCC", padding: '8px' }}
                                     onChange={handleDataChange}
                                     name='email'
@@ -270,11 +270,11 @@ const ParentSiginIn = () => {
                             <div style={textFieldStyle}>
                                 <label>Password</label>
                                 <div style={{ position: 'relative' }}>
-                                    <input 
-                                        style={{ 
-                                            height: "40px", 
-                                            borderRadius: "8px", 
-                                            border: error.password ? "1px solid red" : "1px solid #CCCCCC", 
+                                    <input
+                                        style={{
+                                            height: "40px",
+                                            borderRadius: "8px",
+                                            border: error.password ? "1px solid red" : "1px solid #CCCCCC",
                                             padding: '8px',
                                             width: '100%'
                                         }}
@@ -283,7 +283,7 @@ const ParentSiginIn = () => {
                                         value={data.password}
                                         type={showPassword ? "text" : "password"}
                                     />
-                                    <div 
+                                    <div
                                         style={{
                                             position: 'absolute',
                                             right: '10px',
@@ -302,7 +302,7 @@ const ParentSiginIn = () => {
                         <Stack direction={'row'} sx={{ display: "flex", gap: "25px" }}>
                             <div style={textFieldStyle}>
                                 <label>Phone Number</label>
-                                <input 
+                                <input
                                     style={{ height: "40px", borderRadius: "8px", border: error.phone ? "1px solid red" : "1px solid #CCCCCC", padding: '8px' }}
                                     onChange={handleDataChange}
                                     name='phone'
@@ -318,11 +318,11 @@ const ParentSiginIn = () => {
                             <div style={textFieldStyle}>
                                 <label>Confirm Password</label>
                                 <div style={{ position: 'relative' }}>
-                                    <input 
-                                        style={{ 
-                                            height: "40px", 
-                                            borderRadius: "8px", 
-                                            border: error.confirmPassword ? "1px solid red" : "1px solid #CCCCCC", 
+                                    <input
+                                        style={{
+                                            height: "40px",
+                                            borderRadius: "8px",
+                                            border: error.confirmPassword ? "1px solid red" : "1px solid #CCCCCC",
                                             padding: '8px',
                                             width: '100%'
                                         }}
@@ -331,7 +331,7 @@ const ParentSiginIn = () => {
                                         value={data.confirmPassword}
                                         type={showConfirmPassword ? "text" : "password"}
                                     />
-                                    <div 
+                                    <div
                                         style={{
                                             position: 'absolute',
                                             right: '10px',
@@ -364,9 +364,9 @@ const ParentSiginIn = () => {
                     </Box>
 
                     <Box display={'flex'} alignItems={'center'} justifyContent={'center'} flexDirection={'column'} sx={{ width: '253px', height: "93px", gap: '10px' }}>
-                        <Button 
-                            variant='contained' 
-                            color='secondary' 
+                        <Button
+                            variant='contained'
+                            color='secondary'
                             sx={{ borderRadius: "25px", marginTop: "20px", height: "40px", width: '200px', padding: '10px 35px' }}
                             onClick={handleSubmit}
                         >
@@ -378,7 +378,7 @@ const ParentSiginIn = () => {
                     </Box>
                 </Box>
             </Container>
-<Footer userRole="parent" />         </>
+            <Footer userRole="parent" />         </>
     )
 }
 

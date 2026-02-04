@@ -25,7 +25,7 @@ const EducatorForgotPassword = () => {
         setEmailError("");
         return true;
     }
-const navigate=useNavigate();
+    const navigate = useNavigate();
 
 
     const handleForgot = async (e) => {
@@ -36,19 +36,19 @@ const navigate=useNavigate();
             return;
         }
 
-        const response = await axios.post("http://localhost:4000/ldss/educator/forgotpassword", { email });
+        const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/ldss/educator/forgotpassword`, { email });
         console.log(response.data);
         setEmail("");
-        if(response.data.message===" No educator found with this email."){
-           return toast.error("No educator found with this email");
+        if (response.data.message === " No educator found with this email.") {
+            return toast.error("No educator found with this email");
         }
         // toast.info("register your new password");
         navigate(`/educator/resetpassword/${email}`);
 
     }
-  return (
-    <>
-       <ParentNavbarSiginIn siginupStyle={siginupStyle}/>
+    return (
+        <>
+            <ParentNavbarSiginIn siginupStyle={siginupStyle} />
             <Container maxWidth="x-lg">
                 <Box component="img" src={background} sx={{ position: "absolute", top: -50, left: 0, objectFit: 'cover', zIndex: -1 }}></Box>
                 <Box display={'flex'} flexDirection={'column'} alignItems={'center'} justifyContent={"center"} gap={2} mt={5}>
@@ -79,8 +79,8 @@ const navigate=useNavigate();
 
             </Container>
             <Footer />
-    </>
-  )
+        </>
+    )
 }
 
 export default EducatorForgotPassword

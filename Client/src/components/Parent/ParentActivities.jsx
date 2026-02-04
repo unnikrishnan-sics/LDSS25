@@ -24,7 +24,7 @@ const ParentActivities = () => {
         title: activity.activityName,
         description: activity.description,
         category: activity.category,
-        image: activity.activityPhoto ? `http://localhost:4000/uploads/${activity.activityPhoto}` : LirbraryCardImage,
+        image: activity.activityPhoto ? `${import.meta.env.VITE_SERVER_URL}/uploads/${activity.activityPhoto}` : LirbraryCardImage,
         status: activity.status
     });
 
@@ -33,7 +33,7 @@ const ParentActivities = () => {
         if (parentData) {
             const parsedData = JSON.parse(parentData);
             // console.log(parsedData);
-            
+
             setParentDetails(parsedData);
             fetchAllActivities();
             fetchMyActivities(parsedData._id);
@@ -44,10 +44,10 @@ const ParentActivities = () => {
         try {
             setLoading(prev => ({ ...prev, all: true }));
             const token = localStorage.getItem("token");
-            const response = await axios.get('http://localhost:4000/ldss/activity/getallactivities', {
+            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/activity/getallactivities`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            
+
             if (response.data) {
                 const activitiesData = response.data.activities || response.data.data || [];
                 setAllActivities(activitiesData.map(normalizeActivity));
@@ -66,7 +66,7 @@ const ParentActivities = () => {
         try {
             setLoading(prev => ({ ...prev, my: true }));
             const token = localStorage.getItem("token");
-            const response = await axios.get(`http://localhost:4000/ldss/activity/parent/${parentId}`, {
+            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/activity/parent/${parentId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -112,7 +112,7 @@ const ParentActivities = () => {
     const handleEnrollActivity = async (activityId) => {
         try {
             const response = await axios.post(
-                `http://localhost:4000/ldss/activity/enroll/${activityId}/${parentDetails._id}`,
+                `${import.meta.env.VITE_SERVER_URL}/ldss/activity/enroll/${activityId}/${parentDetails._id}`,
                 {},
                 {
                     headers: {
@@ -124,18 +124,18 @@ const ParentActivities = () => {
 
             if (response.data) {
                 toast.success(response.data.message);
-                
+
                 // Find the enrolled activity from allActivities
                 const enrolledActivity = allActivities.find(activity => activity._id === activityId);
-                
+
                 if (enrolledActivity) {
                     // Add to myActivities
                     setMyActivities(prev => [...prev, enrolledActivity]);
-                    
+
                     // Remove from allActivities (optional, if you want it to disappear from Explore immediately)
                     setAllActivities(prev => prev.filter(activity => activity._id !== activityId));
                 }
-                
+
                 // If you want to switch to My Activities tab after enrollment
                 setActiveTab('myActivities');
             } else {
@@ -305,7 +305,7 @@ const ParentActivities = () => {
                                                             {isEnrolled ? "Enrolled" : "Have a try"}
                                                         </Button>
                                                     )}
-                                                    
+
                                                 </CardContent>
                                             </Card>
                                         </Grid>

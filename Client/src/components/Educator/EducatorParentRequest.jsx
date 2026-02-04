@@ -79,7 +79,7 @@ const EducatorParentRequest = () => {
             try {
                 const token = localStorage.getItem('token');
                 const decoded = jwtDecode(token);
-                const educator = await axios.get(`http://localhost:4000/ldss/educator/geteducator/${decoded.id}`, {
+                const educator = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/educator/geteducator/${decoded.id}`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -103,14 +103,14 @@ const EducatorParentRequest = () => {
                     console.error("Educator ID not found");
                     return;
                 }
-                const request = await axios.get(`http://localhost:4000/ldss/educator/parentsrequest/${educatorId}`, {
+                const request = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/educator/parentsrequest/${educatorId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
                 });
                 setParentRequest(request.data?.request || []);
                 console.log(request);
-                
+
             } catch (error) {
                 console.error("Error fetching parent requests:", error);
                 setParentRequest([]);
@@ -120,14 +120,14 @@ const EducatorParentRequest = () => {
 
     const acceptParentrequest = async (requestId) => {
         if (useDummyData) {
-            setParentRequest(prev => prev.map(req => 
-                req._id === requestId ? {...req, status: "accepted"} : req
+            setParentRequest(prev => prev.map(req =>
+                req._id === requestId ? { ...req, status: "accepted" } : req
             ));
             handleParentClose();
         } else {
             try {
                 const token = localStorage.getItem("token");
-                await axios.put(`http://localhost:4000/ldss/educator/acceptsrequest/${requestId}`, {}, {
+                await axios.put(`${import.meta.env.VITE_SERVER_URL}/ldss/educator/acceptsrequest/${requestId}`, {}, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -140,14 +140,14 @@ const EducatorParentRequest = () => {
         }
     };
 
-    const rejectParentrequest = async(requestId) => {
+    const rejectParentrequest = async (requestId) => {
         if (useDummyData) {
             setParentRequest(prev => prev.filter(req => req._id !== requestId));
             handleParentClose();
         } else {
             try {
                 const token = localStorage.getItem("token");
-                await axios.delete(`http://localhost:4000/ldss/educator/rejectparent/${requestId}`, {
+                await axios.delete(`${import.meta.env.VITE_SERVER_URL}/ldss/educator/rejectparent/${requestId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -163,7 +163,7 @@ const EducatorParentRequest = () => {
     const handleParentOpen = () => setOpenParent(true);
     const handleParentClose = () => setOpenParent(false);
 
-    const fetchParentByRequestId = async(requestId) => {
+    const fetchParentByRequestId = async (requestId) => {
         if (useDummyData) {
             const foundRequest = dummyParentRequests.find(req => req._id === requestId);
             if (foundRequest) {
@@ -173,7 +173,7 @@ const EducatorParentRequest = () => {
         } else {
             try {
                 const token = localStorage.getItem("token");
-                const parent = await axios.get(`http://localhost:4000/ldss/educator/viewrequestedparent/${requestId}`, {
+                const parent = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/educator/viewrequestedparent/${requestId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -220,10 +220,10 @@ const EducatorParentRequest = () => {
                         <input placeholder='search here' style={{ padding: "8px 15px", border: 0, outline: 0, height: "100%" }}></input>
                     </Box>
                 </Box>
-                
+
                 {/* Parents Grid */}
-                <Box sx={{ 
-                    width: "100%", 
+                <Box sx={{
+                    width: "100%",
                     backgroundColor: "#F6F7F9",
                     py: 4,
                     minHeight: "calc(100vh - 200px)",
@@ -238,17 +238,17 @@ const EducatorParentRequest = () => {
                         maxWidth: "1200px",
                         px: 3
                     }}>
-                        {pendingRequests.length === 0 ? 
-                            (<Typography sx={{ 
-                                fontSize: "32px", 
+                        {pendingRequests.length === 0 ?
+                            (<Typography sx={{
+                                fontSize: "32px",
                                 gridColumn: "1 / -1",
                                 textAlign: "center"
                             }} color='primary'>No request found</Typography>)
                             :
-                            (pendingRequests.map((request, index) => (   
-                                <Card key={index} sx={{ 
-                                    height: "205px", 
-                                    borderRadius: "20px", 
+                            (pendingRequests.map((request, index) => (
+                                <Card key={index} sx={{
+                                    height: "205px",
+                                    borderRadius: "20px",
                                     p: "20px",
                                     transition: "transform 0.3s ease, box-shadow 0.3s ease",
                                     '&:hover': {
@@ -257,20 +257,20 @@ const EducatorParentRequest = () => {
                                     }
                                 }}>
                                     <Box display="flex" alignItems="center" sx={{ height: "100%" }}>
-                                        <Box display="flex" sx={{ 
-                                            height: "100%", 
+                                        <Box display="flex" sx={{
+                                            height: "100%",
                                             gap: "1px",
                                             width: "100%"
                                         }}>
                                             <CardMedia
                                                 component="img"
-                                                sx={{ 
-                                                    height: "150px", 
-                                                    width: "150px", 
-                                                    borderRadius: "10px", 
-                                                    flexShrink: 0 
+                                                sx={{
+                                                    height: "150px",
+                                                    width: "150px",
+                                                    borderRadius: "10px",
+                                                    flexShrink: 0
                                                 }}
-                                                image={useDummyData ? image68 : request.parentId?.profilePic?.filename ? `http://localhost:4000/uploads/${request.parentId.profilePic.filename}` : image68}
+                                                image={useDummyData ? image68 : request.parentId?.profilePic?.filename ? `${import.meta.env.VITE_SERVER_URL}/uploads/${request.parentId.profilePic.filename}` : image68}
                                                 alt="Profile"
                                             />
                                             <Box sx={{
@@ -286,28 +286,28 @@ const EducatorParentRequest = () => {
                                                     <Typography variant="h6" color="primary">
                                                         {request.parentId?.name || "Unknown Parent"}
                                                     </Typography>
-                                                    <Typography sx={{ 
-                                                        color: '#7F7F7F', 
-                                                        fontSize: "13px", 
+                                                    <Typography sx={{
+                                                        color: '#7F7F7F',
+                                                        fontSize: "13px",
                                                         fontWeight: "500",
                                                         whiteSpace: "nowrap",
                                                         overflow: "hidden",
                                                         textOverflow: "ellipsis",
-                                                        maxWidth: "100%" 
+                                                        maxWidth: "100%"
                                                     }}>
                                                         {request.parentId?.address || "Address not available"}
                                                     </Typography>
 
-                                                    <Typography sx={{ 
-                                                        color: '#7F7F7F', 
-                                                        fontSize: "13px", 
-                                                        fontWeight: "500" 
+                                                    <Typography sx={{
+                                                        color: '#7F7F7F',
+                                                        fontSize: "13px",
+                                                        fontWeight: "500"
                                                     }}>
                                                         {request.parentId?.phone || "Phone not available"}
                                                     </Typography>
-                                                    <Button 
+                                                    <Button
                                                         onClick={() => fetchParentByRequestId(request._id)}
-                                                        sx={{ 
+                                                        sx={{
                                                             alignSelf: "flex-start",
                                                             textTransform: "none",
                                                             color: '#1976d2',
@@ -322,31 +322,31 @@ const EducatorParentRequest = () => {
                                                     </Button>
                                                 </Box>
                                                 <Box display="flex" alignItems="center" justifyContent="center" gap={2}>
-                                                    <Button 
-                                                        onClick={() => rejectParentrequest(request._id)} 
-                                                        variant='outlined' 
-                                                        color='secondary' 
-                                                        sx={{ 
-                                                            borderRadius: "25px", 
-                                                            height: "35px", 
-                                                            width: '100px', 
-                                                            padding: '10px 35px', 
+                                                    <Button
+                                                        onClick={() => rejectParentrequest(request._id)}
+                                                        variant='outlined'
+                                                        color='secondary'
+                                                        sx={{
+                                                            borderRadius: "25px",
+                                                            height: "35px",
+                                                            width: '100px',
+                                                            padding: '10px 35px',
                                                             mt: "10px",
                                                             border: "1px solid #1967D2"
                                                         }}
                                                     >
                                                         Reject
                                                     </Button>
-                                                    <Button 
-                                                        onClick={() => acceptParentrequest(request._id)} 
-                                                        variant='contained' 
-                                                        color='secondary' 
-                                                        sx={{ 
-                                                            borderRadius: "25px", 
-                                                            height: "35px", 
-                                                            width: '100px', 
-                                                            padding: '10px 35px', 
-                                                            mt: "10px" 
+                                                    <Button
+                                                        onClick={() => acceptParentrequest(request._id)}
+                                                        variant='contained'
+                                                        color='secondary'
+                                                        sx={{
+                                                            borderRadius: "25px",
+                                                            height: "35px",
+                                                            width: '100px',
+                                                            padding: '10px 35px',
+                                                            mt: "10px"
                                                         }}
                                                     >
                                                         Accept
@@ -356,7 +356,7 @@ const EducatorParentRequest = () => {
                                         </Box>
                                     </Box>
                                 </Card>
-                            ))) 
+                            )))
                         }
                     </Box>
                 </Box>
@@ -382,10 +382,10 @@ const EducatorParentRequest = () => {
                             borderRadius: "20px",
                             overflow: "hidden"
                         }}>
-                            <EducatorViewParentDetails 
-                                acceptParentrequest={acceptParentrequest} 
-                                rejectParentrequest={rejectParentrequest} 
-                                handleParentClose={handleParentClose} 
+                            <EducatorViewParentDetails
+                                acceptParentrequest={acceptParentrequest}
+                                rejectParentrequest={rejectParentrequest}
+                                handleParentClose={handleParentClose}
                                 requestDetail={requestDetail}
                                 useDummyData={useDummyData}
                             />

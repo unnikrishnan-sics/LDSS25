@@ -22,17 +22,17 @@ const EducatorBlogList = () => {
         console.log('Fetching blogs from backend...'); // Log 4: Fetch start
         try {
             const token = localStorage.getItem('token');
-             if (!token) {
+            if (!token) {
                 console.error('No token found. Redirecting to login.'); // Log 5: No token
-                 // Optionally redirect to login if token is missing
-                 // navigate('/login'); 
-                 return; // Stop fetching if no token
-             }
+                // Optionally redirect to login if token is missing
+                // navigate('/login'); 
+                return; // Stop fetching if no token
+            }
 
-            const response = await axios.get('http://localhost:4000/ldss/blog/all', {
+            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/blog/all`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            
+
             console.log('Blogs fetched successfully. Total blogs:', response.data.blogs.length); // Log 6: Fetch success
 
             const decoded = jwtDecode(token);
@@ -40,17 +40,17 @@ const EducatorBlogList = () => {
 
             const fetchedBlogs = response.data.blogs;
 
-            const myBlogsData = fetchedBlogs.filter(blog => 
+            const myBlogsData = fetchedBlogs.filter(blog =>
                 blog.creatorId && blog.creatorId._id === userId && blog.creatorType === 'educator'
             );
-             console.log('Filtered myBlogs length:', myBlogsData.length); // Log 7: My blogs count
+            console.log('Filtered myBlogs length:', myBlogsData.length); // Log 7: My blogs count
 
-            const allOtherBlogsData = fetchedBlogs.filter(blog => 
-                 !(blog.creatorId && blog.creatorId._id === userId && blog.creatorType === 'educator')
-                 // Alternatively, simply filter out my blogs if the initial filter is guaranteed to work:
-                 // blog.creatorId && blog.creatorId._id !== userId 
+            const allOtherBlogsData = fetchedBlogs.filter(blog =>
+                !(blog.creatorId && blog.creatorId._id === userId && blog.creatorType === 'educator')
+                // Alternatively, simply filter out my blogs if the initial filter is guaranteed to work:
+                // blog.creatorId && blog.creatorId._id !== userId 
             );
-             console.log('Filtered allOtherBlogs length:', allOtherBlogsData.length); // Log 8: Other blogs count
+            console.log('Filtered allOtherBlogs length:', allOtherBlogsData.length); // Log 8: Other blogs count
 
 
             setMyBlogs(myBlogsData);
@@ -58,56 +58,56 @@ const EducatorBlogList = () => {
 
         } catch (error) {
             console.error('Error fetching blogs:', error); // Log 9: Fetch error
-             // Check error response for more details
-             if (error.response) {
+            // Check error response for more details
+            if (error.response) {
                 console.error('Fetch error response data:', error.response.data);
                 console.error('Fetch error response status:', error.response.status);
-             }
+            }
         }
     };
 
     useEffect(() => {
         fetchBlogs();
-         // Depend on navigate if you redirect in fetchBlogs, otherwise empty array is fine
-    }, []); 
+        // Depend on navigate if you redirect in fetchBlogs, otherwise empty array is fine
+    }, []);
 
     const handleLike = async (blogId) => {
         console.log(`Attempting to like blog: ${blogId}`); // Log L1: Like attempt
         try {
             const token = localStorage.getItem('token');
-             if (!token) { console.error('No token for like.'); return; }
-            await axios.post(`http://localhost:4000/ldss/blog/like/${blogId}`, {}, {
+            if (!token) { console.error('No token for like.'); return; }
+            await axios.post(`${import.meta.env.VITE_SERVER_URL}/ldss/blog/like/${blogId}`, {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             console.log(`Blog liked: ${blogId}. Refetching...`); // Log L2: Like success
             // Refetch all blogs to update like counts and statuses across both lists
-            fetchBlogs(); 
+            fetchBlogs();
         } catch (error) {
             console.error(`Error liking blog ${blogId}:`, error); // Log L3: Like error
-             if (error.response) {
-                 console.error('Like error response data:', error.response.data);
-                 console.error('Like error response status:', error.response.status);
-             }
+            if (error.response) {
+                console.error('Like error response data:', error.response.data);
+                console.error('Like error response status:', error.response.status);
+            }
         }
     };
 
     const handleUnlike = async (blogId) => {
-         console.log(`Attempting to unlike blog: ${blogId}`); // Log U1: Unlike attempt
+        console.log(`Attempting to unlike blog: ${blogId}`); // Log U1: Unlike attempt
         try {
             const token = localStorage.getItem('token');
             if (!token) { console.error('No token for unlike.'); return; }
-            await axios.delete(`http://localhost:4000/ldss/blog/unlike/${blogId}`, {
+            await axios.delete(`${import.meta.env.VITE_SERVER_URL}/ldss/blog/unlike/${blogId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             console.log(`Blog unliked: ${blogId}. Refetching...`); // Log U2: Unlike success
             // Refetch all blogs to update like counts and statuses
             fetchBlogs();
         } catch (error) {
-             console.error(`Error unliking blog ${blogId}:`, error); // Log U3: Unlike error
-             if (error.response) {
-                 console.error('Unlike error response data:', error.response.data);
-                 console.error('Unlike error response status:', error.response.status);
-             }
+            console.error(`Error unliking blog ${blogId}:`, error); // Log U3: Unlike error
+            if (error.response) {
+                console.error('Unlike error response data:', error.response.data);
+                console.error('Unlike error response status:', error.response.status);
+            }
         }
     };
 
@@ -117,28 +117,28 @@ const EducatorBlogList = () => {
             console.log('Delete cancelled by user.'); // Log D2: Delete cancelled
             return;
         }
-        
+
         console.log(`Confirmed delete for blog ID: ${blogId}`); // Log D3: Delete confirmed
         setIsDeleting(true);
-        
+
         try {
             const token = localStorage.getItem('token');
-             if (!token) { console.error('No token for delete.'); setIsDeleting(false); return; }
+            if (!token) { console.error('No token for delete.'); setIsDeleting(false); return; }
 
             console.log(`Sending DELETE request for blog ID: ${blogId}`); // Log D4: Sending delete request
-            const response = await axios.delete(`http://localhost:4000/ldss/blog/delete/${blogId}`, {
+            const response = await axios.delete(`${import.meta.env.VITE_SERVER_URL}/ldss/blog/delete/${blogId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            
+
             console.log('Backend DELETE response status:', response.status); // Log D5: Backend response status
             // Optional: console.log('Backend DELETE response data:', response.data); // Log D6 if needed
 
             // --- Direct State Update After Successful Deletion ---
-            
+
             // Log the state *before* filtering
             console.log('State BEFORE filtering - myBlogs IDs:', myBlogs.map(b => b._id)); // Log D7
             console.log('State BEFORE filtering - blogs IDs:', blogs.map(b => b._id)); // Log D8
-            
+
             // Filter the state: Keep blogs whose ID does *not* match the deleted blogId
             setMyBlogs(prevMyBlogs => {
                 const newState = prevMyBlogs.filter(blog => blog._id !== blogId);
@@ -146,14 +146,14 @@ const EducatorBlogList = () => {
                 console.log('State AFTER filtering - new myBlogs IDs:', newState.map(b => b._id)); // Log D10
                 return newState;
             });
-            
+
             setBlogs(prevBlogs => {
-                 const newState = prevBlogs.filter(blog => blog._id !== blogId);
-                 console.log('State AFTER filtering - new blogs length:', newState.length); // Log D11
-                 console.log('State AFTER filtering - new blogs IDs:', newState.map(b => b._id)); // Log D12
-                 return newState;
+                const newState = prevBlogs.filter(blog => blog._id !== blogId);
+                console.log('State AFTER filtering - new blogs length:', newState.length); // Log D11
+                console.log('State AFTER filtering - new blogs IDs:', newState.map(b => b._id)); // Log D12
+                return newState;
             });
-            
+
             console.log(`State update called. Blog ${blogId} should be removed from view on next render.`); // Log D13
 
             // Note: We are NOT calling fetchBlogs() here. The state updates above
@@ -161,11 +161,11 @@ const EducatorBlogList = () => {
 
         } catch (error) {
             console.error(`Error deleting blog ${blogId}:`, error); // Log D14: Delete error
-             // Check error.response for server-side error details
-             if (error.response) {
-                 console.error('Delete error response data:', error.response.data);
-                 console.error('Delete error response status:', error.response.status);
-             }
+            // Check error.response for server-side error details
+            if (error.response) {
+                console.error('Delete error response data:', error.response.data);
+                console.error('Delete error response status:', error.response.status);
+            }
             alert('Failed to delete blog. Please check console for details.');
         } finally {
             console.log('Delete process finished for blog ID:', blogId); // Log D15
@@ -174,33 +174,33 @@ const EducatorBlogList = () => {
     };
 
     // Note: Search filtering is applied only to the 'blogs' list (not 'myBlogs')
-    const filteredBlogs = blogs.filter(blog => 
+    const filteredBlogs = blogs.filter(blog =>
         blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         blog.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-         // Add creator name to search?
+        // Add creator name to search?
         (blog.creatorId?.name || '').toLowerCase().includes(searchTerm.toLowerCase())
     );
-     console.log('Filtered blogs length for display:', filteredBlogs.length); // Log 14: Filtered length
+    console.log('Filtered blogs length for display:', filteredBlogs.length); // Log 14: Filtered length
 
     return (
         <>
-<EducatorNavbar
-        educatorDetails={educatorDetails}
-        navigateToProfile={() => navigate('/educator/profile')}
-      />            <Box sx={{ p: 3 }}>
+            <EducatorNavbar
+                educatorDetails={educatorDetails}
+                navigateToProfile={() => navigate('/educator/profile')}
+            />            <Box sx={{ p: 3 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3, alignItems: 'center' }}>
                     <Typography variant="h4">Blogs</Typography>
-                     {/* Optional: Add Search Field Here */}
-                     <TextField
-                         label="Search Blogs"
-                         variant="outlined"
-                         size="small"
-                         value={searchTerm}
-                         onChange={(e) => setSearchTerm(e.target.value)}
-                         sx={{ mr: 2 }}
-                     />
-                    <Button 
-                        variant="contained" 
+                    {/* Optional: Add Search Field Here */}
+                    <TextField
+                        label="Search Blogs"
+                        variant="outlined"
+                        size="small"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        sx={{ mr: 2 }}
+                    />
+                    <Button
+                        variant="contained"
                         startIcon={<Add />}
                         onClick={() => navigate('/educator/blog/add')}
                     >
@@ -222,7 +222,7 @@ const EducatorBlogList = () => {
                                     <CardMedia
                                         component="img"
                                         height="140"
-                                        image={`http://localhost:4000/uploads/blogs/${blog.image.filename}`}
+                                        image={`${import.meta.env.VITE_SERVER_URL}/uploads/blogs/${blog.image.filename}`}
                                         alt={blog.title}
                                     />
                                 )}
@@ -232,15 +232,15 @@ const EducatorBlogList = () => {
                                     </Typography>
                                     <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                                         {blog.description.length > 150 ? // Increased description length limit slightly for card view
-                                            `${blog.description.substring(0, 150)}...` : 
+                                            `${blog.description.substring(0, 150)}...` :
                                             blog.description
                                         }
                                     </Typography>
                                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                                        <Avatar 
-                                            src={blog.creatorId?.profilePic?.filename ? 
-                                                `http://localhost:4000/uploads/${blog.creatorId.profilePic.filename}` : ''}
-                                             alt={blog.creatorId?.name || 'Creator'} // Added alt text
+                                        <Avatar
+                                            src={blog.creatorId?.profilePic?.filename ?
+                                                `${import.meta.env.VITE_SERVER_URL}/uploads/${blog.creatorId.profilePic.filename}` : ''}
+                                            alt={blog.creatorId?.name || 'Creator'} // Added alt text
                                         />
                                         <Typography variant="body2" sx={{ ml: 1 }}>
                                             {blog.creatorId?.name || 'Unknown Creator'} {/* Added fallback name */}
@@ -255,7 +255,7 @@ const EducatorBlogList = () => {
                                             <Edit color="primary" />
                                         </IconButton>
                                         {/* Delete Button */}
-                                        <IconButton 
+                                        <IconButton
                                             onClick={() => deleteBlog(blog._id)}
                                             disabled={isDeleting} // Disable while deletion is in progress
                                             aria-label="delete"
@@ -288,8 +288,8 @@ const EducatorBlogList = () => {
                 </Box>
 
                 {/* Search Input Field */}
-                 {/* Moved search field up near the title and Add button */}
-                 {/* <TextField
+                {/* Moved search field up near the title and Add button */}
+                {/* <TextField
                      label="Search Blogs"
                      variant="outlined"
                      fullWidth
@@ -314,7 +314,7 @@ const EducatorBlogList = () => {
                                         <CardMedia
                                             component="img"
                                             height="140"
-                                            image={`http://localhost:4000/uploads/blogs/${blog.image.filename}`}
+                                            image={`${import.meta.env.VITE_SERVER_URL}/uploads/blogs/${blog.image.filename}`}
                                             alt={blog.title}
                                         />
                                     )}
@@ -323,23 +323,23 @@ const EducatorBlogList = () => {
                                             {blog.title}
                                         </Typography>
                                         <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                                            {blog.description.length > 150 ? 
-                                                `${blog.description.substring(0, 150)}...` : 
+                                            {blog.description.length > 150 ?
+                                                `${blog.description.substring(0, 150)}...` :
                                                 blog.description
                                             }
                                         </Typography>
                                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                                            <Avatar 
-                                                 src={blog.creatorId?.profilePic?.filename ? 
-                                                    `http://localhost:4000/uploads/${blog.creatorId.profilePic.filename}` : ''}
-                                                 alt={blog.creatorId?.name || 'Creator'} // Added alt text
+                                            <Avatar
+                                                src={blog.creatorId?.profilePic?.filename ?
+                                                    `${import.meta.env.VITE_SERVER_URL}/uploads/${blog.creatorId.profilePic.filename}` : ''}
+                                                alt={blog.creatorId?.name || 'Creator'} // Added alt text
                                             />
                                             <Typography variant="body2" sx={{ ml: 1 }}>
                                                 {blog.creatorId?.name || 'Unknown Creator'} {/* Added fallback name */}
                                             </Typography>
                                         </Box>
                                     </CardContent>
-                                     {/* Actions section - Only Like/Unlike for other users' blogs */}
+                                    {/* Actions section - Only Like/Unlike for other users' blogs */}
                                     {/* <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', p: 2, pt: 0 }}>
                                         {blog.likes.some(like => {
                                             const token = localStorage.getItem('token');

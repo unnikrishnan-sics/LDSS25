@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import ParentNavbar from '../Navbar/ParentNavbar';
 import "../../Styles/LandingPage.css";
 import Navbar from '../Navbar/Navbar';
-import {Avatar, Box, Button, Container, Divider, Fade, Grid, Modal, Stack, Typography } from '@mui/material';
+import { Avatar, Box, Button, Container, Divider, Fade, Grid, Modal, Stack, Typography } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 import background from "../../assets/Frame 12@2x.png";
@@ -32,7 +32,7 @@ import CardMedia from '@mui/material/CardMedia';
 import CardActionArea from '@mui/material/CardActionArea';
 import { Link, useNavigate } from 'react-router-dom';
 import StarOutlineOutlinedIcon from '@mui/icons-material/StarOutlineOutlined';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import axios from "axios";
 import { toast } from 'react-toastify';
 import Backdrop from '@mui/material/Backdrop';
@@ -53,26 +53,26 @@ const ParentHome = () => {
         cardBg: '#FFFFFF',
         textLight: '#7F7F7F'
     }
-    
+
     const homebg = {
         backgroundColor: colors.lightBg
     }
-    
+
     const [parent, setParent] = useState("");
     const [hasEducatorRequest, setHasEducatorRequest] = useState(false);
     const [hasTherapistRequest, setHasTherapistRequest] = useState(false);
-    
+
     const fetchUser = async () => {
         const token = localStorage.getItem('token');
         const decoded = jwtDecode(token);
-        const parent = await axios.get(`http://localhost:4000/ldss/parent/getparent/${decoded.id}`, {
+        const parent = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/parent/getparent/${decoded.id}`, {
             headers: {
-              Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`,
             },
-          });
+        });
         const parentDatas = localStorage.setItem("parentDetails", JSON.stringify(parent.data.parent));
         setParent(parent.data.parent);
-        
+
         // Check if parent has any requests
         await checkParentRequests(decoded.id);
     }
@@ -81,24 +81,24 @@ const ParentHome = () => {
     const checkParentRequests = async (parentId) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:4000/ldss/request/fetchall', {
+            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/request/fetchall`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            
+
             const educatorRequests = response.data.requests.filter(
-                request => request.parentId === parentId && 
-                (request.status === 'pending' || request.status === 'accepted') &&
-                request.recipientRole === 'educator'
+                request => request.parentId === parentId &&
+                    (request.status === 'pending' || request.status === 'accepted') &&
+                    request.recipientRole === 'educator'
             );
-            
+
             const therapistRequests = response.data.requests.filter(
-                request => request.parentId === parentId && 
-                (request.status === 'pending' || request.status === 'accepted') &&
-                request.recipientRole === 'theraphist'
+                request => request.parentId === parentId &&
+                    (request.status === 'pending' || request.status === 'accepted') &&
+                    request.recipientRole === 'theraphist'
             );
-            
+
             setHasEducatorRequest(educatorRequests.length > 0);
             setHasTherapistRequest(therapistRequests.length > 0);
         } catch (error) {
@@ -112,14 +112,14 @@ const ParentHome = () => {
 
     const navigate = useNavigate();
     const navigateToProfile = () => {
-         navigate('/parent/profile');
+        navigate('/parent/profile');
     }
-    
+
     // view all educators
     const [alleducators, setAlleducators] = useState([]);
     const fetchAllEducators = async () => {
         const token = localStorage.getItem("token");
-        const alleducators = await axios.get("http://localhost:4000/ldss/educator/getalleducators", {
+        const alleducators = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/educator/getalleducators`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -131,7 +131,7 @@ const ParentHome = () => {
             fetchAllEducators();
         }
     }, [hasEducatorRequest]);
-    
+
     // educator view model
     const educatorViewstyle = {
         position: 'absolute',
@@ -148,12 +148,12 @@ const ParentHome = () => {
         overflowY: 'auto',
         maxHeight: '90vh'
     };
-    
+
     const [educatorViewOpen, setEducatorViewOpen] = useState(false);
     const [singleEducator, setSingleEducator] = useState({});
     const handleEducatorViewOpen = async (educatorId) => {
         const token = localStorage.getItem("token");
-        const educator = await axios.get(`http://localhost:4000/ldss/educator/geteducator/${educatorId}`, {
+        const educator = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/educator/geteducator/${educatorId}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -176,7 +176,7 @@ const ParentHome = () => {
             recipientRole,
             message
         }
-        const request = await axios.post(`http://localhost:4000/ldss/request/sendrequest`, requestData, {
+        const request = await axios.post(`${import.meta.env.VITE_SERVER_URL}/ldss/request/sendrequest`, requestData, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -191,12 +191,12 @@ const ParentHome = () => {
             handleEducatorViewClose();
         }
     };
-    
+
     // all theraphist view 
     const [allTheraphist, setAllTheraphist] = useState([]);
     const fetchAllTheraphist = async () => {
         const token = localStorage.getItem("token");
-        const alltheraphist = await axios.get("http://localhost:4000/ldss/theraphist/getalltheraphist", {
+        const alltheraphist = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/theraphist/getalltheraphist`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -225,12 +225,12 @@ const ParentHome = () => {
         overflowY: 'auto',
         maxHeight: '90vh'
     };
-    
+
     const [theraphistViewOpen, setTheraphistViewOpen] = useState(false);
     const [singleTheraphist, setSingleTheraphist] = useState({});
     const handleTheraphistViewOpen = async (theraphistId) => {
         const token = localStorage.getItem("token");
-        const theraphist = await axios.get(`http://localhost:4000/ldss/theraphist/gettheraphist/${theraphistId}`, {
+        const theraphist = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/theraphist/gettheraphist/${theraphistId}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -253,7 +253,7 @@ const ParentHome = () => {
             recipientRole,
             message
         }
-        const request = await axios.post(`http://localhost:4000/ldss/request/sendrequest`, requestData, {
+        const request = await axios.post(`${import.meta.env.VITE_SERVER_URL}/ldss/request/sendrequest`, requestData, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -271,18 +271,18 @@ const ParentHome = () => {
 
     const [educatorRatings, setEducatorRatings] = useState({});
     const [therapistRatings, setTherapistRatings] = useState({});
-    
+
     useEffect(() => {
         const fetchRatings = async () => {
             const token = localStorage.getItem("token");
-            
+
             try {
                 // Fetch educator ratings
                 const educatorRes = await axios.get(
-                    "http://localhost:4000/ldss/ratings/educator",
+                    `${import.meta.env.VITE_SERVER_URL}/ldss/ratings/educator`,
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
-                
+
                 // Create a map of educatorId to average rating
                 const educatorRatingMap = {};
                 educatorRes.data.data.forEach(rating => {
@@ -295,18 +295,18 @@ const ParentHome = () => {
                     }
                     educatorRatingMap[rating.professionalId._id].total += rating.rating;
                     educatorRatingMap[rating.professionalId._id].count += 1;
-                    educatorRatingMap[rating.professionalId._id].average = 
-                        educatorRatingMap[rating.professionalId._id].total / 
+                    educatorRatingMap[rating.professionalId._id].average =
+                        educatorRatingMap[rating.professionalId._id].total /
                         educatorRatingMap[rating.professionalId._id].count;
                 });
                 setEducatorRatings(educatorRatingMap);
 
                 // Fetch therapist ratings
                 const therapistRes = await axios.get(
-                    "http://localhost:4000/ldss/ratings/theraphist",
+                    `${import.meta.env.VITE_SERVER_URL}/ldss/ratings/theraphist`,
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
-                
+
                 // Create a map of therapistId to average rating
                 const therapistRatingMap = {};
                 therapistRes.data.data.forEach(rating => {
@@ -319,8 +319,8 @@ const ParentHome = () => {
                     }
                     therapistRatingMap[rating.professionalId._id].total += rating.rating;
                     therapistRatingMap[rating.professionalId._id].count += 1;
-                    therapistRatingMap[rating.professionalId._id].average = 
-                        therapistRatingMap[rating.professionalId._id].total / 
+                    therapistRatingMap[rating.professionalId._id].average =
+                        therapistRatingMap[rating.professionalId._id].total /
                         therapistRatingMap[rating.professionalId._id].count;
                 });
                 setTherapistRatings(therapistRatingMap);
@@ -335,10 +335,10 @@ const ParentHome = () => {
 
     return (
         <>
-            <ParentNavbar homebg={homebg} navigateToProfile={navigateToProfile} parentdetails={parent}/>
+            <ParentNavbar homebg={homebg} navigateToProfile={navigateToProfile} parentdetails={parent} />
 
             {/* Hero Section */}
-            <Box sx={{ 
+            <Box sx={{
                 backgroundColor: colors.secondary,
                 backgroundImage: `linear-gradient(135deg, ${colors.secondary} 0%, #6BB1FF 100%)`,
                 color: 'white',
@@ -361,8 +361,8 @@ const ParentHome = () => {
                                 <StarIcon sx={{ mr: 1, color: colors.accent }} />
                                 <Typography variant="body2">Welcome to Learn Hub</Typography>
                             </Box>
-                            
-                            <Typography variant="h2" sx={{ 
+
+                            <Typography variant="h2" sx={{
                                 fontWeight: 700,
                                 mb: 2,
                                 fontSize: { xs: '2.5rem', md: '3.5rem' },
@@ -370,8 +370,8 @@ const ParentHome = () => {
                             }}>
                                 Empowering Every Child's Learning Journey
                             </Typography>
-                            
-                            <Typography variant="body1" sx={{ 
+
+                            <Typography variant="body1" sx={{
                                 mb: 4,
                                 fontSize: '1.1rem',
                                 opacity: 0.9,
@@ -380,7 +380,7 @@ const ParentHome = () => {
                                 A one-stop platform connecting parents, educators, and therapists to support children with learning disabilities through personalized learning plans, activity tracking, and seamless collaboration.
                             </Typography>
                         </Grid>
-                        
+
                         <Grid item xs={12} md={6}>
                             <Box sx={{
                                 position: 'relative',
@@ -395,7 +395,7 @@ const ParentHome = () => {
                                 }
                             }}>
                                 <img src={image68} alt="Children learning" />
-                                
+
                                 <Box sx={{
                                     position: 'absolute',
                                     top: 20,
@@ -412,7 +412,7 @@ const ParentHome = () => {
                                         Thousands of Verified Educators & Therapists!
                                     </Typography>
                                 </Box>
-                                
+
                                 <Box sx={{
                                     position: 'absolute',
                                     bottom: -40,
@@ -423,16 +423,16 @@ const ParentHome = () => {
                                     boxShadow: 2,
                                     width: 180
                                 }}>
-                                    <Box sx={{ 
+                                    <Box sx={{
                                         display: 'flex',
                                         justifyContent: 'center',
                                         mb: 1
                                     }}>
                                         {[AVATAR1, AVATAR2, AVATAR3, AVATAR4].map((avatar, index) => (
-                                            <Avatar 
+                                            <Avatar
                                                 key={index}
                                                 src={avatar}
-                                                sx={{ 
+                                                sx={{
                                                     width: 36,
                                                     height: 36,
                                                     ml: index > 0 ? -1.5 : 0,
@@ -455,14 +455,14 @@ const ParentHome = () => {
             <Box sx={{ py: 10, backgroundColor: colors.lightBg }}>
                 <Container maxWidth="lg">
                     <Box sx={{ textAlign: 'center', mb: 8 }}>
-                        <Typography variant="h3" sx={{ 
+                        <Typography variant="h3" sx={{
                             fontWeight: 700,
                             mb: 2,
                             color: colors.primary
                         }}>
                             How It Works
                         </Typography>
-                        <Typography variant="body1" sx={{ 
+                        <Typography variant="body1" sx={{
                             color: colors.textLight,
                             maxWidth: 600,
                             mx: 'auto'
@@ -470,7 +470,7 @@ const ParentHome = () => {
                             Find the perfect learning support in just a few steps
                         </Typography>
                     </Box>
-                    
+
                     <Grid container spacing={4} justifyContent="center">
                         <Grid item xs={12} md={4}>
                             <Box sx={{
@@ -499,7 +499,7 @@ const ParentHome = () => {
                                 }}>
                                     <img src={user} alt="Profile" style={{ width: 40 }} />
                                 </Box>
-                                <Typography variant="h5" sx={{ 
+                                <Typography variant="h5" sx={{
                                     fontWeight: 600,
                                     mb: 2,
                                     color: colors.primary
@@ -511,7 +511,7 @@ const ParentHome = () => {
                                 </Typography>
                             </Box>
                         </Grid>
-                        
+
                         <Grid item xs={12} md={4}>
                             <Box sx={{
                                 backgroundColor: colors.cardBg,
@@ -539,7 +539,7 @@ const ParentHome = () => {
                                 }}>
                                     <img src={elearning} alt="Learning" style={{ width: 40 }} />
                                 </Box>
-                                <Typography variant="h5" sx={{ 
+                                <Typography variant="h5" sx={{
                                     fontWeight: 600,
                                     mb: 2,
                                     color: colors.primary
@@ -551,7 +551,7 @@ const ParentHome = () => {
                                 </Typography>
                             </Box>
                         </Grid>
-                        
+
                         <Grid item xs={12} md={4}>
                             <Box sx={{
                                 backgroundColor: colors.cardBg,
@@ -579,7 +579,7 @@ const ParentHome = () => {
                                 }}>
                                     <img src={shopping} alt="Monitor" style={{ width: 40 }} />
                                 </Box>
-                                <Typography variant="h5" sx={{ 
+                                <Typography variant="h5" sx={{
                                     fontWeight: 600,
                                     mb: 2,
                                     color: colors.primary
@@ -600,14 +600,14 @@ const ParentHome = () => {
                 <Box sx={{ py: 10, backgroundColor: `${colors.secondary}08` }}>
                     <Container maxWidth="lg">
                         <Box sx={{ textAlign: 'center', mb: 8 }}>
-                            <Typography variant="h3" sx={{ 
+                            <Typography variant="h3" sx={{
                                 fontWeight: 700,
                                 mb: 2,
                                 color: colors.primary
                             }}>
                                 Our Educators
                             </Typography>
-                            <Typography variant="body1" sx={{ 
+                            <Typography variant="body1" sx={{
                                 color: colors.textLight,
                                 maxWidth: 600,
                                 mx: 'auto'
@@ -615,10 +615,10 @@ const ParentHome = () => {
                                 Create personalized learning plans, track student progress, and collaborate with parents and therapists to support every child's educational journey.
                             </Typography>
                         </Box>
-                        
+
                         <Grid container spacing={4} justifyContent="center">
                             {alleducators
-                                .slice(0,3)
+                                .slice(0, 3)
                                 .map(educator => {
                                     const ratingData = educatorRatings[educator._id] || { average: 0, count: 0 };
                                     return { ...educator, averageRating: ratingData.average, reviewCount: ratingData.count };
@@ -627,7 +627,7 @@ const ParentHome = () => {
                                 .map((educator, index) => {
                                     return (
                                         <Grid item xs={12} sm={6} md={4} key={index}>
-                                            <Card sx={{ 
+                                            <Card sx={{
                                                 height: '100%',
                                                 borderRadius: 3,
                                                 boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)',
@@ -640,10 +640,10 @@ const ParentHome = () => {
                                                 <CardActionArea onClick={() => handleEducatorViewOpen(educator._id)}>
                                                     <Box sx={{ p: 3, display: 'flex', flexDirection: 'column', height: '100%' }}>
                                                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                                                            <Avatar 
-                                                                src={`http://localhost:4000/uploads/${educator?.profilePic?.filename}`}
-                                                                sx={{ 
-                                                                    width: 80, 
+                                                            <Avatar
+                                                                src={`${import.meta.env.VITE_SERVER_URL}/uploads/${educator?.profilePic?.filename}`}
+                                                                sx={{
+                                                                    width: 80,
                                                                     height: 80,
                                                                     mr: 3,
                                                                     border: `2px solid ${colors.secondary}`
@@ -662,10 +662,10 @@ const ParentHome = () => {
                                                                             key={star}
                                                                             fontSize="small"
                                                                             sx={{
-                                                                                color: star <= Math.floor(educator.averageRating) 
-                                                                                    ? colors.accent 
-                                                                                    : star - 0.5 <= educator.averageRating 
-                                                                                        ? `${colors.accent}80` 
+                                                                                color: star <= Math.floor(educator.averageRating)
+                                                                                    ? colors.accent
+                                                                                    : star - 0.5 <= educator.averageRating
+                                                                                        ? `${colors.accent}80`
                                                                                         : '#DDD'
                                                                             }}
                                                                         />
@@ -676,9 +676,9 @@ const ParentHome = () => {
                                                                 </Box>
                                                             </Box>
                                                         </Box>
-                                                        
+
                                                         <Divider sx={{ my: 2 }} />
-                                                        
+
                                                         <Box sx={{ mt: 'auto' }}>
                                                             <Typography variant="body2" sx={{ color: colors.textLight, mb: 1 }}>
                                                                 {educator.yearsOfExperience} years Experience
@@ -686,9 +686,9 @@ const ParentHome = () => {
                                                             <Typography variant="body2" sx={{ color: colors.textLight, mb: 2 }}>
                                                                 {educator.availability}
                                                             </Typography>
-                                                            <Typography 
-                                                                variant="body2" 
-                                                                sx={{ 
+                                                            <Typography
+                                                                variant="body2"
+                                                                sx={{
                                                                     color: colors.secondary,
                                                                     fontWeight: 600,
                                                                     display: 'flex',
@@ -705,9 +705,9 @@ const ParentHome = () => {
                                     );
                                 })}
                         </Grid>
-                        
+
                         <Box sx={{ textAlign: 'center', mt: 6 }}>
-                            <Button 
+                            <Button
                                 component={Link}
                                 to="/parent/viewalleducators"
                                 variant="outlined"
@@ -745,7 +745,7 @@ const ParentHome = () => {
             >
                 <Fade in={educatorViewOpen}>
                     <Box sx={educatorViewstyle}>
-                        <Box sx={{ 
+                        <Box sx={{
                             display: 'flex',
                             justifyContent: 'space-between',
                             alignItems: 'center',
@@ -756,26 +756,26 @@ const ParentHome = () => {
                             <Typography variant="h5" sx={{ fontWeight: 700, color: colors.primary }}>
                                 Educator Profile
                             </Typography>
-                            <CloseIcon 
-                                onClick={handleEducatorViewClose} 
-                                sx={{ 
+                            <CloseIcon
+                                onClick={handleEducatorViewClose}
+                                sx={{
                                     cursor: 'pointer',
                                     color: colors.textLight,
                                     '&:hover': {
                                         color: colors.primary
                                     }
-                                }} 
+                                }}
                             />
                         </Box>
-                        
+
                         <Box sx={{ mb: 5 }}>
-                            <Box sx={{ 
+                            <Box sx={{
                                 display: 'flex',
                                 alignItems: 'center',
                                 mb: 4,
                                 flexDirection: { xs: 'column', md: 'row' }
                             }}>
-                                <Box sx={{ 
+                                <Box sx={{
                                     width: { xs: '100%', md: 'auto' },
                                     mb: { xs: 3, md: 0 },
                                     mr: { xs: 0, md: 5 },
@@ -783,18 +783,18 @@ const ParentHome = () => {
                                     justifyContent: 'center'
                                 }}>
                                     {singleEducator.profilePic?.filename ? (
-                                        <Avatar 
-                                            src={`http://localhost:4000/uploads/${singleEducator?.profilePic?.filename}`} 
-                                            sx={{ 
-                                                width: 150, 
+                                        <Avatar
+                                            src={`${import.meta.env.VITE_SERVER_URL}/uploads/${singleEducator?.profilePic?.filename}`}
+                                            sx={{
+                                                width: 150,
                                                 height: 150,
                                                 border: `3px solid ${colors.secondary}`
-                                            }} 
+                                            }}
                                         />
                                     ) : (
-                                        <Avatar 
-                                            sx={{ 
-                                                width: 150, 
+                                        <Avatar
+                                            sx={{
+                                                width: 150,
                                                 height: 150,
                                                 fontSize: 60,
                                                 bgcolor: colors.secondary
@@ -804,9 +804,9 @@ const ParentHome = () => {
                                         </Avatar>
                                     )}
                                 </Box>
-                                
+
                                 <Box sx={{ flex: 1 }}>
-                                    <Typography variant="h4" sx={{ 
+                                    <Typography variant="h4" sx={{
                                         fontWeight: 700,
                                         mb: 1,
                                         color: colors.primary,
@@ -815,7 +815,7 @@ const ParentHome = () => {
                                     }}>
                                         {singleEducator.name}
                                         {singleEducator._id && (
-                                            <Box sx={{ 
+                                            <Box sx={{
                                                 display: 'inline-flex',
                                                 alignItems: 'center',
                                                 ml: 2
@@ -824,7 +824,7 @@ const ParentHome = () => {
                                                     const ratingData = educatorRatings[singleEducator._id] || { average: 0, count: 0 };
                                                     const averageRating = ratingData.average;
                                                     const reviewCount = ratingData.count;
-                                                    
+
                                                     return (
                                                         <>
                                                             {[1, 2, 3, 4, 5].map((star) => (
@@ -832,10 +832,10 @@ const ParentHome = () => {
                                                                     key={star}
                                                                     fontSize="small"
                                                                     sx={{
-                                                                        color: star <= Math.floor(averageRating) 
-                                                                            ? colors.accent 
-                                                                            : star - 0.5 <= averageRating 
-                                                                                ? `${colors.accent}80` 
+                                                                        color: star <= Math.floor(averageRating)
+                                                                            ? colors.accent
+                                                                            : star - 0.5 <= averageRating
+                                                                                ? `${colors.accent}80`
                                                                                 : '#DDD'
                                                                     }}
                                                                 />
@@ -849,7 +849,7 @@ const ParentHome = () => {
                                             </Box>
                                         )}
                                     </Typography>
-                                    
+
                                     <Grid container spacing={3} sx={{ mt: 2 }}>
                                         <Grid item xs={12} sm={6}>
                                             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -876,25 +876,25 @@ const ParentHome = () => {
                                     </Grid>
                                 </Box>
                             </Box>
-                            
-                            <Box sx={{ 
+
+                            <Box sx={{
                                 backgroundColor: `${colors.secondary}08`,
                                 borderRadius: 3,
                                 p: 4,
                                 mb: 4
                             }}>
-                                <Typography variant="h6" sx={{ 
+                                <Typography variant="h6" sx={{
                                     fontWeight: 600,
                                     mb: 3,
                                     color: colors.primary
                                 }}>
                                     Professional Information
                                 </Typography>
-                                
+
                                 <Grid container spacing={4}>
                                     <Grid item xs={12} md={6}>
                                         <Box sx={{ mb: 3 }}>
-                                            <Typography variant="body2" sx={{ 
+                                            <Typography variant="body2" sx={{
                                                 fontWeight: 600,
                                                 color: colors.secondary,
                                                 mb: 1
@@ -905,9 +905,9 @@ const ParentHome = () => {
                                                 {singleEducator.educationalQualification || "Not Updated"}
                                             </Typography>
                                         </Box>
-                                        
+
                                         <Box sx={{ mb: 3 }}>
-                                            <Typography variant="body2" sx={{ 
+                                            <Typography variant="body2" sx={{
                                                 fontWeight: 600,
                                                 color: colors.secondary,
                                                 mb: 1
@@ -919,10 +919,10 @@ const ParentHome = () => {
                                             </Typography>
                                         </Box>
                                     </Grid>
-                                    
+
                                     <Grid item xs={12} md={6}>
                                         <Box sx={{ mb: 3 }}>
-                                            <Typography variant="body2" sx={{ 
+                                            <Typography variant="body2" sx={{
                                                 fontWeight: 600,
                                                 color: colors.secondary,
                                                 mb: 1
@@ -933,9 +933,9 @@ const ParentHome = () => {
                                                 {singleEducator.yearsOfExperience || "Not Updated"}
                                             </Typography>
                                         </Box>
-                                        
+
                                         <Box>
-                                            <Typography variant="body2" sx={{ 
+                                            <Typography variant="body2" sx={{
                                                 fontWeight: 600,
                                                 color: colors.secondary,
                                                 mb: 1
@@ -949,9 +949,9 @@ const ParentHome = () => {
                                     </Grid>
                                 </Grid>
                             </Box>
-                            
+
                             <Box sx={{ textAlign: 'center' }}>
-                                <Button 
+                                <Button
                                     onClick={handleEducatorrequest}
                                     variant="contained"
                                     color="primary"
@@ -977,14 +977,14 @@ const ParentHome = () => {
                 <Box sx={{ py: 10, backgroundColor: colors.lightBg }}>
                     <Container maxWidth="lg">
                         <Box sx={{ textAlign: 'center', mb: 8 }}>
-                            <Typography variant="h3" sx={{ 
+                            <Typography variant="h3" sx={{
                                 fontWeight: 700,
                                 mb: 2,
                                 color: colors.primary
                             }}>
                                 Our Therapists
                             </Typography>
-                            <Typography variant="body1" sx={{ 
+                            <Typography variant="body1" sx={{
                                 color: colors.textLight,
                                 maxWidth: 600,
                                 mx: 'auto'
@@ -992,10 +992,10 @@ const ParentHome = () => {
                                 Monitor developmental progress, assign therapy-based activities, and collaborate with parents and educators to provide holistic support.
                             </Typography>
                         </Box>
-                        
+
                         <Grid container spacing={4} justifyContent="center">
                             {allTheraphist
-                                .slice(0,3)
+                                .slice(0, 3)
                                 .map(therapist => {
                                     const ratingData = therapistRatings[therapist._id] || { average: 0, count: 0 };
                                     return { ...therapist, averageRating: ratingData.average, reviewCount: ratingData.count };
@@ -1004,7 +1004,7 @@ const ParentHome = () => {
                                 .map((therapist, index) => {
                                     return (
                                         <Grid item xs={12} sm={6} md={4} key={index}>
-                                            <Card sx={{ 
+                                            <Card sx={{
                                                 height: '100%',
                                                 borderRadius: 3,
                                                 boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)',
@@ -1017,10 +1017,10 @@ const ParentHome = () => {
                                                 <CardActionArea onClick={() => handleTheraphistViewOpen(therapist._id)}>
                                                     <Box sx={{ p: 3, display: 'flex', flexDirection: 'column', height: '100%' }}>
                                                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                                                            <Avatar 
-                                                                src={`http://localhost:4000/uploads/${therapist?.profilePic?.filename}`}
-                                                                sx={{ 
-                                                                    width: 80, 
+                                                            <Avatar
+                                                                src={`${import.meta.env.VITE_SERVER_URL}/uploads/${therapist?.profilePic?.filename}`}
+                                                                sx={{
+                                                                    width: 80,
                                                                     height: 80,
                                                                     mr: 3,
                                                                     border: `2px solid ${colors.secondary}`
@@ -1039,10 +1039,10 @@ const ParentHome = () => {
                                                                             key={star}
                                                                             fontSize="small"
                                                                             sx={{
-                                                                                color: star <= Math.floor(therapist.averageRating) 
-                                                                                    ? colors.accent 
-                                                                                    : star - 0.5 <= therapist.averageRating 
-                                                                                        ? `${colors.accent}80` 
+                                                                                color: star <= Math.floor(therapist.averageRating)
+                                                                                    ? colors.accent
+                                                                                    : star - 0.5 <= therapist.averageRating
+                                                                                        ? `${colors.accent}80`
                                                                                         : '#DDD'
                                                                             }}
                                                                         />
@@ -1053,9 +1053,9 @@ const ParentHome = () => {
                                                                 </Box>
                                                             </Box>
                                                         </Box>
-                                                        
+
                                                         <Divider sx={{ my: 2 }} />
-                                                        
+
                                                         <Box sx={{ mt: 'auto' }}>
                                                             <Typography variant="body2" sx={{ color: colors.textLight, mb: 1 }}>
                                                                 {therapist.yearsOfExperience} years Experience
@@ -1063,9 +1063,9 @@ const ParentHome = () => {
                                                             <Typography variant="body2" sx={{ color: colors.textLight, mb: 2 }}>
                                                                 {therapist.availability}
                                                             </Typography>
-                                                            <Typography 
-                                                                variant="body2" 
-                                                                sx={{ 
+                                                            <Typography
+                                                                variant="body2"
+                                                                sx={{
                                                                     color: colors.secondary,
                                                                     fontWeight: 600,
                                                                     display: 'flex',
@@ -1082,9 +1082,9 @@ const ParentHome = () => {
                                     );
                                 })}
                         </Grid>
-                        
+
                         <Box sx={{ textAlign: 'center', mt: 6 }}>
-                            <Button 
+                            <Button
                                 component={Link}
                                 to="/parent/viewalltheraphist"
                                 variant="outlined"
@@ -1122,7 +1122,7 @@ const ParentHome = () => {
             >
                 <Fade in={theraphistViewOpen}>
                     <Box sx={theraphistViewstyle}>
-                        <Box sx={{ 
+                        <Box sx={{
                             display: 'flex',
                             justifyContent: 'space-between',
                             alignItems: 'center',
@@ -1133,26 +1133,26 @@ const ParentHome = () => {
                             <Typography variant="h5" sx={{ fontWeight: 700, color: colors.primary }}>
                                 Therapist Profile
                             </Typography>
-                            <CloseIcon 
-                                onClick={handleTheraphistViewClose} 
-                                sx={{ 
+                            <CloseIcon
+                                onClick={handleTheraphistViewClose}
+                                sx={{
                                     cursor: 'pointer',
                                     color: colors.textLight,
                                     '&:hover': {
                                         color: colors.primary
                                     }
-                                }} 
+                                }}
                             />
                         </Box>
-                        
+
                         <Box sx={{ mb: 5 }}>
-                            <Box sx={{ 
+                            <Box sx={{
                                 display: 'flex',
                                 alignItems: 'center',
                                 mb: 4,
                                 flexDirection: { xs: 'column', md: 'row' }
                             }}>
-                                <Box sx={{ 
+                                <Box sx={{
                                     width: { xs: '100%', md: 'auto' },
                                     mb: { xs: 3, md: 0 },
                                     mr: { xs: 0, md: 5 },
@@ -1160,18 +1160,18 @@ const ParentHome = () => {
                                     justifyContent: 'center'
                                 }}>
                                     {singleTheraphist.profilePic?.filename ? (
-                                        <Avatar 
-                                            src={`http://localhost:4000/uploads/${singleTheraphist?.profilePic?.filename}`} 
-                                            sx={{ 
-                                                width: 150, 
+                                        <Avatar
+                                            src={`${import.meta.env.VITE_SERVER_URL}/uploads/${singleTheraphist?.profilePic?.filename}`}
+                                            sx={{
+                                                width: 150,
                                                 height: 150,
                                                 border: `3px solid ${colors.secondary}`
-                                            }} 
+                                            }}
                                         />
                                     ) : (
-                                        <Avatar 
-                                            sx={{ 
-                                                width: 150, 
+                                        <Avatar
+                                            sx={{
+                                                width: 150,
                                                 height: 150,
                                                 fontSize: 60,
                                                 bgcolor: colors.secondary
@@ -1181,9 +1181,9 @@ const ParentHome = () => {
                                         </Avatar>
                                     )}
                                 </Box>
-                                
+
                                 <Box sx={{ flex: 1 }}>
-                                    <Typography variant="h4" sx={{ 
+                                    <Typography variant="h4" sx={{
                                         fontWeight: 700,
                                         mb: 1,
                                         color: colors.primary,
@@ -1192,7 +1192,7 @@ const ParentHome = () => {
                                     }}>
                                         {singleTheraphist.name}
                                         {singleTheraphist._id && (
-                                            <Box sx={{ 
+                                            <Box sx={{
                                                 display: 'inline-flex',
                                                 alignItems: 'center',
                                                 ml: 2
@@ -1201,7 +1201,7 @@ const ParentHome = () => {
                                                     const ratingData = therapistRatings[singleTheraphist._id] || { average: 0, count: 0 };
                                                     const averageRating = ratingData.average;
                                                     const reviewCount = ratingData.count;
-                                                    
+
                                                     return (
                                                         <>
                                                             {[1, 2, 3, 4, 5].map((star) => (
@@ -1209,10 +1209,10 @@ const ParentHome = () => {
                                                                     key={star}
                                                                     fontSize="small"
                                                                     sx={{
-                                                                        color: star <= Math.floor(averageRating) 
-                                                                            ? colors.accent 
-                                                                            : star - 0.5 <= averageRating 
-                                                                                ? `${colors.accent}80` 
+                                                                        color: star <= Math.floor(averageRating)
+                                                                            ? colors.accent
+                                                                            : star - 0.5 <= averageRating
+                                                                                ? `${colors.accent}80`
                                                                                 : '#DDD'
                                                                     }}
                                                                 />
@@ -1226,7 +1226,7 @@ const ParentHome = () => {
                                             </Box>
                                         )}
                                     </Typography>
-                                    
+
                                     <Grid container spacing={3} sx={{ mt: 2 }}>
                                         <Grid item xs={12} sm={6}>
                                             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -1253,25 +1253,25 @@ const ParentHome = () => {
                                     </Grid>
                                 </Box>
                             </Box>
-                            
-                            <Box sx={{ 
+
+                            <Box sx={{
                                 backgroundColor: `${colors.secondary}08`,
                                 borderRadius: 3,
                                 p: 4,
                                 mb: 4
                             }}>
-                                <Typography variant="h6" sx={{ 
+                                <Typography variant="h6" sx={{
                                     fontWeight: 600,
                                     mb: 3,
                                     color: colors.primary
                                 }}>
                                     Professional Information
                                 </Typography>
-                                
+
                                 <Grid container spacing={4}>
                                     <Grid item xs={12} md={6}>
                                         <Box sx={{ mb: 3 }}>
-                                            <Typography variant="body2" sx={{ 
+                                            <Typography variant="body2" sx={{
                                                 fontWeight: 600,
                                                 color: colors.secondary,
                                                 mb: 1
@@ -1282,9 +1282,9 @@ const ParentHome = () => {
                                                 {singleTheraphist.educationalQualification || "Not Updated"}
                                             </Typography>
                                         </Box>
-                                        
+
                                         <Box sx={{ mb: 3 }}>
-                                            <Typography variant="body2" sx={{ 
+                                            <Typography variant="body2" sx={{
                                                 fontWeight: 600,
                                                 color: colors.secondary,
                                                 mb: 1
@@ -1296,10 +1296,10 @@ const ParentHome = () => {
                                             </Typography>
                                         </Box>
                                     </Grid>
-                                    
+
                                     <Grid item xs={12} md={6}>
                                         <Box sx={{ mb: 3 }}>
-                                            <Typography variant="body2" sx={{ 
+                                            <Typography variant="body2" sx={{
                                                 fontWeight: 600,
                                                 color: colors.secondary,
                                                 mb: 1
@@ -1310,9 +1310,9 @@ const ParentHome = () => {
                                                 {singleTheraphist.yearsOfExperience || "Not Updated"}
                                             </Typography>
                                         </Box>
-                                        
+
                                         <Box>
-                                            <Typography variant="body2" sx={{ 
+                                            <Typography variant="body2" sx={{
                                                 fontWeight: 600,
                                                 color: colors.secondary,
                                                 mb: 1
@@ -1326,9 +1326,9 @@ const ParentHome = () => {
                                     </Grid>
                                 </Grid>
                             </Box>
-                            
+
                             <Box sx={{ textAlign: 'center' }}>
-                                <Button 
+                                <Button
                                     onClick={handleTheraphistrequest}
                                     variant="contained"
                                     color="primary"
@@ -1350,7 +1350,7 @@ const ParentHome = () => {
             </Modal>
 
             {/* Personalized Learning Section */}
-            <Box sx={{ 
+            <Box sx={{
                 py: 10,
                 backgroundColor: colors.secondary,
                 color: 'white',
@@ -1358,7 +1358,7 @@ const ParentHome = () => {
                 overflow: 'hidden'
             }}>
                 <Container maxWidth="lg">
-                    <Box sx={{ 
+                    <Box sx={{
                         position: 'absolute',
                         top: 0,
                         left: 0,
@@ -1370,22 +1370,22 @@ const ParentHome = () => {
                         <Box component="img" src={frame1} alt="Decoration" sx={{ position: 'absolute', top: -50, left: 0 }} />
                         <Box component="img" src={frame2} alt="Decoration" sx={{ position: 'absolute', bottom: -50, right: 0 }} />
                     </Box>
-                    
-                    <Box sx={{ 
+
+                    <Box sx={{
                         position: 'relative',
                         zIndex: 1,
                         textAlign: 'center',
                         maxWidth: 800,
                         mx: 'auto'
                     }}>
-                        <Typography variant="h3" sx={{ 
+                        <Typography variant="h3" sx={{
                             fontWeight: 700,
                             mb: 3,
                             fontSize: { xs: '2rem', md: '2.5rem' }
                         }}>
                             Personalized Learning Plans!
                         </Typography>
-                        <Typography variant="body1" sx={{ 
+                        <Typography variant="body1" sx={{
                             fontSize: '1.1rem',
                             opacity: 0.9,
                             lineHeight: 1.6
@@ -1396,7 +1396,7 @@ const ParentHome = () => {
                 </Container>
             </Box>
 
-<Footer userRole="parent" />         </>
+            <Footer userRole="parent" />         </>
     )
 }
 

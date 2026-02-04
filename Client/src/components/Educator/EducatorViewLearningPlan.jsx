@@ -8,15 +8,15 @@ import { toast } from 'react-toastify';
 
 const EducatorViewLearningPlan = () => {
     const [educatorDetails, setEducatorDetails] = useState({});
-    const [useDummyData, setUseDummyData] = useState(false); 
-    
+    const [useDummyData, setUseDummyData] = useState(false);
+
     useEffect(() => {
         const educatorDetails = localStorage.getItem("educatorDetails");
         if (educatorDetails) {
             setEducatorDetails(JSON.parse(educatorDetails));
         }
     }, []);
-    
+
     const navigate = useNavigate();
     const navigateToProfile = () => {
         navigate('/educator/profile');
@@ -24,7 +24,7 @@ const EducatorViewLearningPlan = () => {
     const { childId } = useParams();
 
     const [studentPlan, setStudentsPlan] = useState(null);
-    
+
     // Dummy data for learning plans
     const dummyLearningPlans = [
         {
@@ -95,12 +95,12 @@ const EducatorViewLearningPlan = () => {
                 const token = localStorage.getItem("token");
                 const educatorId = (JSON.parse(localStorage.getItem("educatorDetails"))?._id);
                 const studentPlan = await axios.get(
-                    `http://localhost:4000/ldss/educator/getstudentplan/${educatorId}/${childId}`, 
+                    `${import.meta.env.VITE_SERVER_URL}/ldss/educator/getstudentplan/${educatorId}/${childId}`,
                     {
                         headers: { Authorization: `Bearer ${token}` }
                     }
                 );
-                
+
                 setStudentsPlan(studentPlan.data.data);
             } catch (error) {
                 console.error("Failed to fetch learning plan:", error);
@@ -123,7 +123,7 @@ const EducatorViewLearningPlan = () => {
             try {
                 const token = localStorage.getItem("token");
                 await axios.delete(
-                    `http://localhost:4000/ldss/educator/deleteplan/${planid}`, 
+                    `${import.meta.env.VITE_SERVER_URL}/ldss/educator/deleteplan/${planid}`,
                     {
                         headers: { Authorization: `Bearer ${token}` }
                     }
@@ -170,13 +170,13 @@ const EducatorViewLearningPlan = () => {
                 <Box>
                     <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"} m={"20px 50px"} sx={{ background: "#F0F6FE", height: "70px" }}>
                         <Typography variant='h4' color='primary' sx={{ fontSize: "24px", fontWeight: "600", pl: "20px" }}>
-                            Goal: {studentPlan[0]?.goal} 
+                            Goal: {studentPlan[0]?.goal}
                         </Typography>
                         <Typography variant='h4' color='primary' sx={{ fontSize: "24px", fontWeight: "600", pr: "20px" }}>
                             {studentPlan[0]?.planDuration} Weeks Plan
                         </Typography>
                     </Box>
-                    
+
                     {Array.isArray(studentPlan[0]?.weeks) && studentPlan[0]?.weeks.map((week, weekIndex) => (
                         <Box key={weekIndex} display={'flex'} flexDirection={'column'} m={"20px 50px"} sx={{ height: "268px", background: "#F0F6FE" }}>
                             <Typography variant='h6' color='primary' sx={{ fontSize: "24px", fontWeight: "500", p: "20px 30px" }}>
@@ -202,20 +202,20 @@ const EducatorViewLearningPlan = () => {
                             </Box>
                         </Box>
                     ))}
-                    
-                    <Box display={'flex'} alignItems={'center'} justifyContent={'center'} gap={3} sx={{marginBottom:"50px",}}>
-                        <Button 
-                            onClick={() => deleteLearningPlan(studentPlan[0]._id)} 
-                            variant='outlined' 
-                            color='secondary' 
+
+                    <Box display={'flex'} alignItems={'center'} justifyContent={'center'} gap={3} sx={{ marginBottom: "50px", }}>
+                        <Button
+                            onClick={() => deleteLearningPlan(studentPlan[0]._id)}
+                            variant='outlined'
+                            color='secondary'
                             sx={{ borderRadius: "25px", marginTop: "20px", height: "40px", width: '200px', padding: '10px 35px' }}
                         >
                             Delete
                         </Button>
-                        <Button 
-                            onClick={handleEdit} 
-                            variant='contained' 
-                            color='secondary' 
+                        <Button
+                            onClick={handleEdit}
+                            variant='contained'
+                            color='secondary'
                             sx={{ borderRadius: "25px", marginTop: "20px", height: "40px", width: '200px', padding: '10px 35px' }}
                         >
                             Edit

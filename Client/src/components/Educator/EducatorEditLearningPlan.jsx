@@ -7,7 +7,7 @@ import axios from "axios";
 import { toast } from 'react-toastify';
 
 const EducatorEditLearningPlan = () => {
-    const activityContainerStyle = { 
+    const activityContainerStyle = {
         width: '360px',
         p: 2,
         borderRadius: '8px',
@@ -35,13 +35,13 @@ const EducatorEditLearningPlan = () => {
         try {
             const token = localStorage.getItem("token");
             const educatorId = (JSON.parse(localStorage.getItem("educatorDetails"))?._id);
-            
+
             if (!educatorId || !childId) {
                 throw new Error("Missing educator or student ID");
             }
 
             const response = await axios.get(
-                `http://localhost:4000/ldss/educator/getstudentplan/${educatorId}/${childId}`, 
+                `${import.meta.env.VITE_SERVER_URL}/ldss/educator/getstudentplan/${educatorId}/${childId}`,
                 {
                     headers: { Authorization: `Bearer ${token}` }
                 }
@@ -50,7 +50,7 @@ const EducatorEditLearningPlan = () => {
 
             if (response.data?.data?.length > 0) {
                 const plan = response.data.data[0]; // Get the first plan from the array
-                
+
                 // Ensure all required fields exist and are properly formatted
                 const formattedPlan = {
                     _id: plan._id,
@@ -72,7 +72,7 @@ const EducatorEditLearningPlan = () => {
                     updatedStatus: plan.updatedStatus,
                     createdAt: plan.createdAt
                 };
-                
+
                 setLearningPlan(formattedPlan);
             } else {
                 // Initialize with default plan if none exists
@@ -138,12 +138,12 @@ const EducatorEditLearningPlan = () => {
     const handleRemoveActivity = (weekIndex, activityIndex) => {
         const updatedWeeks = [...learningPlan.weeks];
         updatedWeeks[weekIndex].activities.splice(activityIndex, 1);
-        
+
         // If this was the last activity in the week, add a new empty one
         if (updatedWeeks[weekIndex].activities.length === 0) {
             updatedWeeks[weekIndex].activities.push({ title: '', description: '' });
         }
-        
+
         setLearningPlan(prev => ({ ...prev, weeks: updatedWeeks }));
     };
 
@@ -152,10 +152,10 @@ const EducatorEditLearningPlan = () => {
             toast.warning("You must have at least one week");
             return;
         }
-        
+
         const updatedWeeks = [...learningPlan.weeks];
         updatedWeeks.splice(weekIndex, 1);
-        
+
         setLearningPlan(prev => ({
             ...prev,
             weeks: updatedWeeks,
@@ -166,7 +166,7 @@ const EducatorEditLearningPlan = () => {
     const handleSubmit = async () => {
         const token = localStorage.getItem('token');
         const educatorId = (JSON.parse(localStorage.getItem("educatorDetails"))?._id);
-        
+
         if (!educatorId || !childId) {
             toast.error("Missing educator or student information");
             return;
@@ -195,11 +195,11 @@ const EducatorEditLearningPlan = () => {
             };
 
             const response = await axios.put(
-                `http://localhost:4000/ldss/educator/updateplan/${educatorId}/${childId}`, 
+                `${import.meta.env.VITE_SERVER_URL}/ldss/educator/updateplan/${educatorId}/${childId}`,
                 planData,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-            
+
             if (response.data?.message === "Learning plan updated successfully") {
                 toast.success("Learning plan updated successfully");
                 navigate(`/educator/viewlearningplan/${childId}`);
@@ -301,7 +301,7 @@ const EducatorEditLearningPlan = () => {
                             )}
                         </Box>
 
-                        <Box sx={{ 
+                        <Box sx={{
                             width: '100%',
                             display: 'flex',
                             flexWrap: 'wrap',
@@ -335,10 +335,10 @@ const EducatorEditLearningPlan = () => {
                                             onChange={(e) => handleActivityChange(weekIndex, activityIndex, e)}
                                         />
                                     </div>
-                                    <div style={{height: "85px", width: "100%", display: "flex", flexDirection: "column", justifyContent: "start", position: "relative"}}>
+                                    <div style={{ height: "85px", width: "100%", display: "flex", flexDirection: "column", justifyContent: "start", position: "relative" }}>
                                         <label>Description</label>
                                         <input
-                                            style={{height: "60px", borderRadius: "8px", border: "1px solid #CCCCCC", padding: '8px', width: '100%'}}
+                                            style={{ height: "60px", borderRadius: "8px", border: "1px solid #CCCCCC", padding: '8px', width: '100%' }}
                                             name='description'
                                             value={activity.description || ''}
                                             onChange={(e) => handleActivityChange(weekIndex, activityIndex, e)}

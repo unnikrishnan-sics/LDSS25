@@ -35,7 +35,7 @@ const ParentQuizAttemptReport = () => {
         try {
             const token = localStorage.getItem('token');
             const response = await axios.get(
-                `http://localhost:4000/ldss/parent/quiz/attempt/${attemptId}`,
+                `${import.meta.env.VITE_SERVER_URL}/ldss/parent/quiz/attempt/${attemptId}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             if (response.data.success) {
@@ -45,7 +45,7 @@ const ParentQuizAttemptReport = () => {
             }
         } catch (err) {
             console.error("Error fetching attempt details:", err);
-             setError(err.response?.data?.message || "An error occurred while fetching attempt details.");
+            setError(err.response?.data?.message || "An error occurred while fetching attempt details.");
         } finally {
             setLoading(false);
         }
@@ -53,19 +53,19 @@ const ParentQuizAttemptReport = () => {
 
     if (loading) {
         return (
-             <>
+            <>
                 <ParentNavbar parentdetails={parentDetails} navigateToProfile={navigateToProfile} />
-                 <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
-                     <CircularProgress />
-                 </Box>
-             </>
+                <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
+                    <CircularProgress />
+                </Box>
+            </>
         );
     }
 
     if (error) {
         return (
             <>
-                 <ParentNavbar parentdetails={parentDetails} navigateToProfile={navigateToProfile} />
+                <ParentNavbar parentdetails={parentDetails} navigateToProfile={navigateToProfile} />
                 <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
                     <Typography color="error">{error}</Typography>
                 </Box>
@@ -73,22 +73,22 @@ const ParentQuizAttemptReport = () => {
         );
     }
 
-     if (!attempt || !attempt.quizId) {
-         return (
-             <>
-                 <ParentNavbar parentdetails={parentDetails} navigateToProfile={navigateToProfile} />
-                 <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
+    if (!attempt || !attempt.quizId) {
+        return (
+            <>
+                <ParentNavbar parentdetails={parentDetails} navigateToProfile={navigateToProfile} />
+                <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
                     <Typography>Attempt data is incomplete or quiz details are missing.</Typography>
                 </Box>
-             </>
-         );
+            </>
+        );
     }
 
 
     return (
         <>
             <ParentNavbar parentdetails={parentDetails} navigateToProfile={navigateToProfile} />
-             <Box display="flex" justifyContent="center" alignItems="center" sx={{ height: "46px", background: "#DBE8FA" }}>
+            <Box display="flex" justifyContent="center" alignItems="center" sx={{ height: "46px", background: "#DBE8FA" }}>
                 <Typography color='primary' textAlign="center" sx={{ fontSize: "18px", fontWeight: "600" }}>
                     Quiz Report
                 </Typography>
@@ -100,11 +100,11 @@ const ParentQuizAttemptReport = () => {
                         Home
                     </Link>
                     {/* Link back to the child's quiz list - needs childId */}
-                     {attempt.childId && (
-                         <Link to={`/parent/child/${attempt.childId}/quizzes`} style={{ fontSize: "12px", fontWeight: "500", color: "#7F7F7F", textDecoration: "none" }}>
-                           Quizzes
+                    {attempt.childId && (
+                        <Link to={`/parent/child/${attempt.childId}/quizzes`} style={{ fontSize: "12px", fontWeight: "500", color: "#7F7F7F", textDecoration: "none" }}>
+                            Quizzes
                         </Link>
-                     )}
+                    )}
                     <Typography color='primary' sx={{ fontSize: "12px", fontWeight: "500" }}>
                         Report
                     </Typography>
@@ -123,17 +123,17 @@ const ParentQuizAttemptReport = () => {
                     <Typography variant="body2" color="textSecondary" align="center">
                         Completed on: {moment(attempt.completedAt).format('YYYY-MM-DD HH:mm')}
                     </Typography>
-                     {/* Optionally display child name if populated or fetched */}
-                     {/* <Typography variant="body2" color="textSecondary" align="center">
+                    {/* Optionally display child name if populated or fetched */}
+                    {/* <Typography variant="body2" color="textSecondary" align="center">
                          For Child: {attempt.childId?.name || 'N/A'}
                      </Typography> */}
                 </Paper>
 
                 {attempt.quizId.questions.map((question, qIndex) => {
-                     const attemptedAnswer = attempt.answers.find(ans => ans.questionIndex === qIndex);
-                     const chosenOptionIndex = attemptedAnswer ? attemptedAnswer.chosenAnswerIndex : -1;
-                     const isCorrect = attemptedAnswer ? attemptedAnswer.isCorrect : false;
-                     const correctOptionIndex = question.correctAnswerIndex;
+                    const attemptedAnswer = attempt.answers.find(ans => ans.questionIndex === qIndex);
+                    const chosenOptionIndex = attemptedAnswer ? attemptedAnswer.chosenAnswerIndex : -1;
+                    const isCorrect = attemptedAnswer ? attemptedAnswer.isCorrect : false;
+                    const correctOptionIndex = question.correctAnswerIndex;
 
                     return (
                         <Paper key={qIndex} elevation={1} sx={{ p: 3, mt: 3 }}>
@@ -144,7 +144,7 @@ const ParentQuizAttemptReport = () => {
                                 {isCorrect ? (
                                     <CheckCircleOutlineIcon color="success" />
                                 ) : (
-                                     <CancelOutlinedIcon color="error" />
+                                    <CancelOutlinedIcon color="error" />
                                 )}
                             </Box>
                             <Box sx={{ mt: 2, ml: 2 }}>
@@ -157,13 +157,13 @@ const ParentQuizAttemptReport = () => {
                                             mb: 1
                                         }}
                                     >
-                                         {oIndex === correctOptionIndex && oIndex === chosenOptionIndex && <CheckCircleOutlineIcon sx={{ verticalAlign: 'middle', mr: 0.5 }} color="success" fontSize="small"/>}
-                                         {oIndex === correctOptionIndex && oIndex !== chosenOptionIndex && <CheckCircleOutlineIcon sx={{ verticalAlign: 'middle', mr: 0.5 }} color="success" fontSize="small"/>}
-                                         {chosenOptionIndex === oIndex && oIndex !== correctOptionIndex && <CancelOutlinedIcon sx={{ verticalAlign: 'middle', mr: 0.5 }} color="error" fontSize="small"/>}
+                                        {oIndex === correctOptionIndex && oIndex === chosenOptionIndex && <CheckCircleOutlineIcon sx={{ verticalAlign: 'middle', mr: 0.5 }} color="success" fontSize="small" />}
+                                        {oIndex === correctOptionIndex && oIndex !== chosenOptionIndex && <CheckCircleOutlineIcon sx={{ verticalAlign: 'middle', mr: 0.5 }} color="success" fontSize="small" />}
+                                        {chosenOptionIndex === oIndex && oIndex !== correctOptionIndex && <CancelOutlinedIcon sx={{ verticalAlign: 'middle', mr: 0.5 }} color="error" fontSize="small" />}
 
                                         {String.fromCharCode(65 + oIndex)}. {option}
-                                        {oIndex === correctOptionIndex && oIndex !== chosenOptionIndex && <Typography component="span" sx={{ml:1, fontSize: '0.8em', color: 'green'}}> (Correct Answer)</Typography>}
-                                         {chosenOptionIndex === oIndex && oIndex !== correctOptionIndex && <Typography component="span" sx={{ml:1, fontSize: '0.8em', color: 'red'}}> (Your Answer)</Typography>}
+                                        {oIndex === correctOptionIndex && oIndex !== chosenOptionIndex && <Typography component="span" sx={{ ml: 1, fontSize: '0.8em', color: 'green' }}> (Correct Answer)</Typography>}
+                                        {chosenOptionIndex === oIndex && oIndex !== correctOptionIndex && <Typography component="span" sx={{ ml: 1, fontSize: '0.8em', color: 'red' }}> (Your Answer)</Typography>}
                                     </Typography>
                                 ))}
                             </Box>
@@ -171,10 +171,10 @@ const ParentQuizAttemptReport = () => {
                     );
                 })}
 
-                 <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-                      {/* Link back to the child's quiz list - needs childId */}
-                     {attempt.childId && (
-                          <Button
+                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+                    {/* Link back to the child's quiz list - needs childId */}
+                    {attempt.childId && (
+                        <Button
                             variant='outlined'
                             color='secondary'
                             sx={{ borderRadius: '25px', width: '200px' }}
@@ -182,7 +182,7 @@ const ParentQuizAttemptReport = () => {
                         >
                             Back to Quizzes
                         </Button>
-                     )}
+                    )}
 
                 </Box>
             </Box>

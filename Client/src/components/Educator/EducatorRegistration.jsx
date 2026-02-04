@@ -11,18 +11,18 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const EducatorRegistration = () => {
-    const textFieldStyle = { 
-        height: "65px", 
-        width: "360px", 
-        display: "flex", 
-        flexDirection: "column", 
-        justifyContent: "start", 
-        position: "relative" 
+    const textFieldStyle = {
+        height: "65px",
+        width: "360px",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "start",
+        position: "relative"
     };
-    
-    const siginupStyle = { 
-        background: "white", 
-        boxShadow: "none" 
+
+    const siginupStyle = {
+        background: "white",
+        boxShadow: "none"
     };
 
     const [checked, setChecked] = React.useState(false);
@@ -55,13 +55,13 @@ const EducatorRegistration = () => {
 
     const handleDataChange = (e) => {
         const { name, value } = e.target;
-        
+
         // Clear any existing error for this field
         setError(prevError => ({
             ...prevError,
             [name]: ""
         }));
-        
+
         // Special validation for name field (only letters and spaces)
         if (name === 'name') {
             if (/^[a-zA-Z ]*$/.test(value) || value === '') {
@@ -69,7 +69,7 @@ const EducatorRegistration = () => {
             }
             return;
         }
-        
+
         // Special validation for phone field (only numbers, max 10 digits)
         if (name === 'phone') {
             if (/^\d*$/.test(value) && value.length <= 10) {
@@ -77,7 +77,7 @@ const EducatorRegistration = () => {
             }
             return;
         }
-        
+
         // For all other fields
         setData(prev => ({ ...prev, [name]: value }));
     };
@@ -93,7 +93,7 @@ const EducatorRegistration = () => {
                 }));
                 return;
             }
-            
+
             // Validate file size (max 2MB)
             if (file.size > 2 * 1024 * 1024) {
                 setError(prevError => ({
@@ -102,12 +102,12 @@ const EducatorRegistration = () => {
                 }));
                 return;
             }
-            
+
             setData(prev => ({
                 ...prev,
                 profilePic: file
             }));
-            
+
             const objectURL = URL.createObjectURL(file);
             setImagePreview(objectURL);
             setError(prevError => ({
@@ -120,13 +120,13 @@ const EducatorRegistration = () => {
     const validation = () => {
         let isValid = true;
         let errorMessage = {};
-        
+
         // Email regex
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        
+
         // Password regex (min 6 chars, at least one uppercase, one lowercase, one number, one special char)
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,15}$/;
-        
+
         // Name validation
         if (!data.name.trim()) {
             errorMessage.name = "Name is required";
@@ -138,7 +138,7 @@ const EducatorRegistration = () => {
             errorMessage.name = "Name should contain only letters";
             isValid = false;
         }
-        
+
         // Email validation
         if (!data.email.trim()) {
             errorMessage.email = "Email is required";
@@ -147,7 +147,7 @@ const EducatorRegistration = () => {
             errorMessage.email = "Invalid email address";
             isValid = false;
         }
-        
+
         // Password validation
         if (!data.password.trim()) {
             errorMessage.password = "Password is required";
@@ -156,7 +156,7 @@ const EducatorRegistration = () => {
             errorMessage.password = "Password must contain at least one uppercase, one lowercase, one number, one special character (6-15 chars)";
             isValid = false;
         }
-        
+
         // Confirm password validation
         if (!data.confirmPassword.trim()) {
             errorMessage.confirmPassword = "Please confirm your password";
@@ -165,7 +165,7 @@ const EducatorRegistration = () => {
             errorMessage.confirmPassword = "Passwords do not match";
             isValid = false;
         }
-        
+
         // Address validation
         if (!data.address.trim()) {
             errorMessage.address = "Address is required";
@@ -174,7 +174,7 @@ const EducatorRegistration = () => {
             errorMessage.address = "Address should be at least 10 characters";
             isValid = false;
         }
-        
+
         // Phone validation
         if (!data.phone.trim()) {
             errorMessage.phone = "Phone number is required";
@@ -186,31 +186,31 @@ const EducatorRegistration = () => {
             errorMessage.phone = "Phone number should contain only digits";
             isValid = false;
         }
-        
+
         // Profile picture validation
         if (!data.profilePic) {
             errorMessage.profilePic = "Profile picture is required";
             isValid = false;
         }
-        
+
         // Terms and conditions validation
         if (!checked) {
             errorMessage.terms = "You must accept the terms and conditions";
             isValid = false;
         }
-        
+
         setError(errorMessage);
         return isValid;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         const isValid = validation();
         if (!isValid) {
             return;
         }
-        
+
         try {
             const formData = new FormData();
             formData.append('name', data.name);
@@ -223,7 +223,7 @@ const EducatorRegistration = () => {
             formData.append('agreed', checked);
 
             const response = await axios.post(
-                "http://localhost:4000/ldss/educator/registration", 
+                `${import.meta.env.VITE_SERVER_URL}/ldss/educator/registration`,
                 formData,
                 {
                     headers: {
@@ -233,7 +233,7 @@ const EducatorRegistration = () => {
             );
 
             const result = response.data;
-            
+
             if (result.message === "educator already registered with this phone number") {
                 toast.error("You have already registered with this phone number");
             } else if (result.message === "educator already registered with this email") {
@@ -251,7 +251,7 @@ const EducatorRegistration = () => {
                 });
                 setChecked(false);
                 setImagePreview(null);
-                
+
                 toast.success("Educator profile created successfully!");
                 navigate("/educator/login");
             }
@@ -273,27 +273,27 @@ const EducatorRegistration = () => {
         <>
             <ParentNavbarSiginIn siginupStyle={siginupStyle} />
             <Container sx={{ position: "relative", mb: "50px", siginupStyle }} maxWidth="x-lg">
-                <Box 
-                    component="img" 
-                    src={background} 
-                    sx={{ 
-                        position: "absolute", 
-                        top: 110, 
-                        left: 0, 
-                        objectFit: 'cover', 
-                        zIndex: -1 
-                    }} 
+                <Box
+                    component="img"
+                    src={background}
+                    sx={{
+                        position: "absolute",
+                        top: 110,
+                        left: 0,
+                        objectFit: 'cover',
+                        zIndex: -1
+                    }}
                 />
-                
+
                 <Box display={'flex'} alignItems={'center'} justifyContent={'center'} flexDirection={'column'}>
                     {/* Profile Picture Upload */}
                     <Box display={'flex'} alignItems={'center'} justifyContent={'center'}>
-                        <Stack spacing={2} sx={{ 
-                            display: "flex", 
-                            justifyContent: "center", 
-                            alignItems: "center", 
-                            flexDirection: "column", 
-                            marginTop: "60px" 
+                        <Stack spacing={2} sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            flexDirection: "column",
+                            marginTop: "60px"
                         }}>
                             <input
                                 type="file"
@@ -303,47 +303,47 @@ const EducatorRegistration = () => {
                                 style={{ display: "none" }}
                             />
 
-                            <Typography 
-                                variant='h2' 
-                                color='primary' 
-                                sx={{ 
-                                    fontSize: "32px", 
-                                    fontWeight: "600" 
+                            <Typography
+                                variant='h2'
+                                color='primary'
+                                sx={{
+                                    fontSize: "32px",
+                                    fontWeight: "600"
                                 }}
                             >
                                 Sign Up!
                             </Typography>
-                            
-                            <label 
-                                htmlFor="profile-upload" 
-                                style={{ 
-                                    cursor: "pointer", 
-                                    textAlign: "center", 
-                                    display: "flex", 
-                                    flexDirection: "column", 
-                                    alignItems: "center", 
-                                    justifyContent: "center", 
-                                    gap: "15px" 
+
+                            <label
+                                htmlFor="profile-upload"
+                                style={{
+                                    cursor: "pointer",
+                                    textAlign: "center",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    gap: "15px"
                                 }}
                             >
-                                <Box 
-                                    component="img" 
-                                    src={imagePreview || profileFrame} 
-                                    alt='profilepic' 
-                                    sx={{ 
-                                        width: "150px", 
-                                        height: "150px", 
+                                <Box
+                                    component="img"
+                                    src={imagePreview || profileFrame}
+                                    alt='profilepic'
+                                    sx={{
+                                        width: "150px",
+                                        height: "150px",
                                         borderRadius: "50%",
                                         border: error.profilePic ? "2px solid red" : "none"
-                                    }} 
+                                    }}
                                 />
                                 {imagePreview ? null : (
-                                    <Typography 
-                                        variant='p' 
-                                        color='primary' 
-                                        sx={{ 
-                                            fontSize: "12px", 
-                                            fontWeight: "500" 
+                                    <Typography
+                                        variant='p'
+                                        color='primary'
+                                        sx={{
+                                            fontSize: "12px",
+                                            fontWeight: "500"
                                         }}
                                     >
                                         + add image
@@ -357,26 +357,26 @@ const EducatorRegistration = () => {
                             )}
                         </Stack>
                     </Box>
-                    
+
                     {/* Registration Form */}
-                    <Box sx={{ 
-                        display: "flex", 
-                        justifyContent: 'center', 
-                        alignItems: "start", 
-                        gap: "30px", 
-                        height: "293px", 
-                        flexDirection: "column", 
-                        marginTop: '30px' 
+                    <Box sx={{
+                        display: "flex",
+                        justifyContent: 'center',
+                        alignItems: "start",
+                        gap: "30px",
+                        height: "293px",
+                        flexDirection: "column",
+                        marginTop: '30px'
                     }}>
                         {/* Name and Address */}
                         <Stack direction="row" sx={{ display: "flex", gap: "25px" }}>
                             <div style={textFieldStyle}>
                                 <label>Name</label>
-                                <input 
-                                    style={{ 
-                                        height: "40px", 
-                                        borderRadius: "8px", 
-                                        border: error.name ? "1px solid red" : "1px solid #CCCCCC", 
+                                <input
+                                    style={{
+                                        height: "40px",
+                                        borderRadius: "8px",
+                                        border: error.name ? "1px solid red" : "1px solid #CCCCCC",
                                         padding: '8px'
                                     }}
                                     onChange={handleDataChange}
@@ -393,11 +393,11 @@ const EducatorRegistration = () => {
 
                             <div style={textFieldStyle}>
                                 <label>Address</label>
-                                <input 
-                                    style={{ 
-                                        height: "40px", 
-                                        borderRadius: "8px", 
-                                        border: error.address ? "1px solid red" : "1px solid #CCCCCC", 
+                                <input
+                                    style={{
+                                        height: "40px",
+                                        borderRadius: "8px",
+                                        border: error.address ? "1px solid red" : "1px solid #CCCCCC",
                                         padding: '8px'
                                     }}
                                     onChange={handleDataChange}
@@ -411,16 +411,16 @@ const EducatorRegistration = () => {
                                 )}
                             </div>
                         </Stack>
-                        
+
                         {/* Email and Password */}
                         <Stack direction={'row'} sx={{ display: "flex", gap: "25px" }}>
                             <div style={textFieldStyle}>
                                 <label>Email</label>
-                                <input 
-                                    style={{ 
-                                        height: "40px", 
-                                        borderRadius: "8px", 
-                                        border: error.email ? "1px solid red" : "1px solid #CCCCCC", 
+                                <input
+                                    style={{
+                                        height: "40px",
+                                        borderRadius: "8px",
+                                        border: error.email ? "1px solid red" : "1px solid #CCCCCC",
                                         padding: '8px'
                                     }}
                                     onChange={handleDataChange}
@@ -434,16 +434,16 @@ const EducatorRegistration = () => {
                                     </span>
                                 )}
                             </div>
-                            
+
                             <div style={textFieldStyle}>
                                 <label>Password</label>
                                 <div style={{ position: 'relative' }}>
-                                    <input 
-                                        style={{ 
-                                            height: "40px", 
+                                    <input
+                                        style={{
+                                            height: "40px",
                                             width: "100%",
-                                            borderRadius: "8px", 
-                                            border: error.password ? "1px solid red" : "1px solid #CCCCCC", 
+                                            borderRadius: "8px",
+                                            border: error.password ? "1px solid red" : "1px solid #CCCCCC",
                                             padding: '8px',
                                             paddingRight: '40px'
                                         }}
@@ -485,16 +485,16 @@ const EducatorRegistration = () => {
                                 )}
                             </div>
                         </Stack>
-                        
+
                         {/* Phone and Confirm Password */}
                         <Stack direction={'row'} sx={{ display: "flex", gap: "25px" }}>
                             <div style={textFieldStyle}>
                                 <label>Phone Number</label>
-                                <input 
-                                    style={{ 
-                                        height: "40px", 
-                                        borderRadius: "8px", 
-                                        border: error.phone ? "1px solid red" : "1px solid #CCCCCC", 
+                                <input
+                                    style={{
+                                        height: "40px",
+                                        borderRadius: "8px",
+                                        border: error.phone ? "1px solid red" : "1px solid #CCCCCC",
                                         padding: '8px'
                                     }}
                                     onChange={handleDataChange}
@@ -509,16 +509,16 @@ const EducatorRegistration = () => {
                                     </span>
                                 )}
                             </div>
-                            
+
                             <div style={textFieldStyle}>
                                 <label>Confirm Password</label>
                                 <div style={{ position: 'relative' }}>
-                                    <input 
-                                        style={{ 
-                                            height: "40px", 
+                                    <input
+                                        style={{
+                                            height: "40px",
                                             width: "100%",
-                                            borderRadius: "8px", 
-                                            border: error.confirmPassword ? "1px solid red" : "1px solid #CCCCCC", 
+                                            borderRadius: "8px",
+                                            border: error.confirmPassword ? "1px solid red" : "1px solid #CCCCCC",
                                             padding: '8px',
                                             paddingRight: '40px'
                                         }}
@@ -581,8 +581,8 @@ const EducatorRegistration = () => {
                             </Box>
                         </Stack>
                         {error.terms && (
-                            <span style={{ 
-                                color: 'red', 
+                            <span style={{
+                                color: 'red',
                                 fontSize: '12px',
                                 marginTop: "-30px",
                                 marginLeft: "35px"
@@ -591,18 +591,18 @@ const EducatorRegistration = () => {
                             </span>
                         )}
                     </Box>
-                    
+
                     {/* Submit Button */}
-                    <Box display={'flex'} alignItems={'center'} justifyContent={'center'} flexDirection={'column'} 
+                    <Box display={'flex'} alignItems={'center'} justifyContent={'center'} flexDirection={'column'}
                         sx={{ width: '253px', height: "93px", gap: '10px', marginTop: '20px' }}
                     >
-                        <Button 
-                            variant='contained' 
-                            color='secondary' 
-                            sx={{ 
-                                borderRadius: "25px", 
-                                height: "40px", 
-                                width: '200px', 
+                        <Button
+                            variant='contained'
+                            color='secondary'
+                            sx={{
+                                borderRadius: "25px",
+                                height: "40px",
+                                width: '200px',
                                 padding: '10px 35px',
                                 textTransform: 'none',
                                 fontSize: '16px',
@@ -612,12 +612,12 @@ const EducatorRegistration = () => {
                         >
                             Sign up
                         </Button>
-                        
+
                         <Typography sx={{ fontSize: '14px' }}>
                             Already have an account?{' '}
-                            <Link 
-                                to="/educator/login" 
-                                style={{ 
+                            <Link
+                                to="/educator/login"
+                                style={{
                                     textDecoration: "underline",
                                     color: '#1967D2',
                                     fontWeight: '500'
@@ -629,8 +629,8 @@ const EducatorRegistration = () => {
                     </Box>
                 </Box>
             </Container>
-            
-<Footer userRole="educator" />        </>
+
+            <Footer userRole="educator" />        </>
     );
 };
 

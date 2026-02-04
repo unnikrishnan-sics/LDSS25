@@ -16,7 +16,7 @@ const ParentLogin = () => {
     });
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
-    
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setData((prevData) => ({ ...prevData, [name]: value }));
@@ -29,14 +29,14 @@ const ParentLogin = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://localhost:4000/ldss/parent/login", data);
+            const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/ldss/parent/login`, data);
             const jwtToken = response.data.token;
             const message = response.data.message;
 
-            if(message === "Parent not found with this email."){
+            if (message === "Parent not found with this email.") {
                 toast.error("Parent not found with this email.")
             }
-            if(message === "Invalid Password."){
+            if (message === "Invalid Password.") {
                 toast.error("Invalid Password.")
             }
 
@@ -54,18 +54,18 @@ const ParentLogin = () => {
     return (
         <>
             <ParentNavbarSiginIn siginupStyle={{ background: "white", boxShadow: "none" }} />
-            <Container maxWidth="xs" sx={{ 
+            <Container maxWidth="xs" sx={{
                 minHeight: 'calc(100vh - 120px)',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
                 py: 4
             }}>
-                <Box sx={{ 
+                <Box sx={{
                     textAlign: 'center',
                     mb: 4
                 }}>
-                    <Typography variant="h4" color='primary' sx={{ 
+                    <Typography variant="h4" color='primary' sx={{
                         fontWeight: 700,
                         mb: 1
                     }}>
@@ -78,8 +78,8 @@ const ParentLogin = () => {
 
                 <Box component="form" onSubmit={handleLogin}>
                     <Box sx={{ mb: 3 }}>
-                        <input 
-                            style={{ 
+                        <input
+                            style={{
                                 width: '100%',
                                 padding: '12px 16px',
                                 borderRadius: '8px',
@@ -97,8 +97,8 @@ const ParentLogin = () => {
                     </Box>
 
                     <Box sx={{ mb: 2, position: 'relative' }}>
-                        <input 
-                            style={{ 
+                        <input
+                            style={{
                                 width: '100%',
                                 padding: '12px 16px 12px 16px',
                                 borderRadius: '8px',
@@ -113,7 +113,7 @@ const ParentLogin = () => {
                             type={showPassword ? 'text' : 'password'}
                             required
                         />
-                        <Box 
+                        <Box
                             onClick={togglePasswordVisibility}
                             sx={{
                                 position: 'absolute',
@@ -128,7 +128,7 @@ const ParentLogin = () => {
                     </Box>
 
                     <Box sx={{ textAlign: 'right', mb: 3 }}>
-                        <Link to="/parent/forgotpassword" style={{ 
+                        <Link to="/parent/forgotpassword" style={{
                             textDecoration: "none",
                             color: 'primary.main',
                             fontSize: '14px'
@@ -137,11 +137,11 @@ const ParentLogin = () => {
                         </Link>
                     </Box>
 
-                    <Button 
+                    <Button
                         fullWidth
-                        variant='contained' 
-                        color='secondary' 
-                        sx={{ 
+                        variant='contained'
+                        color='secondary'
+                        sx={{
                             borderRadius: "8px",
                             height: "48px",
                             textTransform: 'none',
@@ -156,7 +156,7 @@ const ParentLogin = () => {
 
                     <Typography sx={{ textAlign: 'center', mt: 3 }}>
                         Don't have an account?{' '}
-                        <Link to="/parent/siginin" style={{ 
+                        <Link to="/parent/siginin" style={{
                             textDecoration: "none",
                             color: 'primary.main',
                             fontWeight: 600
@@ -166,7 +166,7 @@ const ParentLogin = () => {
                     </Typography>
                 </Box>
             </Container>
-<Footer userRole="parent" />         </>
+            <Footer userRole="parent" />         </>
     )
 }
 

@@ -17,7 +17,7 @@ const TherapistMeeting = () => {
     const [upcomingMeetings, setUpcomingMeetings] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    
+
     const homebg = {
         backgroundColor: "#F6F7F9"
     };
@@ -29,18 +29,18 @@ const TherapistMeeting = () => {
                 console.error("No token found");
                 return;
             }
-            
+
             const decoded = jwtDecode(token);
-            
-            const response = await axios.get(`http://localhost:4000/ldss/theraphist/gettheraphist/${decoded.id}`, {
+
+            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/theraphist/gettheraphist/${decoded.id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            
+
             if (response.data && response.data.theraphist) {
                 const therapistData = response.data.theraphist;
-                
+
                 if (therapistData && therapistData._id) {
                     try {
                         localStorage.setItem("theraphistDetails", JSON.stringify(therapistData));
@@ -79,16 +79,16 @@ const TherapistMeeting = () => {
                 setError("Authentication required");
                 return;
             }
-            
+
             const decoded = jwtDecode(token);
             setLoading(true);
-            
-            const response = await axios.get(`http://localhost:4000/ldss/therapist/viewmeeting/${decoded.id}`, {
+
+            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/therapist/viewmeeting/${decoded.id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            
+
             if (response.data && response.data.meetings) {
                 setMeetings(response.data.meetings);
                 filterUpcomingMeetings(response.data.meetings);
@@ -106,20 +106,20 @@ const TherapistMeeting = () => {
 
     const isMeetingUpcoming = (meeting) => {
         if (!meeting?.date || !meeting?.endTime) return false;
-        
+
         const now = new Date();
         const meetingDate = new Date(meeting.date);
-        
+
         // Compare dates first
         if (meetingDate.toDateString() !== now.toDateString()) {
             return meetingDate > now;
         }
-        
+
         // If same date, compare end time
         const [endHours, endMinutes] = meeting.endTime.split(':').map(Number);
         const meetingEndTime = new Date(meetingDate);
         meetingEndTime.setHours(endHours, endMinutes, 0, 0);
-        
+
         return meetingEndTime > now;
     };
 
@@ -140,7 +140,7 @@ const TherapistMeeting = () => {
                 console.error("Error parsing stored therapist:", error);
             }
         }
-        
+
         fetchTherapist();
         fetchAllMeetings();
     }, []);
@@ -166,7 +166,7 @@ const TherapistMeeting = () => {
     };
 
     const getStatusColor = (status) => {
-        switch(status) {
+        switch (status) {
             case 'upcoming': return 'primary';
             case 'completed': return 'success';
             case 'cancelled': return 'error';
@@ -191,11 +191,11 @@ const TherapistMeeting = () => {
 
     return (
         <>
-            <TheraphistNavbar 
-                theraphistdetails={therapistDetails} 
-                navigateToProfile={navigateToProfile} 
+            <TheraphistNavbar
+                theraphistdetails={therapistDetails}
+                navigateToProfile={navigateToProfile}
             />
-            
+
             <Box display="flex" justifyContent="center" alignItems="center" sx={{ height: "46px", background: "#DBE8FA" }}>
                 <Typography color='primary' textAlign="center" sx={{ fontSize: "18px", fontWeight: "600" }}>
                     Upcoming Meetings
@@ -212,7 +212,7 @@ const TherapistMeeting = () => {
                     </Typography>
                 </Breadcrumbs>
             </Box>
-            
+
             {loading ? (
                 <Box display="flex" justifyContent="center" alignItems="center" sx={{ height: "200px" }}>
                     <Typography variant="h6" color="textSecondary">
@@ -229,24 +229,24 @@ const TherapistMeeting = () => {
                 <Box sx={{ background: "white" }}>
                     <Box display={'flex'} flexDirection={'column'} gap={2}>
                         {upcomingMeetings.map((meeting, index) => (
-                            <Box 
-                                key={meeting._id || index} 
-                                display="flex" 
-                                alignItems="center" 
-                                sx={{ 
-                                    height: "198px", 
-                                    background: "#F0F6FE", 
-                                    borderRadius: "20px", 
-                                    m: "20px 50px" 
+                            <Box
+                                key={meeting._id || index}
+                                display="flex"
+                                alignItems="center"
+                                sx={{
+                                    height: "198px",
+                                    background: "#F0F6FE",
+                                    borderRadius: "20px",
+                                    m: "20px 50px"
                                 }}
                             >
                                 {/* First Section (Student Info) */}
-                                <Box 
-                                    sx={{ 
-                                        m: "20px", 
-                                        borderRadius: "15px", 
-                                        border: "1px solid #CCCCCC", 
-                                        height: "150px", 
+                                <Box
+                                    sx={{
+                                        m: "20px",
+                                        borderRadius: "15px",
+                                        border: "1px solid #CCCCCC",
+                                        height: "150px",
                                         flexBasis: "40%",
                                         display: "flex",
                                         justifyContent: "space-between"
@@ -276,9 +276,9 @@ const TherapistMeeting = () => {
                                             </Box>
                                         </Box>
                                     </Box>
-                                    
+
                                     <Box sx={{ borderLeft: "1px solid #CCCCCC", m: "10px 0" }} />
-                                    
+
                                     <Box sx={{ gap: "20px", p: "20px" }} display="flex" flexDirection="column" alignItems="start">
                                         <Box display="flex" alignItems="center" sx={{ gap: "15px", pl: "50px" }}>
                                             <Box sx={{ color: "#1967D2" }}><DateRangeIcon /></Box>
@@ -306,14 +306,14 @@ const TherapistMeeting = () => {
                                         </Box>
                                     </Box>
                                 </Box>
-                                
+
                                 {/* Second Section (Meeting Info) */}
-                                <Box 
-                                    sx={{ 
-                                        m: "20px", 
-                                        borderRadius: "15px", 
-                                        border: "1px solid #CCCCCC", 
-                                        height: "150px", 
+                                <Box
+                                    sx={{
+                                        m: "20px",
+                                        borderRadius: "15px",
+                                        border: "1px solid #CCCCCC",
+                                        height: "150px",
                                         flexBasis: "40%",
                                         display: "flex",
                                         justifyContent: "space-between"
@@ -342,9 +342,9 @@ const TherapistMeeting = () => {
                                             </Box>
                                         </Box>
                                     </Box>
-                                    
+
                                     <Box sx={{ borderLeft: "1px solid #CCCCCC", m: "10px 0" }} />
-                                    
+
                                     <Box sx={{ gap: "20px", p: "20px" }} display="flex" flexDirection="column" alignItems="start">
                                         <Box display="flex" alignItems="center" sx={{ gap: "15px", pl: "50px" }}>
                                             <Box sx={{ color: "#1967D2" }}><AccessTimeIcon /></Box>
@@ -361,14 +361,14 @@ const TherapistMeeting = () => {
                                 </Box>
 
                                 {/* Join Button */}
-                                <Button 
-                                    variant="contained" 
-                                    color="secondary" 
-                                    sx={{ 
-                                        borderRadius: "25px", 
-                                        marginTop: "20px", 
-                                        height: "40px", 
-                                        width: "150px", 
+                                <Button
+                                    variant="contained"
+                                    color="secondary"
+                                    sx={{
+                                        borderRadius: "25px",
+                                        marginTop: "20px",
+                                        height: "40px",
+                                        width: "150px",
                                         padding: "10px 35px",
                                         mr: "20px"
                                     }}
@@ -379,7 +379,7 @@ const TherapistMeeting = () => {
                             </Box>
                         ))}
                     </Box>
-                    
+
                     {/* Empty state */}
                     {upcomingMeetings.length === 0 && !loading && (
                         <Box display="flex" justifyContent="center" alignItems="center" sx={{ height: "200px" }}>
@@ -391,10 +391,10 @@ const TherapistMeeting = () => {
                 </Box>
             )}
 
-            <AddMeeting 
-                handleAddMeetingOpen={handleAddMeetingOpen} 
-                addMeetingopen={addMeetingopen} 
-                handleAddMeetingClose={handleAddMeetingClose} 
+            <AddMeeting
+                handleAddMeetingOpen={handleAddMeetingOpen}
+                addMeetingopen={addMeetingopen}
+                handleAddMeetingClose={handleAddMeetingClose}
                 fetchAllMeetings={fetchAllMeetings}
                 therapistId={therapistDetails._id}
             />

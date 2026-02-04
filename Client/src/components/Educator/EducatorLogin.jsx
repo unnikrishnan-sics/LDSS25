@@ -29,7 +29,7 @@ const EducatorLogin = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://localhost:4000/ldss/educator/login", data);
+            const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/ldss/educator/login`, data);
             const jwtToken = response.data.token;
             const message = response.data.message;
 
@@ -89,7 +89,7 @@ const EducatorLogin = () => {
                     p: 4
                 }}>
                     <Box sx={{ maxWidth: 400, width: '100%' }}>
-                        <Typography variant="h4" color='primary' sx={{ 
+                        <Typography variant="h4" color='primary' sx={{
                             fontWeight: 700,
                             mb: 4,
                             textAlign: 'center'
@@ -100,8 +100,8 @@ const EducatorLogin = () => {
                         <Box component="form" onSubmit={handleLogin}>
                             <Box sx={{ mb: 3 }}>
                                 <Typography sx={{ mb: 1, fontWeight: 500 }}>Email Address</Typography>
-                                <input 
-                                    style={{ 
+                                <input
+                                    style={{
                                         width: '100%',
                                         padding: '12px 16px',
                                         borderRadius: '8px',
@@ -118,8 +118,8 @@ const EducatorLogin = () => {
 
                             <Box sx={{ mb: 2, position: 'relative' }}>
                                 <Typography sx={{ mb: 1, fontWeight: 500 }}>Password</Typography>
-                                <input 
-                                    style={{ 
+                                <input
+                                    style={{
                                         width: '100%',
                                         padding: '12px 16px 12px 16px',
                                         borderRadius: '8px',
@@ -132,7 +132,7 @@ const EducatorLogin = () => {
                                     type={showPassword ? 'text' : 'password'}
                                     required
                                 />
-                                <Box 
+                                <Box
                                     onClick={togglePasswordVisibility}
                                     sx={{
                                         position: 'absolute',
@@ -146,13 +146,13 @@ const EducatorLogin = () => {
                                 </Box>
                             </Box>
 
-                            <Box sx={{ 
+                            <Box sx={{
                                 display: 'flex',
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
                                 mb: 3
                             }}>
-                                <Link to="/educator/forgotpassword" style={{ 
+                                <Link to="/educator/forgotpassword" style={{
                                     textDecoration: "none",
                                     color: 'primary.main',
                                     fontSize: '14px',
@@ -162,11 +162,11 @@ const EducatorLogin = () => {
                                 </Link>
                             </Box>
 
-                            <Button 
+                            <Button
                                 fullWidth
-                                variant='contained' 
-                                color='secondary' 
-                                sx={{ 
+                                variant='contained'
+                                color='secondary'
+                                sx={{
                                     borderRadius: "8px",
                                     height: "48px",
                                     textTransform: 'none',
@@ -181,7 +181,7 @@ const EducatorLogin = () => {
 
                             <Typography sx={{ textAlign: 'center', mt: 3 }}>
                                 New to our platform?{' '}
-                                <Link to="/educator/registration" style={{ 
+                                <Link to="/educator/registration" style={{
                                     textDecoration: "none",
                                     color: 'primary.main',
                                     fontWeight: 600
@@ -193,7 +193,7 @@ const EducatorLogin = () => {
                     </Box>
                 </Box>
             </Box>
-<Footer userRole="educator" />        </>
+            <Footer userRole="educator" />        </>
     )
 }
 

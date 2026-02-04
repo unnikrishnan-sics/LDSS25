@@ -21,7 +21,7 @@ const EducatorAddEditBlog = () => {
             const fetchBlog = async () => {
                 try {
                     const token = localStorage.getItem('token');
-                    const response = await axios.get(`http://localhost:4000/ldss/blog/${id}`, {
+                    const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/blog/${id}`, {
                         headers: { Authorization: `Bearer ${token}` }
                     });
                     const { title, description, image } = response.data.blog;
@@ -29,7 +29,7 @@ const EducatorAddEditBlog = () => {
                         title,
                         description,
                         image,
-                        previewImage: image ? `http://localhost:4000/uploads/blogs/${image.filename}` : null
+                        previewImage: image ? `${import.meta.env.VITE_SERVER_URL}/uploads/blogs/${image.filename}` : null
                     });
                 } catch (error) {
                     console.error('Error fetching blog:', error);
@@ -69,14 +69,14 @@ const EducatorAddEditBlog = () => {
             }
 
             if (id) {
-                await axios.put(`http://localhost:4000/ldss/blog/edit/${id}`, formData, {
+                await axios.put(`${import.meta.env.VITE_SERVER_URL}/ldss/blog/edit/${id}`, formData, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                         'Content-Type': 'multipart/form-data'
                     }
                 });
             } else {
-                await axios.post('http://localhost:4000/ldss/blog/add', formData, {
+                await axios.post(`${import.meta.env.VITE_SERVER_URL}/ldss/blog/add`, formData, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                         'Content-Type': 'multipart/form-data'
@@ -93,14 +93,14 @@ const EducatorAddEditBlog = () => {
 
     return (
         <>
-<EducatorNavbar
-        educatorDetails={educatorDetails}
-        navigateToProfile={() => navigate('/educator/profile')}
-      />            <Box sx={{ p: 3, maxWidth: 800, mx: 'auto' }}>
+            <EducatorNavbar
+                educatorDetails={educatorDetails}
+                navigateToProfile={() => navigate('/educator/profile')}
+            />            <Box sx={{ p: 3, maxWidth: 800, mx: 'auto' }}>
                 <Typography variant="h4" sx={{ mb: 3 }}>
                     {id ? 'Edit Blog' : 'Add New Blog'}
                 </Typography>
-                
+
                 <Card>
                     <CardContent>
                         <form onSubmit={handleSubmit}>
@@ -113,7 +113,7 @@ const EducatorAddEditBlog = () => {
                                 required
                                 sx={{ mb: 2 }}
                             />
-                            
+
                             <TextField
                                 fullWidth
                                 label="Description"
@@ -125,7 +125,7 @@ const EducatorAddEditBlog = () => {
                                 rows={4}
                                 sx={{ mb: 2 }}
                             />
-                            
+
                             <Box sx={{ mb: 2 }}>
                                 <Typography variant="body1" sx={{ mb: 1 }}>Blog Image</Typography>
                                 <input
@@ -135,15 +135,15 @@ const EducatorAddEditBlog = () => {
                                 />
                                 {blog.previewImage && (
                                     <Box sx={{ mt: 2 }}>
-                                        <img 
-                                            src={blog.previewImage} 
-                                            alt="Preview" 
-                                            style={{ maxWidth: '100%', maxHeight: 200 }} 
+                                        <img
+                                            src={blog.previewImage}
+                                            alt="Preview"
+                                            style={{ maxWidth: '100%', maxHeight: 200 }}
                                         />
                                     </Box>
                                 )}
                             </Box>
-                            
+
                             <Button
                                 type="submit"
                                 variant="contained"

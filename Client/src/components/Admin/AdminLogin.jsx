@@ -19,7 +19,7 @@ const AdminLogin = () => {
     });
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
-    
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setData((prevData) => ({ ...prevData, [name]: value }));
@@ -27,9 +27,9 @@ const AdminLogin = () => {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        
+
         try {
-            const response = await axios.post("http://localhost:4000/ldss/admin/login", data);
+            const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/ldss/admin/login`, data);
 
             const jwtToken = response.data.token;
             const message = response.data.message;
@@ -40,11 +40,11 @@ const AdminLogin = () => {
                 navigate("/admin/dashboard");
             }
         } catch (error) {
-            if(error.response) {
+            if (error.response) {
                 const message = error.response.data.message;
-                if(message === "Invalid password.") {
+                if (message === "Invalid password.") {
                     toast.error("Invalid password.");
-                } else if(message === "Admin not found.") {
+                } else if (message === "Admin not found.") {
                     toast.error("Admin not found with this ID.");
                 } else {
                     toast.error("Login failed. Please try again.");
@@ -73,7 +73,7 @@ const AdminLogin = () => {
                         <Stack>
                             <div style={textFieldStyle}>
                                 <label>UserId</label>
-                                <input 
+                                <input
                                     style={{ height: "40px", borderRadius: "8px", border: " 1px solid #CCCCCC", padding: '8px' }}
                                     onChange={handleInputChange}
                                     name='userId'
@@ -84,7 +84,7 @@ const AdminLogin = () => {
                             </div>
                             <div style={textFieldStyle}>
                                 <label>Password</label>
-                                <input 
+                                <input
                                     style={{ height: "40px", borderRadius: "8px", border: " 1px solid #CCCCCC", padding: '8px', paddingRight: '40px' }}
                                     onChange={handleInputChange}
                                     name='password'
@@ -108,10 +108,10 @@ const AdminLogin = () => {
                         </Stack>
                     </Box>
 
-                    <Stack sx={{mb:"80px"}} display={'flex'} flexDirection={'column'} alignItems={'center'} gap={2} mt={2}>
-                        <Button 
-                            variant='contained' 
-                            color='secondary' 
+                    <Stack sx={{ mb: "80px" }} display={'flex'} flexDirection={'column'} alignItems={'center'} gap={2} mt={2}>
+                        <Button
+                            variant='contained'
+                            color='secondary'
                             sx={{ borderRadius: "25px", marginTop: "20px", height: "40px", width: '200px', padding: '10px 35px' }}
                             onClick={handleLogin}
                         >

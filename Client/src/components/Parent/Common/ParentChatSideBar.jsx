@@ -18,7 +18,7 @@ const ParentChatSideBar = ({ parentDetails }) => {
 
   useEffect(() => {
     console.log('ParentChatSideBar useEffect triggered');
-    
+
     if (!parentDetails?._id && !localStorage.getItem('token')) {
       console.log('No parent details or token available');
       setLoading(false);
@@ -35,20 +35,20 @@ const ParentChatSideBar = ({ parentDetails }) => {
         console.log('Fetching data for parent:', currentParentId);
 
         const [educatorsResponse] = await Promise.all([
-          axios.get(`http://localhost:4000/ldss/parent/getacceptededucator/${currentParentId}`, 
+          axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/parent/getacceptededucator/${currentParentId}`,
             { headers: { Authorization: `Bearer ${token}` } })
         ]);
         const therapistsResponse = await axios.get(
-  `http://localhost:4000/ldss/parent/getacceptedtherapist/${currentParentId}`, 
-  { headers: { Authorization: `Bearer ${token}` } }
-);
+          `${import.meta.env.VITE_SERVER_URL}/ldss/parent/getacceptedtherapist/${currentParentId}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
 
-console.log('Therapists API response:', therapistsResponse.data); // Debug log
+        console.log('Therapists API response:', therapistsResponse.data); // Debug log
 
         const acceptedEds = educatorsResponse.data.acceptedEducators || [];
-const acceptedTherapists = therapistsResponse.data.acceptedTherapists 
-  ? therapistsResponse.data.acceptedTherapists.map(conn => conn.recipientId)
-  : [];      
+        const acceptedTherapists = therapistsResponse.data.acceptedTherapists
+          ? therapistsResponse.data.acceptedTherapists.map(conn => conn.recipientId)
+          : [];
         console.log('Accepted educators:', acceptedEds);
         console.log('Accepted therapists:', acceptedTherapists);
 
@@ -56,25 +56,25 @@ const acceptedTherapists = therapistsResponse.data.acceptedTherapists
         setAcceptedTherapists(acceptedTherapists);
 
         const response = await axios.get(
-          `http://localhost:4000/ldss/conversations/user/${currentParentId}`,
+          `${import.meta.env.VITE_SERVER_URL}/ldss/conversations/user/${currentParentId}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
         console.log('All conversations:', response.data);
 
-const validConversations = response.data.filter(conv => {
-  const otherParticipant = conv.participants.find(p => String(p._id) !== String(currentParentId));
-  
-  if (!otherParticipant) return false;
-  
-  // Check if participant is an accepted educator
-  const isEducator = acceptedEds.some(e => String(e.recipientId._id) === String(otherParticipant._id));
-  
-  // Check if participant is an accepted therapist
-  const isTherapist = acceptedTherapists.some(t => String(t._id) === String(otherParticipant._id));
-  
-  return isEducator || isTherapist;
-});
+        const validConversations = response.data.filter(conv => {
+          const otherParticipant = conv.participants.find(p => String(p._id) !== String(currentParentId));
+
+          if (!otherParticipant) return false;
+
+          // Check if participant is an accepted educator
+          const isEducator = acceptedEds.some(e => String(e.recipientId._id) === String(otherParticipant._id));
+
+          // Check if participant is an accepted therapist
+          const isTherapist = acceptedTherapists.some(t => String(t._id) === String(otherParticipant._id));
+
+          return isEducator || isTherapist;
+        });
 
         console.log('Valid conversations:', validConversations);
         setConversations(validConversations);
@@ -112,7 +112,7 @@ const validConversations = response.data.filter(conv => {
           firstConversation: conv
         });
       }
-      
+
       if (student) {
         educatorMap.get(educatorId).students.add(student);
       }
@@ -127,54 +127,54 @@ const validConversations = response.data.filter(conv => {
   }, [conversations, parentDetails]);
 
   // Group therapist conversations by therapist, listing all their students
-const groupedTherapistConversations = useMemo(() => {
-  console.log('Grouping therapist conversations...'); // Debug log
-  
-  const therapistMap = new Map();
+  const groupedTherapistConversations = useMemo(() => {
+    console.log('Grouping therapist conversations...'); // Debug log
 
-  conversations.forEach(conv => {
-    // Debug log for each conversation
-    console.log('Processing conversation:', conv._id, 'with participants:', conv.participants);
-    
-    // Find the therapist participant (not the parent)
-const therapistParticipant = conv.participants.find(p => 
-  String(p._id) !== String(parentDetails?._id) && 
-  acceptedTherapists.some(t => String(t._id) === String(p._id))
-);
+    const therapistMap = new Map();
 
-    if (!therapistParticipant) {
-      console.log('No therapist participant found in conversation', conv._id);
-      return;
-    }
+    conversations.forEach(conv => {
+      // Debug log for each conversation
+      console.log('Processing conversation:', conv._id, 'with participants:', conv.participants);
 
-    console.log('Found therapist:', therapistParticipant);
+      // Find the therapist participant (not the parent)
+      const therapistParticipant = conv.participants.find(p =>
+        String(p._id) !== String(parentDetails?._id) &&
+        acceptedTherapists.some(t => String(t._id) === String(p._id))
+      );
 
-    const therapistId = therapistParticipant._id;
-    const student = conv.student;
-    
-    if (!therapistMap.has(therapistId)) {
-      therapistMap.set(therapistId, {
-        therapist: therapistParticipant,
-        students: new Set(),
-        firstConversation: conv
-      });
-    }
-    
-    if (student) {
-      therapistMap.get(therapistId).students.add(student);
-    }
-  });
+      if (!therapistParticipant) {
+        console.log('No therapist participant found in conversation', conv._id);
+        return;
+      }
 
-  const result = Array.from(therapistMap.values()).map(entry => ({
-    ...entry.therapist,
-    allStudents: Array.from(entry.students),
-    firstStudentId: entry.firstConversation.student?._id,
-    firstStudentName: entry.firstConversation.student?.name,
-  }));
+      console.log('Found therapist:', therapistParticipant);
 
-  console.log('Final grouped therapists:', result); // Debug log
-  return result;
-}, [conversations, parentDetails]);
+      const therapistId = therapistParticipant._id;
+      const student = conv.student;
+
+      if (!therapistMap.has(therapistId)) {
+        therapistMap.set(therapistId, {
+          therapist: therapistParticipant,
+          students: new Set(),
+          firstConversation: conv
+        });
+      }
+
+      if (student) {
+        therapistMap.get(therapistId).students.add(student);
+      }
+    });
+
+    const result = Array.from(therapistMap.values()).map(entry => ({
+      ...entry.therapist,
+      allStudents: Array.from(entry.students),
+      firstStudentId: entry.firstConversation.student?._id,
+      firstStudentName: entry.firstConversation.student?.name,
+    }));
+
+    console.log('Final grouped therapists:', result); // Debug log
+    return result;
+  }, [conversations, parentDetails]);
 
   // Filter grouped educator conversations based on search term
   const filteredEducators = useMemo(() => {
@@ -294,8 +294,8 @@ const therapistParticipant = conv.participants.find(p =>
           ) : (
             filteredEducators.map((groupedEducator) => {
               const isSelected = selectedParticipantId === groupedEducator._id &&
-                               groupedEducator.allStudents.some(s => s._id === location.state?.studentId);
-              
+                groupedEducator.allStudents.some(s => s._id === location.state?.studentId);
+
               return (
                 <Link
                   key={groupedEducator._id}
@@ -325,7 +325,7 @@ const therapistParticipant = conv.participants.find(p =>
                   >
                     {groupedEducator.profilePic ? (
                       <Avatar
-                        src={`http://localhost:4000/uploads/${groupedEducator.profilePic}`}
+                        src={`${import.meta.env.VITE_SERVER_URL}/uploads/${groupedEducator.profilePic}`}
                         alt={groupedEducator.name || ''}
                       />
                     ) : (
@@ -409,7 +409,7 @@ const therapistParticipant = conv.participants.find(p =>
           ) : (
             filteredTherapists.map((groupedTherapist) => {
               const isSelected = selectedParticipantId === groupedTherapist._id &&
-                               groupedTherapist.allStudents.some(s => s._id === location.state?.studentId);
+                groupedTherapist.allStudents.some(s => s._id === location.state?.studentId);
 
               return (
                 <Link
@@ -440,7 +440,7 @@ const therapistParticipant = conv.participants.find(p =>
                   >
                     {groupedTherapist.profilePic ? (
                       <Avatar
-                        src={`http://localhost:4000/uploads/${groupedTherapist.profilePic}`}
+                        src={`${import.meta.env.VITE_SERVER_URL}/uploads/${groupedTherapist.profilePic}`}
                         alt={groupedTherapist.name || ''}
                       />
                     ) : (

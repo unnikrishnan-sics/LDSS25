@@ -54,7 +54,7 @@ const TheraphistProfile = () => {
         phone: "",
         profilePic: null
     });
-    
+
     // Personal Info state
     const [personalInfo, setPersonalInfo] = useState({
         educationalQualification: "",
@@ -63,9 +63,9 @@ const TheraphistProfile = () => {
         availability: "",
         certification: null
     });
-    
+
     const [personalInfoError, setPersonalInfoError] = useState({});
-    
+
     const handlePersonalInfoChange = (e) => {
         const { name, value } = e.target;
         setPersonalInfo(prev => ({
@@ -77,7 +77,7 @@ const TheraphistProfile = () => {
             [name]: ""
         }));
     };
-    
+
     const handlePersonalInfoFileUpload = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -90,29 +90,29 @@ const TheraphistProfile = () => {
 
     const handleDataChange = (e) => {
         const { name, value } = e.target;
-        
+
         // Validation for name field (only alphabets)
         if (name === 'name') {
             const regex = /^[A-Za-z\s]*$/;
             if (!regex.test(value)) return;
         }
-        
+
         // Validation for phone field (only numbers)
         if (name === 'phone') {
             const regex = /^\d*$/;
             if (!regex.test(value)) return;
         }
-        
+
         setError((prevError) => ({
             ...prevError,
             [name]: ""
         }));
-        
+
         setData(prev => {
             return { ...prev, [name]: value }
         })
     };
-    
+
     const [imagePreview, setImagePreview] = useState(null);
 
     const handleFileUpload = (e) => {
@@ -125,34 +125,34 @@ const TheraphistProfile = () => {
             setImagePreview(objectURL);
         }
     };
-    
+
     const [theraphistdetails, setTheraphistdetails] = useState({});
 
-    useEffect( () => {
+    useEffect(() => {
         const theraphistdetails = localStorage.getItem("theraphistDetails");
         if (theraphistdetails) {
             setTheraphistdetails(JSON.parse(theraphistdetails));
         }
     }, []);
-    
+
     useEffect(() => {
         if (localStorage.getItem("theraphistDetails") == null) {
-          navigate("/");
+            navigate("/");
         }
     });
 
     const [error, setError] = useState({})
-    
+
     // Personal Info validation
     const validatePersonalInfo = () => {
         let isValid = true;
         let errorMessage = {};
-        
+
         if (!personalInfo.educationalQualification.trim()) {
             errorMessage.educationalQualification = "Educational qualification is required";
             isValid = false;
         }
-        
+
         if (!personalInfo.yearsOfExperience) {
             errorMessage.yearsOfExperience = "Years of experience is required";
             isValid = false;
@@ -163,27 +163,27 @@ const TheraphistProfile = () => {
             errorMessage.yearsOfExperience = "Years of experience cannot be negative";
             isValid = false;
         }
-        
+
         if (!personalInfo.languages.trim()) {
             errorMessage.languages = "Languages are required";
             isValid = false;
         }
-        
+
         if (!personalInfo.availability.trim()) {
             errorMessage.availability = "Availability is required";
             isValid = false;
         }
-        
+
         setPersonalInfoError(errorMessage);
         return isValid;
     };
-    
+
     // Submit Personal Info
     const handlePersonalInfoSubmit = async (e) => {
         e.preventDefault();
         const isValid = validatePersonalInfo();
         if (!isValid) return;
-        
+
         try {
             const formData = new FormData();
             formData.append('educationalQualification', personalInfo.educationalQualification);
@@ -193,10 +193,10 @@ const TheraphistProfile = () => {
             if (personalInfo.certification) {
                 formData.append('certification', personalInfo.certification);
             }
-            
+
             const token = localStorage.getItem("token");
             const updated = await axios.post(
-                `http://localhost:4000/ldss/theraphist/addpersonal/${theraphistdetails._id}`,
+                `${import.meta.env.VITE_SERVER_URL}/ldss/theraphist/addpersonal/${theraphistdetails._id}`,
                 formData,
                 {
                     headers: {
@@ -205,20 +205,20 @@ const TheraphistProfile = () => {
                     },
                 }
             );
-            
+
             if (updated.data.message === "theraphist personal details added successfully.") {
                 toast.success("Personal info updated successfully");
-                
+
                 // Refresh therapist details
                 const res = await axios.get(
-                    `http://localhost:4000/ldss/theraphist/gettheraphist/${theraphistdetails._id}`,
+                    `${import.meta.env.VITE_SERVER_URL}/ldss/theraphist/gettheraphist/${theraphistdetails._id}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },
                     }
                 );
-                
+
                 localStorage.setItem("theraphistDetails", JSON.stringify(res.data.theraphist));
                 setTheraphistdetails(res.data.theraphist);
                 setPersonalInfoOpen(false);
@@ -236,7 +236,7 @@ const TheraphistProfile = () => {
         let errorMessage = {};
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const nameRegex = /^[A-Za-z\s]{3,20}$/;
-        
+
         // Name validation
         if (!data.name.trim()) {
             errorMessage.name = "Name should not be empty";
@@ -245,7 +245,7 @@ const TheraphistProfile = () => {
             errorMessage.name = "Name should contain only alphabets and be 3 to 20 characters long";
             isValid = false;
         }
-        
+
         // Email validation
         if (!data.email.trim()) {
             errorMessage.email = "Email should not be empty";
@@ -263,7 +263,7 @@ const TheraphistProfile = () => {
             errorMessage.address = "Address should be at least 10 characters long";
             isValid = false;
         }
-        
+
         // Phone validation
         if (!data.phone) {
             errorMessage.phone = "Phone number should not be empty";
@@ -283,7 +283,7 @@ const TheraphistProfile = () => {
         if (!isValid) {
             return;
         }
-        
+
         const formData = new FormData();
         formData.append('name', data.name);
         formData.append('email', data.email);
@@ -296,8 +296,8 @@ const TheraphistProfile = () => {
         const token = localStorage.getItem("token");
         try {
             const updated = await axios.post(
-                `http://localhost:4000/ldss/theraphist/updatetheraphist/${theraphistdetails._id}`,
-                formData, 
+                `${import.meta.env.VITE_SERVER_URL}/ldss/theraphist/updatetheraphist/${theraphistdetails._id}`,
+                formData,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -305,19 +305,19 @@ const TheraphistProfile = () => {
                     },
                 }
             );
-            
+
             if (updated.data.message === "theraphist updated successfully.") {
                 toast.success("Therapist updated successfully");
-                
+
                 const res = await axios.get(
-                    `http://localhost:4000/ldss/theraphist/gettheraphist/${theraphistdetails._id}`, 
+                    `${import.meta.env.VITE_SERVER_URL}/ldss/theraphist/gettheraphist/${theraphistdetails._id}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },
                     }
                 );
-                
+
                 localStorage.setItem("theraphistDetails", JSON.stringify(res.data.theraphist));
                 setTheraphistdetails(res.data.theraphist);
                 setEditOpen(false);
@@ -329,7 +329,7 @@ const TheraphistProfile = () => {
             toast.error("Error in updating therapist profile");
         }
     };
-    
+
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -343,13 +343,13 @@ const TheraphistProfile = () => {
             phone: theraphistdetails.phone || "",
             profilePic: null,
         });
-        setImagePreview(theraphistdetails?.profilePic?.filename 
-            ? `http://localhost:4000/uploads/${theraphistdetails?.profilePic?.filename}` 
+        setImagePreview(theraphistdetails?.profilePic?.filename
+            ? `${import.meta.env.VITE_SERVER_URL}/uploads/${theraphistdetails?.profilePic?.filename}`
             : null);
         setEditOpen(true);
     };
     const handleEditClose = () => setEditOpen(false);
-    
+
     // Personal Info Modal
     const [personalInfoOpen, setPersonalInfoOpen] = React.useState(false);
     const handlePersonalInfoOpen = () => {
@@ -372,10 +372,10 @@ const TheraphistProfile = () => {
         navigate('/therapist/login');
         toast.success("You have been logged out");
     };
-    
+
     return (
         <>
-            <TheraphistNavbar theraphistdetails={theraphistdetails}/>
+            <TheraphistNavbar theraphistdetails={theraphistdetails} />
 
             <div>
                 <Modal
@@ -453,7 +453,7 @@ const TheraphistProfile = () => {
                                         <Stack direction="row" sx={{ display: "flex", gap: "15px" }}>
                                             <div style={textFieldStyle}>
                                                 <label>Name</label>
-                                                <input 
+                                                <input
                                                     style={{ height: "40px", borderRadius: "8px", border: error.name ? "1px solid red" : "1px solid #CCCCCC", padding: '8px' }}
                                                     onChange={handleDataChange}
                                                     name='name'
@@ -465,7 +465,7 @@ const TheraphistProfile = () => {
                                             </div>
                                             <div style={textFieldStyle}>
                                                 <label>Address</label>
-                                                <input 
+                                                <input
                                                     style={{ height: "40px", borderRadius: "8px", border: error.address ? "1px solid red" : "1px solid #CCCCCC", padding: '8px' }}
                                                     onChange={handleDataChange}
                                                     name='address'
@@ -478,7 +478,7 @@ const TheraphistProfile = () => {
                                         <Stack direction={'row'} sx={{ display: "flex", gap: "15px" }}>
                                             <div style={textFieldStyle}>
                                                 <label>Email</label>
-                                                <input 
+                                                <input
                                                     style={{ height: "40px", borderRadius: "8px", border: error.email ? "1px solid red" : "1px solid #CCCCCC", padding: '8px' }}
                                                     onChange={handleDataChange}
                                                     name='email'
@@ -490,7 +490,7 @@ const TheraphistProfile = () => {
                                             </div>
                                             <div style={textFieldStyle}>
                                                 <label>Phone Number</label>
-                                                <input 
+                                                <input
                                                     style={{ height: "40px", borderRadius: "8px", border: error.phone ? "1px solid red" : "1px solid #CCCCCC", padding: '8px' }}
                                                     onChange={handleDataChange}
                                                     name='phone'
@@ -504,9 +504,9 @@ const TheraphistProfile = () => {
                                         </Stack>
                                     </Box>
                                     <Box display={'flex'} alignItems={'center'} justifyContent={'center'} flexDirection={'column'} sx={{ width: '253px', height: "93px", gap: '10px' }}>
-                                        <Button 
-                                            variant='contained' 
-                                            color='secondary' 
+                                        <Button
+                                            variant='contained'
+                                            color='secondary'
                                             sx={{ borderRadius: "25px", marginTop: "20px", height: "40px", width: '200px', padding: '10px 35px' }}
                                             onClick={handleSubmit}
                                         >
@@ -548,7 +548,7 @@ const TheraphistProfile = () => {
                                         <Stack direction="row" sx={{ display: "flex", gap: "15px", width: '100%' }}>
                                             <div style={textFieldStyle}>
                                                 <label>Educational Qualification</label>
-                                                <input 
+                                                <input
                                                     style={{ height: "40px", borderRadius: "8px", border: personalInfoError.educationalQualification ? "1px solid red" : "1px solid #CCCCCC", padding: '8px' }}
                                                     onChange={handlePersonalInfoChange}
                                                     name='educationalQualification'
@@ -560,7 +560,7 @@ const TheraphistProfile = () => {
                                             </div>
                                             <div style={textFieldStyle}>
                                                 <label>Years of Experience</label>
-                                                <input 
+                                                <input
                                                     style={{ height: "40px", borderRadius: "8px", border: personalInfoError.yearsOfExperience ? "1px solid red" : "1px solid #CCCCCC", padding: '8px' }}
                                                     onChange={handlePersonalInfoChange}
                                                     name='yearsOfExperience'
@@ -575,7 +575,7 @@ const TheraphistProfile = () => {
                                         <Stack direction={'row'} sx={{ display: "flex", gap: "15px", width: '100%' }}>
                                             <div style={textFieldStyle}>
                                                 <label>Languages</label>
-                                                <input 
+                                                <input
                                                     style={{ height: "40px", borderRadius: "8px", border: personalInfoError.languages ? "1px solid red" : "1px solid #CCCCCC", padding: '8px' }}
                                                     onChange={handlePersonalInfoChange}
                                                     name='languages'
@@ -586,7 +586,7 @@ const TheraphistProfile = () => {
                                             </div>
                                             <div style={textFieldStyle}>
                                                 <label>Availability</label>
-                                                <input 
+                                                <input
                                                     style={{ height: "40px", borderRadius: "8px", border: personalInfoError.availability ? "1px solid red" : "1px solid #CCCCCC", padding: '8px' }}
                                                     onChange={handlePersonalInfoChange}
                                                     name='availability'
@@ -599,7 +599,7 @@ const TheraphistProfile = () => {
                                         <Stack direction={'row'} sx={{ display: "flex", gap: "15px", width: '100%' }}>
                                             <div style={textFieldStyle}>
                                                 <label>Certification</label>
-                                                <input 
+                                                <input
                                                     type="file"
                                                     accept=".pdf,.doc,.docx"
                                                     onChange={handlePersonalInfoFileUpload}
@@ -614,9 +614,9 @@ const TheraphistProfile = () => {
                                         </Stack>
                                     </Box>
                                     <Box display={'flex'} alignItems={'center'} justifyContent={'center'} flexDirection={'column'} sx={{ width: '253px', height: "93px", gap: '10px', mt: 3 }}>
-                                        <Button 
-                                            variant='contained' 
-                                            color='secondary' 
+                                        <Button
+                                            variant='contained'
+                                            color='secondary'
                                             sx={{ borderRadius: "25px", height: "40px", width: '200px', padding: '10px 35px' }}
                                             onClick={handlePersonalInfoSubmit}
                                         >
@@ -634,10 +634,10 @@ const TheraphistProfile = () => {
                 <Box display={"flex"} justifyContent={"center"} alignItems={"center"} sx={{ height: "46px", background: "#DBE8FA" }}>
                     <Typography color='primary' textAlign={"center"} sx={{ fontSize: "18px", fontWeight: "600" }}>Profile</Typography>
                 </Box>
-                {!theraphistdetails.languages && 
-                    <Button 
-                        variant="contained" 
-                        color='secondary' 
+                {!theraphistdetails.languages &&
+                    <Button
+                        variant="contained"
+                        color='secondary'
                         sx={{ borderRadius: "15px", mt: "10px", p: "10px 20px", width: "100%" }}
                         onClick={handlePersonalInfoOpen}
                     >
@@ -656,7 +656,7 @@ const TheraphistProfile = () => {
                             {
                                 theraphistdetails.profilePic?.filename ? (
                                     <Avatar sx={{ height: "100%", width: "180px" }}
-                                        src={`http://localhost:4000/uploads/${theraphistdetails?.profilePic?.filename}`} alt={theraphistdetails?.name}
+                                        src={`${import.meta.env.VITE_SERVER_URL}/uploads/${theraphistdetails?.profilePic?.filename}`} alt={theraphistdetails?.name}
                                     />
                                 ) :
                                     (

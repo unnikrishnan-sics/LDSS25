@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import TherapistNavbar from '../Navbar/TheraphistNavbar';
 
 const TherapistAddLearningPlan = () => {
-    const activityContainerStyle = { 
+    const activityContainerStyle = {
         width: '360px',
         p: 2,
         borderRadius: '8px',
@@ -72,13 +72,13 @@ const TherapistAddLearningPlan = () => {
             weeks: [...prev.weeks, { activities: [{ title: '', description: '' }] }]
         }));
     };
-    
+
     const handleSubmit = async () => {
         try {
             const token = localStorage.getItem('token');
             const therapistDetails = JSON.parse(localStorage.getItem("theraphistDetails"));
             const therapistId = therapistDetails._id;
-            
+
             if (!therapistId) {
                 toast.error("Therapist details not found");
                 return;
@@ -91,8 +91,8 @@ const TherapistAddLearningPlan = () => {
             };
 
             const response = await axios.post(
-                `http://localhost:4000/ldss/theraphist/addlearning`, 
-                payload, 
+                `${import.meta.env.VITE_SERVER_URL}/ldss/theraphist/addlearning`,
+                payload,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -127,9 +127,9 @@ const TherapistAddLearningPlan = () => {
 
     return (
         <>
-            <TherapistNavbar 
-                therapistDetails={therapistDetails} 
-                navigateToProfile={navigateToProfile} 
+            <TherapistNavbar
+                therapistDetails={therapistDetails}
+                navigateToProfile={navigateToProfile}
             />
 
             <Box display="flex" justifyContent="center" alignItems="center" sx={{ height: "46px", background: "#DBE8FA" }}>
@@ -186,7 +186,7 @@ const TherapistAddLearningPlan = () => {
                     <Box key={weekIndex} display="flex" flexDirection="column" gap={2} alignItems="center" sx={{ width: '100%' }}>
                         <Typography color='primary' sx={{ fontSize: "18px", fontWeight: "600" }}>{`Week ${weekIndex + 1}`}</Typography>
 
-                        <Box sx={{ 
+                        <Box sx={{
                             width: '100%',
                             display: 'flex',
                             flexWrap: 'wrap',
@@ -208,10 +208,10 @@ const TherapistAddLearningPlan = () => {
                                             onChange={(e) => handleActivityChange(weekIndex, activityIndex, e)}
                                         />
                                     </div>
-                                    <div style={{height: "85px", width: "100%", display: "flex", flexDirection: "column", justifyContent: "start", position: "relative"}}>
+                                    <div style={{ height: "85px", width: "100%", display: "flex", flexDirection: "column", justifyContent: "start", position: "relative" }}>
                                         <label>Description</label>
                                         <input
-                                            style={{height: "60px", borderRadius: "8px", border: "1px solid #CCCCCC", padding: '8px', width: '100%'} }
+                                            style={{ height: "60px", borderRadius: "8px", border: "1px solid #CCCCCC", padding: '8px', width: '100%' }}
                                             name='description'
                                             value={activity.description}
                                             onChange={(e) => handleActivityChange(weekIndex, activityIndex, e)}

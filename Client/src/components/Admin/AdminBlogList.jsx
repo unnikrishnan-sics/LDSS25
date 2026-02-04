@@ -12,7 +12,7 @@ const AdminBlogList = () => {
     const fetchBlogs = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:4000/ldss/blog/all', {
+            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/blog/all`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setBlogs(response.data.blogs);
@@ -25,7 +25,7 @@ const AdminBlogList = () => {
         fetchBlogs();
     }, []);
 
-    const filteredBlogs = blogs.filter(blog => 
+    const filteredBlogs = blogs.filter(blog =>
         blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         blog.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
         blog.creatorId.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -36,7 +36,7 @@ const AdminBlogList = () => {
             <AdminSideBar />
             <Box sx={{ flexGrow: 1, p: 3 }}>
                 <Typography variant="h4" sx={{ mb: 3 }}>All Blogs</Typography>
-                
+
                 <TextField
                     fullWidth
                     placeholder="Search blogs..."
@@ -45,7 +45,7 @@ const AdminBlogList = () => {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     sx={{ mb: 3 }}
                 />
-                
+
                 <TableContainer component={Paper}>
                     <Table>
                         <TableHead>
@@ -62,9 +62,9 @@ const AdminBlogList = () => {
                                     <TableCell>{blog.title}</TableCell>
                                     <TableCell>
                                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                            <Avatar 
-                                                src={blog.creatorId?.profilePic?.filename ? 
-                                                    `http://localhost:4000/uploads/${blog.creatorId?.profilePic?.filename}` : ''}
+                                            <Avatar
+                                                src={blog.creatorId?.profilePic?.filename ?
+                                                    `${import.meta.env.VITE_SERVER_URL}/uploads/${blog.creatorId?.profilePic?.filename}` : ''}
                                                 sx={{ width: 24, height: 24, mr: 1 }}
                                             />
                                             {blog.creatorId.name}
@@ -74,8 +74,8 @@ const AdminBlogList = () => {
                                         {new Date(blog.createdAt).toLocaleDateString()}
                                     </TableCell>
                                     <TableCell>
-                                        <Button 
-                                            variant="outlined" 
+                                        <Button
+                                            variant="outlined"
                                             size="small"
                                             onClick={() => navigate(`/admin/blog/${blog._id}`)}
                                         >

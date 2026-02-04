@@ -12,15 +12,15 @@ const AdminViewParent = () => {
     const [openLogout, setOpenLogout] = useState(false);
     const handleOpenLogout = () => setOpenLogout(true);
     const handleCloseLogout = () => setOpenLogout(false);
-    
+
     const [parentDetails, setParentDetails] = useState([]);
     const [filteredParents, setFilteredParents] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
-    
+
     const fetchAllParents = async () => {
         try {
             const token = localStorage.getItem("token");
-            const allparents = await axios.get("http://localhost:4000/ldss/parent/getallparents", {
+            const allparents = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/parent/getallparents`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -31,17 +31,17 @@ const AdminViewParent = () => {
             console.error("Error fetching parents:", error);
         }
     };
-    
+
     useEffect(() => {
         fetchAllParents();
     }, []);
-    
+
     useEffect(() => {
         const handler = setTimeout(() => {
             if (searchTerm === '') {
                 setFilteredParents(parentDetails);
             } else {
-                const filtered = parentDetails.filter(parent => 
+                const filtered = parentDetails.filter(parent =>
                     (parent.name && parent.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
                     (parent.email && parent.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
                     (parent.address && parent.address.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -63,7 +63,7 @@ const AdminViewParent = () => {
     const fetchParentDetail = async (parentId) => {
         try {
             const token = localStorage.getItem("token");
-            const parentdetail = await axios.get(`http://localhost:4000/ldss/parent/getparent/${parentId}`, {
+            const parentdetail = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/parent/getparent/${parentId}`, {
                 headers: {
                     Authorization: `bearer ${token}`
                 }
@@ -74,7 +74,7 @@ const AdminViewParent = () => {
             console.error("Error fetching parent details:", error);
         }
     };
-    
+
     return (
         <>
             <Container maxWidth="x-lg" sx={{ background: "#F6F7F9" }}>
@@ -91,18 +91,18 @@ const AdminViewParent = () => {
                         <Box sx={{ height: "562px", width: "100%", padding: "20px 10px" }}>
                             <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
                                 <Typography variant='h4' color='primary' sx={{ fontSize: '18px', fontWeight: "600" }}> Parents List</Typography>
-                                <TextField 
-                                    placeholder='search here...' 
-                                    variant="outlined" 
-                                    value={searchTerm} 
-                                    onChange={(e) => setSearchTerm(e.target.value)} 
+                                <TextField
+                                    placeholder='search here...'
+                                    variant="outlined"
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
                                     InputProps={{
                                         startAdornment: (
                                             <InputAdornment position="start">
                                                 <SearchIcon color="primary" />
                                             </InputAdornment>
                                         ),
-                                    }} 
+                                    }}
                                 />
                             </Box>
                             <Box sx={{ height: "320px" }}>
@@ -138,7 +138,7 @@ const AdminViewParent = () => {
                                                         </TableCell>
                                                         <TableCell align="left">{
                                                             parent.profilePic?.filename ? (
-                                                                <Avatar src={`http://localhost:4000/uploads/${parent.profilePic?.filename}`}></Avatar>
+                                                                <Avatar src={`${import.meta.env.VITE_SERVER_URL}/uploads/${parent.profilePic?.filename}`}></Avatar>
                                                             ) : (
                                                                 <Avatar>{parent.name?.charAt(0) || ''}</Avatar>
                                                             )
@@ -149,9 +149,9 @@ const AdminViewParent = () => {
                                                         <TableCell align="left">{parent.address}</TableCell>
                                                         <TableCell align="left">
                                                             <Tooltip title="View Details">
-                                                                <VisibilityIcon 
-                                                                    color="primary" 
-                                                                    sx={{ cursor: 'pointer' }} 
+                                                                <VisibilityIcon
+                                                                    color="primary"
+                                                                    sx={{ cursor: 'pointer' }}
                                                                     onClick={() => fetchParentDetail(parent._id)}
                                                                 />
                                                             </Tooltip>
@@ -205,7 +205,7 @@ const AdminViewParent = () => {
                         </Box>
                     </Fade>
                 </Modal>
-                <AdminLogout handleCloseLogout={handleCloseLogout} openLogout={openLogout}/>
+                <AdminLogout handleCloseLogout={handleCloseLogout} openLogout={openLogout} />
             </Container>
         </>
     );

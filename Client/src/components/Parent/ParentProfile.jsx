@@ -82,21 +82,21 @@ const ParentProfile = () => {
     };
     const [parentDetails, setParentDetails] = useState({});
 
-    useEffect( () => {
+    useEffect(() => {
         const parentDetails = localStorage.getItem("parentDetails");
         if (parentDetails) {
             setParentDetails(JSON.parse(parentDetails));
 
         }
-   
+
     }, []);
 
     // loging out and not returing to profile page
     useEffect(() => {
         if (localStorage.getItem("parentDetails") == null) {
-          navigate("/");
+            navigate("/");
         }
-      });
+    });
 
     const [error, setError] = useState({})
     const validation = () => {
@@ -137,7 +137,7 @@ const ParentProfile = () => {
             errorMessage.phone = "Phone number must be exactly 10 digits";
             isValid = false;
         }
-        
+
 
         setError(errorMessage);
         return isValid;
@@ -165,7 +165,7 @@ const ParentProfile = () => {
 
         console.log(data);
         const token = localStorage.getItem("token");
-        const updated = await axios.post(`http://localhost:4000/ldss/parent/updateparent/${parentDetails._id}`, formData, {
+        const updated = await axios.post(`${import.meta.env.VITE_SERVER_URL}/ldss/parent/updateparent/${parentDetails._id}`, formData, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -183,20 +183,20 @@ const ParentProfile = () => {
             //     success: "Parent detail updated in database"
             // });
             toast.success("Parent updated successfully.")
-            
+
 
             const token = localStorage.getItem("token");
-    const parentDetails = JSON.parse(localStorage.getItem("parentDetails"));
-    const res = await axios.get(`http://localhost:4000/ldss/parent/getparent/${parentDetails._id}`, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    });
-    localStorage.setItem("parentDetails", JSON.stringify(res.data.parent));
-    setParentDetails(res.data.parent);
+            const parentDetails = JSON.parse(localStorage.getItem("parentDetails"));
+            const res = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/parent/getparent/${parentDetails._id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            localStorage.setItem("parentDetails", JSON.stringify(res.data.parent));
+            setParentDetails(res.data.parent);
 
-    // Close the modal
-    setEditOpen(false);
+            // Close the modal
+            setEditOpen(false);
 
         }
         else {
@@ -222,8 +222,8 @@ const ParentProfile = () => {
             phone: parentDetails.phone || "",
             profilePic: null, // leave this null so user can choose a new one
         });
-        setImagePreview(parentDetails?.profilePic?.filename 
-            ? `http://localhost:4000/uploads/${parentDetails?.profilePic?.filename}` 
+        setImagePreview(parentDetails?.profilePic?.filename
+            ? `${import.meta.env.VITE_SERVER_URL}/uploads/${parentDetails?.profilePic?.filename}`
             : null);
         setEditOpen(true);
     }
@@ -369,7 +369,7 @@ const ParentProfile = () => {
                                                 />
                                                 {error.phone && <span style={{ color: 'red', fontSize: '12px' }}>{error.phone}</span>}
 
-                                                
+
                                             </div>
                                         </Stack>
 
@@ -413,7 +413,7 @@ const ParentProfile = () => {
                             {
                                 parentDetails.profilePic?.filename ? (
                                     <Avatar sx={{ height: "100%", width: "180px" }}
-                                        src={`http://localhost:4000/uploads/${parentDetails?.profilePic?.filename}`} alt={parentDetails?.name}
+                                        src={`${import.meta.env.VITE_SERVER_URL}/uploads/${parentDetails?.profilePic?.filename}`} alt={parentDetails?.name}
                                     />
                                 ) :
                                     (

@@ -44,7 +44,7 @@ const TheraphistPersonal = () => {
         yearsOfExperience: "",
         languages: "",
         availability: "",
-        specialities:"",
+        specialities: "",
         certification: null,
     });
 
@@ -106,7 +106,7 @@ const TheraphistPersonal = () => {
             errorMessage.certification = "Certification is required";
             isValid = true;
         }
-        if(!data.specialities){
+        if (!data.specialities) {
             errorMessage.specialities = "Specialities is required";
             isValid = true;
         }
@@ -114,7 +114,7 @@ const TheraphistPersonal = () => {
         return isValid;
 
     }
-const navigate=useNavigate();
+    const navigate = useNavigate();
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (validation()) {
@@ -133,7 +133,7 @@ const navigate=useNavigate();
         const theraphistId = JSON.parse(theraphistDetails)._id;
         const token = localStorage.getItem("token")
 
-        const addTheraphistInfo = await axios.post(`http://localhost:4000/ldss/theraphist/addpersonal/${theraphistId}`, formData, {
+        const addTheraphistInfo = await axios.post(`${import.meta.env.VITE_SERVER_URL}/ldss/theraphist/addpersonal/${theraphistId}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 Authorization: `Bearer ${token}`,
@@ -149,7 +149,7 @@ const navigate=useNavigate();
     };
     return (
         <>
-             <ParentNavbarSiginIn />
+            <ParentNavbarSiginIn />
             <Container sx={{ position: "relative" }} maxWidth="x-lg">
                 <Box component="img" src={background} sx={{ position: "absolute", top: 110, left: 0, objectFit: 'cover', zIndex: -1 }}></Box>
                 <Box display={'flex'} alignItems={'center'} justifyContent={'center'} flexDirection={'column'}>
@@ -237,26 +237,26 @@ const navigate=useNavigate();
 
                         </Stack>
                         <Box sx={{ height: '65px', width: '744px' }}>
-                                <label>Specialities</label>
-                                <FormControl fullWidth variant="outlined">
-                                    <InputLabel></InputLabel>
-                                    <StyledSelect
-                                        value={data.specialities}
-                                        onChange={handleChange}
-                                        name='specialities'
-                                        inputProps={{ 'aria-label': 'Option' }}
-                                        sx={{ height: "40px" }}
-                                    >
-                                        <MenuItem value="">
-                                            <em>None</em>
-                                        </MenuItem>
-                                        <MenuItem value="Full time">Trauma-Focused Therapy</MenuItem>
-                                        <MenuItem value="Part timeout">Cognitive Behavioral Therapy </MenuItem>
-                                        <MenuItem value="Weekend">Psychodynamic Therapy</MenuItem>
-                                    </StyledSelect>
-                                </FormControl>
-                                {error.specialities && <span style={{ color: 'red', fontSize: '12px' }}>{error.specialities}</span>}
-                            </Box>
+                            <label>Specialities</label>
+                            <FormControl fullWidth variant="outlined">
+                                <InputLabel></InputLabel>
+                                <StyledSelect
+                                    value={data.specialities}
+                                    onChange={handleChange}
+                                    name='specialities'
+                                    inputProps={{ 'aria-label': 'Option' }}
+                                    sx={{ height: "40px" }}
+                                >
+                                    <MenuItem value="">
+                                        <em>None</em>
+                                    </MenuItem>
+                                    <MenuItem value="Full time">Trauma-Focused Therapy</MenuItem>
+                                    <MenuItem value="Part timeout">Cognitive Behavioral Therapy </MenuItem>
+                                    <MenuItem value="Weekend">Psychodynamic Therapy</MenuItem>
+                                </StyledSelect>
+                            </FormControl>
+                            {error.specialities && <span style={{ color: 'red', fontSize: '12px' }}>{error.specialities}</span>}
+                        </Box>
                         <Stack>
 
                         </Stack>
@@ -310,7 +310,7 @@ const navigate=useNavigate();
                 </Box>
 
             </Container>
-<Footer userRole="therapist" />        </>
+            <Footer userRole="therapist" />        </>
     )
 }
 

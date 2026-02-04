@@ -33,11 +33,11 @@ const TherapistQuizAttemptList = () => {
         try {
             const token = localStorage.getItem('token');
             const response = await axios.get(
-                `http://localhost:4000/ldss/therapist/quizzes/attempts/${childId}`,
+                `${import.meta.env.VITE_SERVER_URL}/ldss/therapist/quizzes/attempts/${childId}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-            console.log(response,"dfsfs");
-            
+            console.log(response, "dfsfs");
+
             if (response.data.success) {
                 setAttempts(response.data.data);
             } else {
@@ -45,7 +45,7 @@ const TherapistQuizAttemptList = () => {
             }
         } catch (err) {
             console.error("Error fetching attempts:", err);
-             setError(err.response?.data?.message || "An error occurred while fetching attempts.");
+            setError(err.response?.data?.message || "An error occurred while fetching attempts.");
         } finally {
             setLoading(false);
         }
@@ -53,19 +53,19 @@ const TherapistQuizAttemptList = () => {
 
     if (loading) {
         return (
-             <>
+            <>
                 <TherapistNavbar theraphistdetails={therapistDetails} navigateToProfile={navigateToProfile} />
-                 <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
-                     <CircularProgress />
-                 </Box>
-             </>
+                <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
+                    <CircularProgress />
+                </Box>
+            </>
         );
     }
 
     if (error) {
         return (
             <>
-                 <TherapistNavbar theraphistdetails={therapistDetails} navigateToProfile={navigateToProfile} />
+                <TherapistNavbar theraphistdetails={therapistDetails} navigateToProfile={navigateToProfile} />
                 <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
                     <Typography color="error">{error}</Typography>
                 </Box>
@@ -76,9 +76,9 @@ const TherapistQuizAttemptList = () => {
     return (
         <>
             <TherapistNavbar theraphistdetails={therapistDetails} navigateToProfile={navigateToProfile} />
-             <Box display="flex" justifyContent="center" alignItems="center" sx={{ height: "46px", background: "#DBE8FA" }}>
+            <Box display="flex" justifyContent="center" alignItems="center" sx={{ height: "46px", background: "#DBE8FA" }}>
                 <Typography color='primary' textAlign="center" sx={{ fontSize: "18px", fontWeight: "600" }}>
-                    Quiz Attempts 
+                    Quiz Attempts
                 </Typography>
             </Box>
 
@@ -87,11 +87,11 @@ const TherapistQuizAttemptList = () => {
                     <Link to="/therapist/home" style={{ fontSize: "12px", fontWeight: "500", color: "#7F7F7F", textDecoration: "none" }}>
                         Home
                     </Link>
-                     <Link to="/therapist/home" style={{ fontSize: "12px", fontWeight: "500", color: "#7F7F7F", textDecoration: "none" }}>
+                    <Link to="/therapist/home" style={{ fontSize: "12px", fontWeight: "500", color: "#7F7F7F", textDecoration: "none" }}>
                         All Students
                     </Link>
                     <Link to={`/therapist/child/${childId}/quizzes`} style={{ fontSize: "12px", fontWeight: "500", color: "#7F7F7F", textDecoration: "none" }}>
-                       Quizzes
+                        Quizzes
                     </Link>
                     <Typography color='primary' sx={{ fontSize: "12px", fontWeight: "500" }}>
                         Attempts
@@ -102,7 +102,7 @@ const TherapistQuizAttemptList = () => {
 
             <Box sx={{ p: 4, maxWidth: 800, mx: 'auto', mt: 3 }}>
                 <Typography variant="h5" color="primary" gutterBottom align="center">
-                   Quiz Attempts
+                    Quiz Attempts
                 </Typography>
 
                 {attempts.length === 0 ? (
@@ -135,7 +135,7 @@ const TherapistQuizAttemptList = () => {
                 )}
 
                 <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-                     <Button
+                    <Button
                         variant='outlined'
                         color='secondary'
                         sx={{ borderRadius: '25px', width: '200px' }}

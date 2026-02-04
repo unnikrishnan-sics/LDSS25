@@ -30,7 +30,7 @@ const AdminViewActivityLibrary = () => {
     const fetchAllActivities = async () => {
         try {
             const token = localStorage.getItem("token");
-            const response = await axios.get("http://localhost:4000/ldss/activity/getallactivities", {
+            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/ldss/activity/getallactivities`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -45,7 +45,7 @@ const AdminViewActivityLibrary = () => {
     const handleDelete = async (id) => {
         try {
             const token = localStorage.getItem("token");
-            await axios.delete(`http://localhost:4000/ldss/activity/delete/${id}`, {
+            await axios.delete(`${import.meta.env.VITE_SERVER_URL}/ldss/activity/delete/${id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -62,16 +62,16 @@ const AdminViewActivityLibrary = () => {
     const handleSearch = (event) => {
         const term = event.target.value;
         setSearchTerm(term);
-        
+
         if (!term) {
             setFilteredActivities(activityCards);
             return;
         }
-        
+
         const filtered = activityCards.filter(activity => {
             const searchLower = term.toLowerCase();
             return (
-                (activity.title && activity.title.toLowerCase().includes(searchLower)) || 
+                (activity.title && activity.title.toLowerCase().includes(searchLower)) ||
                 (activity.activityName && activity.activityName.toLowerCase().includes(searchLower)) ||
                 (activity.description && activity.description.toLowerCase().includes(searchLower)) ||
                 (activity.category && activity.category.toLowerCase().includes(searchLower))
@@ -100,8 +100,8 @@ const AdminViewActivityLibrary = () => {
                     <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'} mb={3}>
                         <Typography variant='h4' color='primary' sx={{ fontSize: '18px', fontWeight: "500" }}>All Activities</Typography>
                         <Box display={'flex'} alignItems={'center'} gap={2}>
-                            <StyledTextField 
-                                placeholder='Search here...' 
+                            <StyledTextField
+                                placeholder='Search here...'
                                 variant="outlined"
                                 sx={{ width: '250px', '& .MuiOutlinedInput-root': { height: '40px' } }}
                                 InputProps={{
@@ -114,9 +114,9 @@ const AdminViewActivityLibrary = () => {
                                 value={searchTerm}
                                 onChange={handleSearch}
                             />
-                            <Button 
-                                variant='contained' 
-                                color='secondary' 
+                            <Button
+                                variant='contained'
+                                color='secondary'
                                 onClick={() => navigate('/admin/addactivity')}
                                 startIcon={<AddIcon />}
                                 sx={{ borderRadius: "25px", height: "45px", width: '160px', padding: '20px 3px', textTransform: "none", fontWeight: "500", fontSize: "13px" }}
@@ -140,7 +140,7 @@ const AdminViewActivityLibrary = () => {
                                                 {card.activityPhoto && /\.(jpg|jpeg|png|webp)$/i.test(card.activityPhoto) ? (
                                                     <CardMedia
                                                         component="img"
-                                                        image={`http://localhost:4000/uploads/${card.activityPhoto}`}
+                                                        image={`${import.meta.env.VITE_SERVER_URL}/uploads/${card.activityPhoto}`}
                                                         alt={card.activityName}
                                                         sx={{ width: '100%', objectFit: 'cover' }}
                                                     />
@@ -160,16 +160,16 @@ const AdminViewActivityLibrary = () => {
                                             </CardContent>
 
                                             <CardActions sx={{ p: 0, display: 'flex', gap: 2, mt: 2 }}>
-                                                <Button 
-                                                    variant="outlined" 
+                                                <Button
+                                                    variant="outlined"
                                                     color="secondary"
                                                     onClick={() => handleDelete(card._id)}
                                                     sx={{ borderRadius: '25px', textTransform: 'none', flex: 1, py: 1 }}
                                                 >
                                                     Delete
                                                 </Button>
-                                                <Button 
-                                                    variant="contained" 
+                                                <Button
+                                                    variant="contained"
                                                     color="secondary"
                                                     onClick={() => navigate(`/admin/editactivity/${card._id}`)}
                                                     sx={{ borderRadius: '25px', textTransform: 'none', flex: 1, py: 1 }}
