@@ -31,9 +31,9 @@ const pages = [
     { label: 'Contact', path: '/parent/contact' },
     { label: 'Child', path: '/parent/childprofile' },
     { label: 'Learning', path: '/parent/learningplan' },
-    { label: 'Meetings', path: '/parent/meeting' },
+    // { label: 'Meetings', path: '/parent/meeting' },
     { label: 'Activities', path: '/parent/activities' },
-    { label: 'Blogs', path: '/parent/blogs' },
+    // { label: 'Blogs', path: '/parent/blogs' },
 ];
 
 const ParentNavbar = ({ homebg = {}, aboutBg = {}, profilebg = {}, navigateToProfile = () => { }, parentdetails = {}, contactbg = {} }) => {

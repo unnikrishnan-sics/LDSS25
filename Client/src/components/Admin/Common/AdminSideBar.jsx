@@ -51,12 +51,12 @@ const AdminSideBar = () => {
                             <Typography color='primary' sx={{ fontSize: "14px", fontWeight: "500" }}>Activity Library</Typography>
                         </Box>
                         </Link>
-                        <Link to={`/admin/blogs`} style={{textDecoration:"none"}}>
+                        {/* <Link to={`/admin/blogs`} style={{textDecoration:"none"}}>
                         <Box sx={{ height: "40px", marginBottom: "10px",background: location.pathname=== "/admin/blogs"? "#F0F6FE":"none" }} display={'flex'} justifyContent={'start'} alignItems={'center'} gap={2}>
                             <NewspaperIcon color='primary' sx={{ width: "24px" }} />
                             <Typography color='primary' sx={{ fontSize: "14px", fontWeight: "500" }}>Blogs</Typography>
                         </Box>
-                        </Link>
+                        </Link> */}
 
                     </Box>
                 </Box>

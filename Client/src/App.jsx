@@ -99,40 +99,40 @@ const App = () => {
   });
   return (
     <>
-    
-    <ToastContainer/>
+
+      <ToastContainer />
       <ThemeProvider theme={theme}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path='/contact' element={<Contact />} />
           <Route path='/aboutus' element={<AboutUs />} />
-          {/* <Route path="/chatbot" element={<ChatBot   />} /> */}
+          <Route path="/chatbot" element={<ChatBot   />} />
 
           {/* parents */}
           <Route path='/parent/siginin' element={<ParentSiginIn />} />
           <Route path='/parent/login' element={<ParentLogin />} />
           <Route path='/parent/forgotpassword' element={<ParentForgotPassword />} />
-          <Route path='/parent/resetpassword/:email' element={<ParentResetPassword/>}/>
-          <Route path='/parent/home' element={<ParentHome/>}/>
-          <Route path='/parent/profile' element={<ParentProfile/>}/>
-          <Route path='/parent/about' element={<ParentAboutUs/>}/>
-          <Route path='/parent/contact' element={<ParentContactUs/>}/>
-          <Route path='/parent/childprofile' element={<ParentChildProfile/>}/>
+          <Route path='/parent/resetpassword/:email' element={<ParentResetPassword />} />
+          <Route path='/parent/home' element={<ParentHome />} />
+          <Route path='/parent/profile' element={<ParentProfile />} />
+          <Route path='/parent/about' element={<ParentAboutUs />} />
+          <Route path='/parent/contact' element={<ParentContactUs />} />
+          <Route path='/parent/childprofile' element={<ParentChildProfile />} />
           <Route path='/parent/viewalleducators' element={<ParentAllEducator/>}/>
           <Route path='/parent/viewalltheraphist' element={<ParentAllTheraphist/>}/>
-          <Route path='/parent/learningplan' element={<ParentLearningPlan/>}/>
-          <Route path='/parent/therapistlearningplan/:therapistId/:childId' element={<ParentTheraphistLearning/>}/>
-          <Route path='/parent/educatorlearningplan/:educatorId/:childId' element={<ParentEducatorLearning/>}/>
-          <Route path='/parent/meeting' element={<ParentMeeting/>}/>
+          <Route path='/parent/learningplan' element={<ParentLearningPlan />} />
+          <Route path='/parent/therapistlearningplan/:therapistId/:childId' element={<ParentTheraphistLearning />} />
+          <Route path='/parent/educatorlearningplan/:educatorId/:childId' element={<ParentEducatorLearning />} />
+          {/* <Route path='/parent/meeting' element={<ParentMeeting/>}/> */}
           <Route path='/parent/activities' element={<ParentActivities/>}/>
-          <Route path='/parent/chat/:id' element={<ParentChat/>}/>
-          <Route path="/parent/chat" element={<ParentChat />} />
-        <Route path='/parent/blog/:id' element={<ParentBlogDetail/>}/>
-          <Route path='/parent/blogs' element={<ParentBlogList/>}/>
+          {/* <Route path='/parent/chat/:id' element={<ParentChat/>}/>
+          <Route path="/parent/chat" element={<ParentChat />} /> */}
+        {/* <Route path='/parent/blog/:id' element={<ParentBlogDetail/>}/>
+          <Route path='/parent/blogs' element={<ParentBlogList/>}/> */}
 
-          <Route path='/parent/child/:childId/quizzes' element={<ParentQuizList/>}/>
-          <Route path='/parent/quiz/take/:quizId' element={<ParentTakeQuiz/>}/>
-          <Route path='/parent/quiz/attempt/:attemptId' element={<ParentQuizAttemptReport/>}/>
+          {/* <Route path='/parent/child/:childId/quizzes' element={<ParentQuizList />} />
+          <Route path='/parent/quiz/take/:quizId' element={<ParentTakeQuiz />} />
+          <Route path='/parent/quiz/attempt/:attemptId' element={<ParentQuizAttemptReport />} /> */}
 
           {/* admin */}
           <Route path='/admin/login' element={<AdminLogin />} />
@@ -143,8 +143,8 @@ const App = () => {
           <Route path='/admin/addactivity' element={<AddActivity />} />
           <Route path='/admin/viewactivitylibrary' element={<AdminViewActivityLibrary/>}/>
 <Route path="/admin/editactivity/:id" element={<AdminEditActivity />} />
-           <Route path='/admin/blog/:id' element={<AdminBlogDetail/>}/>
-          <Route path='/admin/blogs' element={<AdminBlogList/>}/>
+           {/* <Route path='/admin/blog/:id' element={<AdminBlogDetail/>}/>
+          <Route path='/admin/blogs' element={<AdminBlogList/>}/> */}
 
           {/* educator */}
           <Route path='/educator/registration' element={<EducatorRegistration />} />
@@ -153,23 +153,23 @@ const App = () => {
           <Route path='/educator/resetpassword/:email' element={<EducatorResetPassword />} />
           <Route path='/educator/personalinfo' element={<EducatorPersonal />} />
           <Route path='/educator/home' element={<EducatorHome />} />
-          <Route path='/educator/profile' element={<EducatorProfile/>} />
-          <Route path='/educator/about' element={<EducatorAbout/>} />
-          <Route path='/educator/contact' element={<EducatorContact/>} />
+          <Route path='/educator/profile' element={<EducatorProfile />} />
+          <Route path='/educator/about' element={<EducatorAbout />} />
+          <Route path='/educator/contact' element={<EducatorContact />} />
           <Route path='/educator/allstudents' element={<EducatorAllStudents/>} />
-          <Route path='/educator/addlearningplan/:childId' element={<EducatorAddLearningPlan/>} />
-          <Route path='/educator/editlearningplan/:childId' element={<EducatorEditLearningPlan/>} />
+          <Route path='/educator/addlearningplan/:childId' element={<EducatorAddLearningPlan />} />
+          <Route path='/educator/editlearningplan/:childId' element={<EducatorEditLearningPlan />} />
           <Route path='/educator/parentsrequest' element={<EducatorParentRequest/>} />
           <Route path='/educator/acceptedparents' element={<EducatorAcceptedParents/>} />
-      <Route path='/educator/chat' element={<EducatorChat />} />
-      <Route path='/educator/chat/:id' element={<EducatorChat />} />
-          <Route path='/educator/viewlearningplan/:childId' element={<EducatorViewLearningPlan/>} />
-          <Route path='/educator/meeting' element={<EducatorMeeting/>} />
+      {/* <Route path='/educator/chat' element={<EducatorChat />} />
+      <Route path='/educator/chat/:id' element={<EducatorChat />} /> */}
+          <Route path='/educator/viewlearningplan/:childId' element={<EducatorViewLearningPlan />} />
+          {/* <Route path='/educator/meeting' element={<EducatorMeeting/>} /> */}
           <Route path='/educator/viewactivitylibrary' element={<EducatorViewActivityLibrary/>}/>
-                    <Route path='/educator/blog/detail/:id' element={<EducatorBlogDetail/>}/>
+                    {/* <Route path='/educator/blog/detail/:id' element={<EducatorBlogDetail/>}/>
           <Route path='/educator/blogs' element={<EducatorBlogList/>}/>
           <Route path='/educator/blog/add' element={<EducatorAddEditBlog/>}/>
-                    <Route path='/educator/blog/edit/:id' element={<EducatorAddEditBlog/>}/>
+                    <Route path='/educator/blog/edit/:id' element={<EducatorAddEditBlog/>}/> */}
 
 
 
@@ -179,35 +179,35 @@ const App = () => {
           <Route path='/therapist/registration' element={<TheraphistRegistration />} />
           <Route path='/therapist/login' element={<TheraphistLogin />} />
           <Route path='/therapist/forgotpassword' element={<TheraphistForgot />} />
-          <Route path='/therapist/resetpassword/:email' element={<TheraphistRest/>} />
-          <Route path='/therapist/personalinfo' element={<TheraphistPersonal/>} />
+          <Route path='/therapist/resetpassword/:email' element={<TheraphistRest />} />
+          <Route path='/therapist/personalinfo' element={<TheraphistPersonal />} />
           <Route path='/therapist/home' element={<TheraphistHome />} />
-          <Route path='/therapist/profile' element={<TheraphistProfile/>} />
-          <Route path='/therapist/about' element={<TheraphistAbout/>} />
-          <Route path='/therapist/contact' element={<TheraphistContact/>} />
+          <Route path='/therapist/profile' element={<TheraphistProfile />} />
+          <Route path='/therapist/about' element={<TheraphistAbout />} />
+          <Route path='/therapist/contact' element={<TheraphistContact />} />
           <Route path='/therapist/allstudents' element={<TherapistAllStudents/>} />
-          <Route path='/therapist/meeting' element={<TherapistMeeting/>}/>
-          <Route path='/therapist/addlearningplan/:childId' element={<TherapistAddLearningPlan/>} />
-          <Route path='/therapist/editlearningplan/:childId' element={<TherapistEditLearningPlan/>} />
-          <Route path='/therapist/viewlearningplan/:childId' element={<TherapistViewLearningPlan/>} />
+          {/* <Route path='/therapist/meeting' element={<TherapistMeeting/>}/> */}
+          <Route path='/therapist/addlearningplan/:childId' element={<TherapistAddLearningPlan />} />
+          <Route path='/therapist/editlearningplan/:childId' element={<TherapistEditLearningPlan />} />
+          <Route path='/therapist/viewlearningplan/:childId' element={<TherapistViewLearningPlan />} />
           <Route path='/therapist/acceptedparents' element={<TherapistAcceptedParents/>}/>
           <Route path='/therapist/parentsrequest' element={<TherapistParentRequest/>}/>
           <Route path='/therapist/viewactivitylibrary' element={<TherapistViewActivityLibrary />} />
-          <Route path='/therapist/chat/:id' element={<TherapistChat/>}/>
+          {/* <Route path='/therapist/chat/:id' element={<TherapistChat/>}/>
           <Route path="/therapist/chat" element={<TherapistChat />} />
           <Route path='/therapist/blog/detail/:id' element={<TherapistBlogDetail/>}/>
           <Route path='/therapist/blogs' element={<TherapistBlogList/>}/>
           <Route path='/therapist/blog/add' element={<TherapistAddEditBlog/>}/>
-          <Route path='/therapist/blog/edit/:id' element={<TherapistAddEditBlog/>}/>
+          <Route path='/therapist/blog/edit/:id' element={<TherapistAddEditBlog/>}/> */}
 
-          <Route path='/therapist/child/:childId/quizzes' element={<TherapistQuizList/>}/>
-          <Route path='/therapist/child/:childId/quizzes/add' element={<TherapistAddQuiz/>}/>
-          <Route path='/therapist/child/:childId/quizzes/attempts' element={<TherapistQuizAttemptList/>}/>
-          <Route path='/therapist/quiz/attempt/:attemptId' element={<TherapistQuizAttemptReport/>}/>
+          {/* <Route path='/therapist/child/:childId/quizzes' element={<TherapistQuizList />} />
+          <Route path='/therapist/child/:childId/quizzes/add' element={<TherapistAddQuiz />} />
+          <Route path='/therapist/child/:childId/quizzes/attempts' element={<TherapistQuizAttemptList />} />
+          <Route path='/therapist/quiz/attempt/:attemptId' element={<TherapistQuizAttemptReport />} /> */}
 
         </Routes>
       </ThemeProvider>
-      
+
     </>
   )
 }

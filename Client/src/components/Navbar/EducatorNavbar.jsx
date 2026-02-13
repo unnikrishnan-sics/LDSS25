@@ -23,9 +23,8 @@ const pages = [
     { label: 'Contact', path: '/educator/contact' },
     { label: 'All students', path: '/educator/allstudents' },
     { label: 'Parents', path: '/educator/acceptedparents' },
-    { label: 'Meetings', path: '/educator/meeting' },
-    // { label: 'Activities', path: '/educator/viewactivitylibrary' },
-    { label: 'Blogs', path: '/educator/blogs' },
+    // { label: 'Meetings', path: '/educator/meeting' },
+    // { label: 'Blogs', path: '/educator/blogs' },
 
 ];
 

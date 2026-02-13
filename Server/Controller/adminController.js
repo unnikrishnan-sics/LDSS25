@@ -6,7 +6,7 @@ const adminLogin = async (req, res) => {
 
         // Hardcoded admin credentials
         const ADMIN_CREDENTIALS = {
-            userId: "Admin123",
+            userId: "admin123",
             password: "admin@123",
         };
 

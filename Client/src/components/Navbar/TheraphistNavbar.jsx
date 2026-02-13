@@ -27,8 +27,8 @@ const pages = [
   { label: 'Contact', path: '/therapist/contact' },
   { label: 'All Students', path: '/therapist/allstudents' },
   { label: 'Parents', path: '/therapist/acceptedparents' },
-  { label: 'Meetings', path: '/therapist/meeting' },
-  { label: 'Blogs', path: '/therapist/blogs' },
+  // { label: 'Meetings', path: '/therapist/meeting' },
+  // { label: 'Blogs', path: '/therapist/blogs' },
   // { label: 'Activities', path: '/therapist/viewactivitylibrary' }
 ];
 
