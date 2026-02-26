@@ -110,7 +110,7 @@ const ParentQuizList = () => {
                 </Typography>
 
                 {quizzes.length === 0 ? (
-                    <Typography>No quizzes found for this child yet.</Typography>
+                    <Typography>No quiz assigned</Typography>
                 ) : (
                     <List component={Paper} elevation={2}>
                         {quizzes.map((quiz) => (
