@@ -1,0 +1,95 @@
+# Intelligent Logistics and Delivery Tracking System (iLDTS)
+## System Documentation
+
+This document consolidates the architectural diagrams and technical flows for the **iLDTS** platform.
+
+---
+
+## 1. System Architecture (Tree Structure)
+
+The following tree diagram illustrates the logical flow from startup through the central database to specialized user roles.
+
+```mermaid
+graph TD
+    START[<b>START APP</b>] --> LOGIN[<b>LOGIN / AUTH</b>]
+    LOGIN --> VERIFY{Verify Role}
+    VERIFY --> DB[(<b>DATABASE: MongoDB</b>)]
+    
+    DB --- D_STORES[Users, Orders, Tracking, Reviews]
+
+    %% Admin Branch
+    DB --> ADMIN[<b>ADMIN DASHBOARD</b>]
+    ADMIN --> A1[Order Dispatch & Assignment]
+    ADMIN --> A2[Fleet Management]
+    ADMIN --> A3[User Governance]
+    ADMIN --> A4[Business Analytics]
+
+    %% Driver Branch
+    DB --> DRIVER[<b>DRIVER HUB</b>]
+    DRIVER --> D1[Route Optimization]
+    DRIVER --> D2[Pickup & Delivery Flow]
+    DRIVER --> D3[Real-time GPS Pinging]
+
+    %% Customer Branch
+    DB --> CUSTOMER[<b>CUSTOMER DASHBOARD</b>]
+    CUSTOMER --> C1[Shipment Booking]
+    CUSTOMER --> C2[Live Consignment Tracking]
+    CUSTOMER --> C3[OTP & Secure Handover]
+    CUSTOMER --> C4[Payments & Ratings]
+```
+
+---
+
+## 2. Data Flow Diagrams (DFD)
+
+### 2.1 Level 0: Context Diagram
+Visualizes the external entities communicating with the single process system.
+
+```mermaid
+graph LR
+    C[Customer] -- Credentials/Orders --> S(iLDTS System)
+    D[Driver] -- GPS/Status --> S
+    A[Admin] -- Dispatch/Admin --> S
+    S -- Status/ETA/OTP --> C
+    S -- Assignments --> D
+    S -- Analytics --> A
+```
+
+### 2.2 Level 1: Detailed Data Flow
+Detailed breakdown of internal processes and data stores.
+
+```mermaid
+flowchart TB
+    U((Users))
+    P1[Auth Process]
+    P2[Order Lifecycle]
+    P3[Tracking Engine]
+    DS1[(Users DB)]
+    DS2[(Orders DB)]
+    DS3[(Tracking DB)]
+
+    U -- Login -- > P1
+    P1 <--> DS1
+    U -- Create Order --> P2
+    P2 <--> DS2
+    P3 <--> DS3
+    P3 -- Live Push --> U
+```
+
+---
+
+## 3. Tech Stack Summary
+
+| Layer | Technology |
+| :--- | :--- |
+| **Frontend** | React, Vite, Material UI |
+| **Backend** | Node.js, Express |
+| **Database** | MongoDB (Mongoose) |
+| **Real-time** | Socket.io |
+| **Maps** | Leaflet, OpenStreetMap |
+
+---
+
+> [!TIP]
+> **To Save as PDF:**
+> Since this is a Markdown file, you can easily export it to PDF using your IDE's "Markdown to PDF" extension (like "Markdown PDF" in VS Code) or by opening this file in a browser/previewer and choosing **Print -> Save as PDF**.
