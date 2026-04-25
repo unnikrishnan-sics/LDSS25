@@ -23,8 +23,8 @@ const pages = [
     { label: 'Contact', path: '/educator/contact' },
     { label: 'All students', path: '/educator/allstudents' },
     { label: 'Parents', path: '/educator/acceptedparents' },
-    // { label: 'Meetings', path: '/educator/meeting' },
-    // { label: 'Blogs', path: '/educator/blogs' },
+    { label: 'Meetings', path: '/educator/meeting' },
+    { label: 'Blogs', path: '/educator/blogs' },
 
 ];
 
@@ -224,7 +224,7 @@ const EducatorNavbar = ({ homebg = {}, aboutBg = {}, contactbg = {}, navigateToP
                         <IconButton onClick={handleOpenNotificationMenu} color="inherit">
                             <Box sx={{ position: 'relative' }}>
                                 <NotificationsOutlinedIcon color="primary" sx={{ height: '24px' }} />
-                                {/* {unreadCount > 0 && (
+                                {unreadCount > 0 && (
                                     <Box
                                         sx={{
                                             position: 'absolute',
@@ -244,7 +244,7 @@ const EducatorNavbar = ({ homebg = {}, aboutBg = {}, contactbg = {}, navigateToP
                                     >
                                         {unreadCount}
                                     </Box>
-                                )} */}
+                                )}
                             </Box>
                         </IconButton>
 
@@ -293,7 +293,7 @@ const EducatorNavbar = ({ homebg = {}, aboutBg = {}, contactbg = {}, navigateToP
                                                             >
                                                                 {formatDate(meeting?.date)} | {formatTime(meeting?.startTime)} - {formatTime(meeting?.endTime)}
                                                             </Typography>
-                                                            {/* <Typography
+                                                            <Typography
                                                                 component="span"
                                                                 variant="body2"
                                                                 color="text.secondary"
@@ -310,7 +310,7 @@ const EducatorNavbar = ({ homebg = {}, aboutBg = {}, contactbg = {}, navigateToP
                                                                 >
                                                                     Child: {meeting.childId.name}
                                                                 </Typography>
-                                                            )} */}
+                                                            )}
                                                         </>
                                                     }
                                                 />

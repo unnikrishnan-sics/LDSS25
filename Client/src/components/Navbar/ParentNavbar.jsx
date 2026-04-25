@@ -31,9 +31,9 @@ const pages = [
     { label: 'Contact', path: '/parent/contact' },
     { label: 'Child', path: '/parent/childprofile' },
     { label: 'Learning', path: '/parent/learningplan' },
-    // { label: 'Meetings', path: '/parent/meeting' },
+    { label: 'Meetings', path: '/parent/meeting' },
     { label: 'Activities', path: '/parent/activities' },
-    // { label: 'Blogs', path: '/parent/blogs' },
+    { label: 'Blogs', path: '/parent/blogs' },
 ];
 
 const ParentNavbar = ({ homebg = {}, aboutBg = {}, profilebg = {}, navigateToProfile = () => { }, parentdetails = {}, contactbg = {} }) => {
@@ -316,11 +316,11 @@ const ParentNavbar = ({ homebg = {}, aboutBg = {}, profilebg = {}, navigateToPro
                     {/* Right side - Icons and User Menu */}
                     <Box display="flex" justifyContent="center" alignItems="center" sx={{ flexGrow: 0, gap: "30px" }}>
                         {/* Chat Icon */}
-                        {/* <Tooltip title="Messages">
+                        <Tooltip title="Messages">
                             <Link to={'/parent/chat'}>
                                 <SmsOutlinedIcon color="primary" sx={{ height: '24px' }} />
                             </Link>
-                        </Tooltip> */}
+                        </Tooltip>
 
                         {/* Notifications */}
                         <Tooltip title="Notifications">
@@ -378,26 +378,26 @@ const ParentNavbar = ({ homebg = {}, aboutBg = {}, profilebg = {}, navigateToPro
                                                                     {meeting.startTime ? formatTime(meeting.startTime) : "No start time"} -
                                                                     {meeting.endTime ? formatTime(meeting.endTime) : "No end time"}
                                                                 </Typography>
-                                                                {/* {participant && (
-                                            <Typography
-                                                component="span"
-                                                variant="body2"
-                                                color="text.secondary"
-                                                display="block"
-                                            >
-                                                With: {participant.name} ({participant.role})
-                                            </Typography>
-                                        )}
-                                        {meeting.childId?.name && (
-                                            <Typography
-                                                component="span"
-                                                variant="body2"
-                                                color="text.secondary"
-                                                display="block"
-                                            >
-                                                Child: {meeting.childId.name}
-                                            </Typography>
-                                        )} */}
+                                                                {participant && (
+                                                                    <Typography
+                                                                        component="span"
+                                                                        variant="body2"
+                                                                        color="text.secondary"
+                                                                        display="block"
+                                                                    >
+                                                                        With: {participant.name} ({participant.role})
+                                                                    </Typography>
+                                                                )}
+                                                                {meeting.childId?.name && (
+                                                                    <Typography
+                                                                        component="span"
+                                                                        variant="body2"
+                                                                        color="text.secondary"
+                                                                        display="block"
+                                                                    >
+                                                                        Child: {meeting.childId.name}
+                                                                    </Typography>
+                                                                )}
                                                             </>
                                                         }
                                                     />

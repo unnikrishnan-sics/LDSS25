@@ -27,9 +27,9 @@ const pages = [
   { label: 'Contact', path: '/therapist/contact' },
   { label: 'All Students', path: '/therapist/allstudents' },
   { label: 'Parents', path: '/therapist/acceptedparents' },
-  // { label: 'Meetings', path: '/therapist/meeting' },
-  // { label: 'Blogs', path: '/therapist/blogs' },
-  // { label: 'Activities', path: '/therapist/viewactivitylibrary' }
+  { label: 'Meetings', path: '/therapist/meeting' },
+  { label: 'Blogs', path: '/therapist/blogs' },
+  { label: 'Activities', path: '/therapist/viewactivitylibrary' }
 ];
 
 const TheraphistNavbar = ({ homebg = {}, aboutBg = {}, profilebg = {}, navigateToProfile = () => { }, theraphistdetails = {}, contactbg = {} }) => {
@@ -265,7 +265,7 @@ const TheraphistNavbar = ({ homebg = {}, aboutBg = {}, profilebg = {}, navigateT
                               >
                                 {new Date(meeting.date).toLocaleDateString()} | {formatTime(meeting.startTime)} - {formatTime(meeting.endTime)}
                               </Typography>
-                              {/* <Typography
+                              <Typography
                                 component="span"
                                 variant="body2"
                                 color="text.secondary"
@@ -282,7 +282,7 @@ const TheraphistNavbar = ({ homebg = {}, aboutBg = {}, profilebg = {}, navigateT
                                 >
                                   Child: {meeting.childId.name}
                                 </Typography>
-                              )} */}
+                              )}
                             </>
                           }
                         />

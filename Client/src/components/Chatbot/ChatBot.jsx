@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import {
-  Card,
-  CardContent,
   Box,
   TextField,
   Button,
+  Typography,
 } from "@mui/material";
 import ChatBotHistory from "./ChatBotHistory";
 import ChatBotLoading from "./ChatBotLoading";
@@ -18,7 +17,7 @@ function ChatBot() {
   const chatHistoryRef = useRef(null);
 
   const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
   const handleUserInput = (e) => {
     setUserInput(e.target.value);
@@ -64,7 +63,6 @@ function ChatBot() {
   };
 
   useEffect(() => {
-    // Scroll to bottom whenever chat history or loading state changes
     if (chatHistoryRef.current) {
       chatHistoryRef.current.scrollTo({
         top: chatHistoryRef.current.scrollHeight,
@@ -79,92 +77,139 @@ function ChatBot() {
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        minHeight: '500px', // Set a minimum height
+        minHeight: '450px',
+        background: 'transparent',
       }}
     >
-      <Card
-        raised
+      <Box
         sx={{
           flexGrow: 1,
-          borderRadius: 4,
-          boxShadow: 3,
           display: 'flex',
           flexDirection: 'column',
-          height: '100%', // Ensure card takes full height
+          p: 2,
+          gap: 2,
+          overflow: 'hidden',
         }}
       >
-        <CardContent
+        <Box
+          ref={chatHistoryRef}
           sx={{
             flexGrow: 1,
+            overflowY: "auto",
+            pr: 1,
             display: 'flex',
             flexDirection: 'column',
-            p: 2,
-            pb: 1,
-            height: '100%', // Ensure CardContent takes full height
-            boxSizing: 'border-box', // Include padding in height calculation
+            gap: 1.5,
+            '&::-webkit-scrollbar': {
+              width: '6px',
+            },
+            '&::-webkit-scrollbar-track': {
+              background: 'rgba(0,0,0,0.05)',
+              borderRadius: '10px',
+            },
+            '&::-webkit-scrollbar-thumb': {
+              background: 'rgba(0,0,0,0.1)',
+              borderRadius: '10px',
+              '&:hover': {
+                background: 'rgba(0,0,0,0.2)',
+              },
+            },
           }}
         >
-          <Box
-            ref={chatHistoryRef}
-            sx={{
-              flexGrow: 1,
-              overflowY: "auto",
-              pr: 1,
-              mb: 2,
-              maxHeight: 'calc(100% - 96px)', // Reserve space for input and buttons
-              '&::-webkit-scrollbar': {
-                width: '8px',
+          {chatHistory.length === 0 && (
+            <Box sx={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              height: '100%',
+              opacity: 0.6,
+              textAlign: 'center',
+              px: 3
+            }}>
+              <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.secondary' }}>
+                Hello! I'm your LearnHub Assistant. How can I help you today?
+              </Typography>
+            </Box>
+          )}
+          <ChatBotHistory chatHistory={chatHistory} />
+          <ChatBotLoading isLoading={isLoading} />
+        </Box>
+
+        <Box 
+          sx={{ 
+            display: "flex", 
+            gap: 1,
+            p: 1.5,
+            bgcolor: 'rgba(255, 255, 255, 0.8)',
+            backdropFilter: 'blur(10px)',
+            borderRadius: '24px',
+            boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
+            border: '1px solid rgba(255, 255, 255, 0.18)',
+          }}
+        >
+          <TextField
+            fullWidth
+            variant="standard"
+            placeholder="Ask anything..."
+            value={userInput}
+            onChange={handleUserInput}
+            onKeyPress={handleKeyPress}
+            disabled={isLoading}
+            InputProps={{
+              disableUnderline: true,
+              sx: { 
+                px: 2, 
+                fontSize: '0.95rem',
+                '& input::placeholder': {
+                  color: 'text.secondary',
+                  opacity: 0.8,
+                }
+              }
+            }}
+          />
+          <Button
+            variant="contained"
+            onClick={sendMessage}
+            disabled={isLoading || !userInput.trim()}
+            sx={{ 
+              borderRadius: '18px', 
+              minWidth: '45px',
+              width: '45px',
+              height: '45px',
+              p: 0,
+              background: 'linear-gradient(135deg, #1967D2 0%, #1565C0 100%)',
+              boxShadow: '0 4px 12px rgba(25, 103, 210, 0.3)',
+              '&:hover': {
+                background: 'linear-gradient(135deg, #1565C0 0%, #0D47A1 100%)',
+                boxShadow: '0 6px 16px rgba(25, 103, 210, 0.4)',
               },
-              '&::-webkit-scrollbar-track': {
-                background: '#f1f1f1',
-                borderRadius: '4px',
-              },
-              '&::-webkit-scrollbar-thumb': {
-                background: '#888',
-                borderRadius: '4px',
-              },
-              '&::-webkit-scrollbar-thumb:hover': {
-                background: '#555',
-              },
+              '&.Mui-disabled': {
+                background: 'rgba(0,0,0,0.12)',
+              }
             }}
           >
-            <ChatBotHistory chatHistory={chatHistory} />
-            <ChatBotLoading isLoading={isLoading} />
-          </Box>
-
-          <Box sx={{ display: "flex", gap: 1 }}>
-            <TextField
-              fullWidth
-              variant="outlined"
-              placeholder="Type your message..."
-              value={userInput}
-              onChange={handleUserInput}
-              onKeyPress={handleKeyPress}
-              disabled={isLoading}
-              size="small"
-              sx={{ borderRadius: 4, '& .MuiOutlinedInput-notchedOutline': { borderRadius: 4 } }}
-            />
-            <Button
-              variant="contained"
-              onClick={sendMessage}
-              disabled={isLoading}
-              sx={{ borderRadius: 4, backgroundColor: "#1967D2" }}
-            >
-              Send
-            </Button>
-          </Box>
-
-          <Button
-            variant="outlined"
-            color="secondary"
-            onClick={clearChat}
-            fullWidth
-            sx={{ mt: 1.5, borderRadius: 4 }}
-          >
-            Clear Chat
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2.01 21L23 12L2.01 3L2 10L17 12L2 14L2.01 21Z" fill="white"/>
+            </svg>
           </Button>
-        </CardContent>
-      </Card>
+        </Box>
+
+        <Button
+          size="small"
+          onClick={clearChat}
+          sx={{ 
+            alignSelf: 'center', 
+            textTransform: 'none',
+            color: 'text.secondary',
+            fontSize: '0.75rem',
+            opacity: 0.7,
+            '&:hover': { opacity: 1, bgcolor: 'transparent', textDecoration: 'underline' }
+          }}
+        >
+          Clear conversation
+        </Button>
+      </Box>
     </Box>
   );
 }

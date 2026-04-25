@@ -156,7 +156,7 @@ const ParentLogin = () => {
 
                     <Typography sx={{ textAlign: 'center', mt: 3 }}>
                         Don't have an account?{' '}
-                        <Link to="/parent/siginin" style={{
+                        <Link to="/parent/registration" style={{
                             textDecoration: "none",
                             color: 'primary.main',
                             fontWeight: 600

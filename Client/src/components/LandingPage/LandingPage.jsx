@@ -28,6 +28,7 @@ import { Link } from 'react-router-dom';
 import ChatIcon from '@mui/icons-material/Chat';
 import CloseIcon from '@mui/icons-material/Close';
 import ChatBot from '../Chatbot/ChatBot';
+import { motion } from 'framer-motion';
 
 const LandingPage = () => {
     const homebg = {
@@ -93,7 +94,7 @@ const LandingPage = () => {
                                 A one-stop platform connecting parents, educators, and therapists to support children with learning disabilities through personalized learning plans, activity tracking, and seamless collaboration.
                             </Typography>
                             <Box sx={{ margin: "30px 0px", gap: "20px", display: "flex" }}>
-                                <Link to="/parent/siginin">
+                                <Link to="/parent/registration">
                                     <Button variant="contained"
                                         color="secondary"
                                         endIcon={<ArrowRightAltIcon />}
@@ -136,22 +137,22 @@ const LandingPage = () => {
                                     </Typography>
                                 </Box>
                             </Box>
-                            <Grid item xs={9}>
+                            <Grid size={{ xs: 9 }}>
                                 <Box component="img" src={image68} alt='img'
                                     sx={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "10px" }}>
                                 </Box>
                             </Grid>
-                            <Grid item xs={3}>
+                            <Grid size={{ xs: 3 }}>
                                 <Box component="img" src={image69} alt='img'
                                     sx={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "10px" }}>
                                 </Box>
                             </Grid>
-                            <Grid item xs={5}>
+                            <Grid size={{ xs: 5 }}>
                                 <Box component="img" src={image70} alt='img'
                                     sx={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "10px" }}>
                                 </Box>
                             </Grid>
-                            <Grid item xs={7}>
+                            <Grid size={{ xs: 7 }}>
                                 <Box component="img" src={image71} alt='img'
                                     sx={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "10px" }}>
                                 </Box>
@@ -328,7 +329,7 @@ const LandingPage = () => {
                     <Typography sx={{ fontSize: "18px", fontWeight: "500" }} variant='h3' color='primary'>
                         Create an account and be a part of a collaborative learning experience that makes a difference.
                     </Typography>
-                    <Link to="parent/siginin">
+                    <Link to="/parent/registration">
                     <Button variant='contained' color='secondary' endIcon={<ArrowRightAltIcon />} sx={{ borderRadius: "25px", marginTop: "20px", height: "40px", width: '200px', padding: '10px 35px' }}>Register Now</Button>
                     </Link>
                 </Stack>
@@ -339,17 +340,21 @@ const LandingPage = () => {
                 <Box
                     sx={{
                         position: 'fixed',
-                        bottom: 90,
+                        bottom: 100,
                         right: 24,
-                        width: { xs: '90%', sm: 380 },
-                        height: '75vh',
-                        maxHeight: 600,
+                        width: { xs: 'calc(100% - 48px)', sm: 400 },
+                        height: '70vh',
+                        maxHeight: 650,
                         zIndex: 1100,
-                        backgroundColor: 'background.paper',
-                        borderRadius: 3,
-                        boxShadow: 6,
+                        background: 'rgba(255, 255, 255, 0.85)',
+                        backdropFilter: 'blur(16px) saturate(180%)',
+                        WebkitBackdropFilter: 'blur(16px) saturate(180%)',
+                        borderRadius: '24px',
+                        border: '1px solid rgba(209, 213, 219, 0.3)',
+                        boxShadow: '0 12px 40px rgba(0, 0, 0, 0.15)',
                         display: 'flex',
                         flexDirection: 'column',
+                        overflow: 'hidden',
                     }}
                 >
                     {/* Chat Window Header */}
@@ -357,51 +362,95 @@ const LandingPage = () => {
                         display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'center',
-                        p: 2,
-                        borderBottom: '1px solid',
-                        borderColor: 'divider',
-                        bgcolor: '#1976d2',
+                        p: '16px 20px',
+                        background: 'linear-gradient(135deg, #1967D2 0%, #1565C0 100%)',
                         color: 'white',
-                        borderTopLeftRadius: 10,
-                        borderTopRightRadius: 10,
                     }}>
-                        <Typography variant="h6" sx={{ flexGrow: 1, textAlign: 'center' }}>
-                            LearnHub Assistant
-                        </Typography>
+                        <Stack direction="row" spacing={1.5} alignItems="center">
+                            <Box sx={{ 
+                                width: 32, 
+                                height: 32, 
+                                bgcolor: 'rgba(255,255,255,0.2)', 
+                                borderRadius: '50%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}>
+                                <ChatIcon sx={{ fontSize: 18 }} />
+                            </Box>
+                            <Box>
+                                <Typography variant="subtitle1" sx={{ fontWeight: 600, lineHeight: 1.2 }}>
+                                    LearnHub AI
+                                </Typography>
+                                <Typography variant="caption" sx={{ opacity: 0.8 }}>
+                                    Online • Always here to help
+                                </Typography>
+                            </Box>
+                        </Stack>
                         <IconButton
-                            aria-label="close chat"
+                            size="small"
                             onClick={() => setShowChatBot(false)}
-                            sx={{ color: 'white' }}
+                            sx={{ color: 'white', bgcolor: 'rgba(255,255,255,0.1)', '&:hover': { bgcolor: 'rgba(255,255,255,0.2)' } }}
                         >
-                            <CloseIcon />
+                            <CloseIcon sx={{ fontSize: 20 }} />
                         </IconButton>
                     </Box>
 
                     {/* Chat Bot Content */}
-                    <Box sx={{ flexGrow: 1, overflow: 'hidden' }}>
+                    <Box sx={{ flexGrow: 1, overflow: 'hidden', bgcolor: 'transparent' }}>
                         <ChatBot />
                     </Box>
                 </Box>
             </Slide>
 
             {/* Floating Chat Button */}
-            <Fab
-                aria-label="chat"
+            <Box
                 sx={{
                     position: 'fixed',
                     bottom: 24,
                     right: 24,
                     zIndex: 1000,
-                    backgroundColor: '#1976d2',
-                    color: 'white',
-                    '&:hover': {
-                        backgroundColor: '#1565c0',
-                    }
                 }}
-                onClick={handleToggleChatBot}
             >
-                {showChatBot ? <CloseIcon /> : <ChatIcon />}
-            </Fab>
+                <Fab
+                    aria-label="chat"
+                    sx={{
+                        background: 'linear-gradient(135deg, #1967D2 0%, #1565C0 100%)',
+                        color: 'white',
+                        width: 60,
+                        height: 60,
+                        boxShadow: '0 8px 24px rgba(25, 103, 210, 0.4)',
+                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                        '&:hover': {
+                            transform: 'scale(1.1) rotate(5deg)',
+                            boxShadow: '0 12px 32px rgba(25, 103, 210, 0.5)',
+                        },
+                        '&:active': {
+                            transform: 'scale(0.95)',
+                        }
+                    }}
+                    onClick={handleToggleChatBot}
+                >
+                    {showChatBot ? <CloseIcon /> : <ChatIcon />}
+                </Fab>
+                {!showChatBot && (
+                    <Box
+                        component={motion.div}
+                        animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0, 0.3] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                        sx={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            borderRadius: '50%',
+                            border: '2px solid #1967D2',
+                            pointerEvents: 'none',
+                        }}
+                    />
+                )}
+            </Box>
 
             <Footer />
         </>
